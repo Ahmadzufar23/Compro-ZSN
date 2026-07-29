@@ -8,6 +8,8 @@
  *
  * Menu mobile memakai <details>/<summary> — 0 KB JavaScript.
  */
+import Logo from '@/components/ui/Logo.astro';
+
 const menu = [
   { label: 'Layanan', href: '/layanan' },
   { label: 'Software', href: '/layanan/software' },
@@ -22,17 +24,13 @@ const isActive = (href: string) =>
   href === '/' ? path === '/' : path.startsWith(href);
 ---
 
-<header class="on-dark sticky top-0 z-50 border-b border-steel bg-ink">
+<header class="sticky top-0 z-50 border-b border-black/10 bg-white">
   <nav
     class="container-content flex h-18 items-center justify-between gap-6"
     aria-label="Navigasi utama"
   >
-    <a
-      href="/"
-      class="font-display text-2xl font-bold tracking-tight text-white"
-      aria-label="ZSN — Beranda"
-    >
-      ZSN
+    <a href="/" aria-label="ZSN — Beranda">
+      <Logo variant="dark" />
     </a>
 
     {/* Desktop */}
@@ -43,9 +41,9 @@ const isActive = (href: string) =>
             href={href}
             aria-current={isActive(href) ? 'page' : undefined}
             class:list={[
-              'label-tech relative py-2 text-white/80 transition-colors hover:text-white',
+              'label-tech relative py-2 text-slate transition-colors hover:text-ink',
               isActive(href) &&
-                'text-white after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-yellow',
+                'text-ink after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-yellow',
             ]}
           >
             {label}
@@ -64,7 +62,7 @@ const isActive = (href: string) =>
     {/* Mobile — tanpa JavaScript */}
     <details class="group lg:hidden [&_summary::-webkit-details-marker]:hidden">
       <summary
-        class="flex size-11 cursor-pointer list-none items-center justify-center text-white"
+        class="flex size-11 cursor-pointer list-none items-center justify-center text-ink"
         aria-label="Buka menu"
       >
         <svg
@@ -90,7 +88,7 @@ const isActive = (href: string) =>
       </summary>
 
       <div
-        class="absolute inset-x-0 top-18 border-b border-steel bg-ink px-5 pb-6 pt-2"
+        class="absolute inset-x-0 top-18 border-b border-black/10 bg-white px-5 pb-6 pt-2 shadow-lg"
       >
         <ul class="flex flex-col">
           {menu.map(({ label, href }) => (
@@ -99,8 +97,8 @@ const isActive = (href: string) =>
                 href={href}
                 aria-current={isActive(href) ? 'page' : undefined}
                 class:list={[
-                  'label-tech block border-b border-steel/60 py-4 text-white/80',
-                  isActive(href) && 'text-yellow',
+                  'label-tech block border-b border-black/10 py-4 text-slate',
+                  isActive(href) && 'border-l-2 border-l-yellow pl-3 text-ink',
                 ]}
               >
                 {label}
