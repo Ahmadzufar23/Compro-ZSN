@@ -1,0 +1,80 @@
+---
+/**
+ * Footer — SATU sumber kebenaran untuk seluruh situs.
+ *
+ * Link di sini nyata semua. Jangan tambahkan tautan dekoratif
+ * bergaya sci-fi (Terminal Access, API Docs, Security Protocols)
+ * seperti yang sempat muncul di draf desain.
+ */
+const kolom = [
+  {
+    judul: 'Layanan',
+    tautan: [
+      { label: 'Fiber Optic & FTTH', href: '/layanan/fiber-optic' },
+      { label: 'CCTV & Security', href: '/layanan/cctv' },
+      { label: 'Network Infrastructure', href: '/layanan/network' },
+      { label: 'Maintenance & IT Support', href: '/layanan/maintenance' },
+      { label: 'Pengembangan Sistem', href: '/layanan/software' },
+    ],
+  },
+  {
+    judul: 'Perusahaan',
+    tautan: [
+      { label: 'Tentang', href: '/tentang' },
+      { label: 'Project', href: '/project' },
+      { label: 'Tim', href: '/tim' },
+    ],
+  },
+  {
+    judul: 'Kontak',
+    tautan: [
+      { label: 'Hubungi Kami', href: '/kontak' },
+      { label: 'Minta Survei', href: '/kontak#survei' },
+    ],
+  },
+];
+
+const tahun = new Date().getFullYear();
+---
+
+<footer class="on-dark blueprint bg-ink">
+  <div class="container-content grid gap-12 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)] md:py-20">
+    <div>
+      <p class="font-display text-2xl font-bold text-white">ZSN</p>
+      <p class="mt-3 max-w-xs text-sm leading-relaxed text-slate-muted">
+        PT Zufar Solusi Nawasena — infrastruktur jaringan, keamanan, dan
+        pengembangan sistem untuk bisnis di Jabodetabek.
+      </p>
+    </div>
+
+    {kolom.map(({ judul, tautan }) => (
+      <nav aria-label={judul}>
+        <p class="label-tech text-yellow">{judul}</p>
+        <ul class="mt-4 flex flex-col gap-3">
+          {tautan.map(({ label, href }) => (
+            <li>
+              <a
+                href={href}
+                class="text-sm text-slate-muted transition-colors hover:text-white"
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    ))}
+  </div>
+
+  <div class="border-t border-steel">
+    <div class="container-content flex flex-col gap-2 py-6 md:flex-row md:items-center md:justify-between">
+      <p class="label-tech text-slate-muted">
+        © {tahun} PT Zufar Solusi Nawasena
+      </p>
+      {/* TODO fase 5: isi setelah data legalitas tersedia */}
+      <p class="label-tech text-slate-muted">
+        NIB · NPWP — menunggu data
+      </p>
+    </div>
+  </div>
+</footer>

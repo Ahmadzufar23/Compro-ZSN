@@ -1,0 +1,58 @@
+---
+/**
+ * ServiceHero — dua mode.
+ * 'foto': foto 21:9 dengan overlay ink dan teks di atasnya (layanan fisik).
+ * 'panel': panel ink tanpa foto (software, tidak ada foto lapangan).
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+
+interface Props {
+  mode: 'foto' | 'panel';
+  judul: string;
+  subjudul: string;
+  ctaLabel: string;
+  image?: ImageMetadata;
+  alt?: string;
+}
+
+const { mode, judul, subjudul, ctaLabel, image, alt } = Astro.props;
+---
+
+<Section bg="ink" size="lg" blueprint={mode === 'panel'} aria-label="Hero layanan">
+  <p class="label-tech text-white/50">
+    <a href="/layanan" class="hover:text-yellow">Layanan</a>
+    <span class="mx-2">/</span>
+    <span class="text-yellow">{judul}</span>
+  </p>
+
+  {
+    mode === 'panel' ? (
+      <div class="mt-6 max-w-2xl">
+        <h1 class="text-h1 text-white">{judul}</h1>
+        <p class="mt-5 text-white/70">{subjudul}</p>
+        <Button href="/kontak" size="lg" class="mt-8">{ctaLabel}</Button>
+      </div>
+    ) : (
+      <div class="relative mt-6 overflow-hidden rounded-md" style="aspect-ratio: 21/9;">
+        {image && (
+          <Image
+            src={image}
+            alt={alt ?? ''}
+            width={1600}
+            height={686}
+            class="size-full object-cover"
+          />
+        )}
+        <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
+        <div class="absolute inset-x-0 bottom-0 p-6 md:p-10">
+          <h1 class="text-h1 text-white">{judul}</h1>
+          <p class="mt-4 max-w-xl text-white/80">{subjudul}</p>
+          <Button href="/kontak" size="lg" class="mt-7">{ctaLabel}</Button>
+        </div>
+      </div>
+    )
+  }
+</Section>

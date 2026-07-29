@@ -1,0 +1,76 @@
+---
+/**
+ * Section — pembungkus ritme vertikal.
+ *
+ * Semua section halaman memakai ini. Padding tidak pernah ditulis
+ * manual di komponen anak, sehingga jarak antar-section konsisten
+ * di seluruh situs dan tidak ada CSS yang saling membatalkan.
+ *
+ * Ritme halaman yang dikunci di spec:
+ *   navbar ink -> hero ink -> stats graphite -> konten PUTIH
+ *   -> CTA ink -> footer ink
+ * Body konten tidak pernah gelap seluruhnya.
+ */
+interface Props {
+  bg?: 'white' | 'mist' | 'ink' | 'graphite';
+  size?: 'sm' | 'md' | 'lg';
+  /** Grid blueprint hanya untuk latar gelap */
+  blueprint?: boolean;
+  /**
+   * Untuk dua section yang sengaja ditempel jadi satu blok visual
+   * (mis. ServiceGrid -> SoftwareBanner, gap 16px total): section
+   * pertama pakai flushBottom, section kedua pakai flushTop.
+   */
+  flushTop?: boolean;
+  flushBottom?: boolean;
+  as?: 'section' | 'div' | 'article';
+  class?: string;
+  id?: string;
+  'aria-label'?: string;
+}
+
+const {
+  bg = 'white',
+  size = 'md',
+  blueprint = false,
+  flushTop = false,
+  flushBottom = false,
+  as: Tag = 'section',
+  class: extra = '',
+  ...rest
+} = Astro.props;
+
+const bgClass = {
+  white: 'bg-white',
+  mist: 'bg-mist',
+  ink: 'on-dark bg-ink text-slate-muted',
+  graphite: 'on-dark bg-graphite text-slate-muted',
+}[bg];
+
+const topClass = {
+  sm: 'pt-12 md:pt-16',
+  md: 'pt-16 md:pt-20',
+  lg: 'pt-20 md:pt-30',
+}[size];
+
+const bottomClass = {
+  sm: 'pb-12 md:pb-16',
+  md: 'pb-16 md:pb-20',
+  lg: 'pb-20 md:pb-30',
+}[size];
+
+/* 16px total antara dua section yang ditempel: pt-0 di section bawah + pb-4 di section atas */
+const finalTop = flushTop ? 'pt-0' : topClass;
+const finalBottom = flushBottom ? 'pb-4' : bottomClass;
+
+const isDark = bg === 'ink' || bg === 'graphite';
+---
+
+<Tag
+  class:list={[bgClass, finalTop, finalBottom, blueprint && isDark && 'blueprint', extra]}
+  {...rest}
+>
+  <div class="container-content">
+    <slot />
+  </div>
+</Tag>

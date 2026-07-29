@@ -1,0 +1,24 @@
+---
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import TopologyDiagram from './TopologyDiagram.astro';
+---
+
+<Section bg="ink" size="lg" blueprint aria-label="Hero">
+  <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+    <div>
+      <p class="label-tech text-yellow">PT Zufar Solusi Nawasena</p>
+      <h1 class="mt-5 text-hero text-white">Dari kabel<br />sampai sistem.</h1>
+      <p class="mt-6 max-w-xl text-white/70">
+        Kami memasang jaringan fiber optic, CCTV, dan infrastruktur enterprise
+        di lapangan — lalu membangun sistem yang menjalankannya. Satu vendor,
+        dari kabel sampai dashboard.
+      </p>
+      <Button href="/kontak" size="lg" class="mt-9">Konsultasi Gratis</Button>
+    </div>
+
+    <div class="lg:pl-6">
+      <TopologyDiagram />
+    </div>
+  </div>
+</Section>

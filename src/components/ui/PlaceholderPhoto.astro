@@ -1,0 +1,29 @@
+---
+/**
+ * PlaceholderPhoto — placeholder foto dengan rasio terkunci.
+ * Dipakai di seluruh homepage sampai foto asli tersedia di Fase 5.
+ */
+interface Props {
+  ratio: string; // '21/9' | '3/4' | '4/3' | '16/9'
+  label?: string;
+  dark?: boolean;
+  class?: string;
+}
+
+const { ratio, label = 'Foto placeholder', dark = false, class: extra = '' } = Astro.props;
+---
+
+<div
+  class:list={[
+    'relative flex items-center justify-center overflow-hidden rounded-md border border-dashed',
+    dark ? 'border-white/20 bg-white/5' : 'border-slate-muted/40 bg-mist',
+    extra,
+  ]}
+  style={`aspect-ratio: ${ratio};`}
+>
+  <span
+    class:list={['label-tech px-4 text-center', dark ? 'text-white/40' : 'text-slate-muted']}
+  >
+    {label}
+  </span>
+</div>

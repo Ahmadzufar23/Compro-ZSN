@@ -1,0 +1,62 @@
+---
+/**
+ * Gallery — masonry foto lapangan, dengan dukungan stempel pojok
+ * (ala gambar teknik) dan anotasi As-Built (garis callout kuning +
+ * label mono) di atas foto.
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Section from '@/components/ui/Section.astro';
+
+interface GaleriItem {
+  src: ImageMetadata;
+  alt: string;
+  stempel?: string;
+  anotasi?: { label: string; x: number; y: number }[];
+}
+
+interface Props {
+  items: GaleriItem[];
+}
+const { items } = Astro.props;
+---
+
+<Section bg="mist" size="md" aria-label="Galeri lapangan">
+  <p class="label-tech text-amber-text">Dokumentasi</p>
+  <h2 class="mt-3 text-h2">Galeri Lapangan</h2>
+
+  <div class="mt-10 columns-1 gap-5 sm:columns-2 lg:columns-3">
+    {
+      items.map((item) => (
+        <figure class="relative mb-5 break-inside-avoid overflow-hidden rounded-md border border-ink/10 bg-ink">
+          <Image
+            src={item.src}
+            alt={item.alt}
+            width={800}
+            height={600}
+            class="block w-full object-cover"
+          />
+
+          {item.anotasi?.map((a) => (
+            <span
+              class="absolute flex items-center gap-1.5"
+              style={`left:${a.x}%; top:${a.y}%;`}
+            >
+              <span class="size-1.5 rounded-full bg-yellow" />
+              <span class="h-px w-6 bg-yellow" />
+              <span class="label-tech whitespace-nowrap rounded-sm bg-ink/80 px-1.5 py-0.5 text-yellow">
+                {a.label}
+              </span>
+            </span>
+          ))}
+
+          {item.stempel && (
+            <figcaption class="label-tech absolute bottom-2 right-2 rounded-sm border border-yellow/40 bg-ink/80 px-2 py-1 text-yellow">
+              {item.stempel}
+            </figcaption>
+          )}
+        </figure>
+      ))
+    }
+  </div>
+</Section>

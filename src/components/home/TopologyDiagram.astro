@@ -1,0 +1,110 @@
+---
+/**
+ * TopologyDiagram — satu-satunya animasi di seluruh situs.
+ *
+ * ODP -> Gedung -> Rack Server -> Dashboard, dengan satu titik cahaya
+ * kuning berjalan menyusuri jalur. Animasi murni stroke-dashoffset,
+ * pathLength dinormalisasi ke 100 sehingga dash tidak perlu dihitung
+ * manual dari panjang path sesungguhnya.
+ *
+ * prefers-reduced-motion dihormati lewat aturan global di global.css
+ * (animation-duration dipaksa ~0 -> diagram diam di frame terakhir,
+ * bukan hilang).
+ */
+interface Props {
+  class?: string;
+}
+const { class: extra = '' } = Astro.props;
+
+const path = 'M70,300 L235,225 L400,175 L565,110';
+
+const iso = { dx: 16, dy: -10 };
+
+function box(cx: number, cy: number, w: number, h: number, label: string) {
+  const x = cx - w / 2;
+  const y = cy - h / 2;
+  return {
+    front: `M${x},${y} H${x + w} V${y + h} H${x} Z`,
+    top: `M${x},${y} L${x + w},${y} L${x + w + iso.dx},${y + iso.dy} L${x + iso.dx},${y + iso.dy} Z`,
+    side: `M${x + w},${y} L${x + w + iso.dx},${y + iso.dy} L${x + w + iso.dx},${y + iso.dy + h} L${x + w},${y + h} Z`,
+    labelX: cx,
+    labelY: y + h + 22,
+    label,
+  };
+}
+
+const nodes = [
+  box(70, 300, 64, 46, 'ODP'),
+  box(235, 225, 76, 130, 'GEDUNG'),
+  box(400, 175, 66, 96, 'RACK SERVER'),
+  box(565, 110, 108, 70, 'DASHBOARD'),
+];
+
+const centers = [
+  { cx: 70, cy: 300 },
+  { cx: 235, cy: 225 },
+  { cx: 400, cy: 175 },
+  { cx: 565, cy: 110 },
+];
+---
+
+<svg
+  viewBox="0 0 640 380"
+  class:list={['h-auto w-full', extra]}
+  role="img"
+  aria-label="Diagram topologi jaringan: dari ODP, gedung, rack server, hingga dashboard pemantauan"
+>
+  {/* Jalur dasar */}
+  <path d={path} fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5" />
+
+  {/* Titik cahaya berjalan */}
+  <path
+    d={path}
+    fill="none"
+    stroke-width="3.5"
+    stroke-linecap="round"
+    pathLength="100"
+    stroke-dasharray="5 95"
+    class="topo-travel"
+  />
+
+  {
+    nodes.map((n) => (
+      <g>
+        <path d={n.side} fill="#0A0A0A" stroke="#2E3033" stroke-width="1" />
+        <path d={n.top} fill="#2E3033" stroke="#4A5259" stroke-width="1" />
+        <path d={n.front} fill="#1C1C1E" stroke="#4A5259" stroke-width="1" />
+        <text
+          x={n.labelX}
+          y={n.labelY}
+          text-anchor="middle"
+          class="label-tech"
+          fill="#9AA0A6"
+          font-size="11"
+        >
+          {n.label}
+        </text>
+      </g>
+    ))
+  }
+
+  {
+    centers.map((c) => (
+      <circle cx={c.cx} cy={c.cy} r="2.5" fill="#ffffff" fill-opacity="0.5" />
+    ))
+  }
+</svg>
+
+<style>
+  .topo-travel {
+    stroke: #ffce00;
+    filter: drop-shadow(0 0 3px rgba(255, 206, 0, 0.7));
+    animation: topo-travel 4.5s linear infinite;
+  }
+
+  @keyframes topo-travel {
+    to {
+      stroke-dashoffset: -100;
+    }
+  }
+</style>

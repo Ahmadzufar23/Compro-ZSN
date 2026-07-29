@@ -1,0 +1,40 @@
+---
+/**
+ * Faq — WAJIB <details>/<summary> native, bukan React. Pola sama
+ * seperti menu mobile di Navbar.astro. 0 KB JavaScript.
+ */
+import Section from '@/components/ui/Section.astro';
+
+interface Props {
+  items: { tanya: string; jawab: string }[];
+}
+const { items } = Astro.props;
+---
+
+<Section bg="white" size="md" aria-label="Pertanyaan umum">
+  <p class="label-tech text-amber-text">FAQ</p>
+  <h2 class="mt-3 text-h2">Pertanyaan Umum</h2>
+
+  <div class="mt-8 divide-y divide-mist border-t border-mist">
+    {
+      items.map((item) => (
+        <details class="group py-5 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-ink">
+            {item.tanya}
+            <svg
+              class="size-4 shrink-0 transition-transform group-open:rotate-45"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <p class="mt-3 text-sm text-slate">{item.jawab}</p>
+        </details>
+      ))
+    }
+  </div>
+</Section>

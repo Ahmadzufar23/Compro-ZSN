@@ -1,0 +1,77 @@
+---
+import Section from '@/components/ui/Section.astro';
+import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
+import ServiceIcon from './ServiceIcon.astro';
+
+/* Layanan bukan sekuens -> tidak ada penomoran 01/02/03 di sini. */
+const services = [
+  {
+    judul: 'Instalasi Fiber Optic',
+    desc: 'Pemasangan FTTH dan backbone fiber, dari ODP sampai terminasi akhir.',
+    icon: 'konektor' as const,
+    href: '/layanan/fiber-optic',
+    dark: true,
+  },
+  {
+    judul: 'CCTV & Keamanan',
+    desc: 'Kamera pengawas, perekaman, dan integrasi monitoring untuk lokasi Anda.',
+    icon: 'kamera' as const,
+    href: '/layanan/cctv',
+    dark: false,
+  },
+  {
+    judul: 'Jaringan Enterprise',
+    desc: 'Rancang bangun jaringan kantor dan gedung, dari rack sampai access point.',
+    icon: 'patch-panel' as const,
+    href: '/layanan/network',
+    dark: false,
+  },
+  {
+    judul: 'Pengujian & Sertifikasi Kabel',
+    desc: 'Pengukuran OTDR dan laporan uji sebagai bukti kualitas instalasi.',
+    icon: 'cable-tester' as const,
+    href: '/layanan/pengujian-kabel',
+    dark: false,
+  },
+];
+---
+
+<Section bg="white" size="md" flushBottom aria-label="Layanan">
+  <p class="label-tech text-amber-text">Layanan</p>
+  <h2 class="mt-3 text-h2">Layanan End-to-End</h2>
+
+  <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      services.map((s) => (
+        <article
+          class:list={[
+            'group relative flex flex-col rounded-md p-6 pb-20',
+            s.dark ? 'bg-ink text-white' : 'border border-mist bg-white',
+          ]}
+        >
+          <ServiceIcon type={s.icon} class={s.dark ? 'size-8 text-yellow' : 'size-8 text-amber-text'} />
+
+          <PlaceholderPhoto ratio="3/4" label="Foto layanan" dark={s.dark} class="mt-4" />
+
+          <h3 class:list={['mt-5 text-h3', s.dark ? 'text-white' : 'text-ink']}>{s.judul}</h3>
+          <p class:list={['mt-2 text-sm', s.dark ? 'text-white/70' : 'text-slate']}>{s.desc}</p>
+
+          <a
+            href={s.href}
+            aria-label={`Lihat detail layanan ${s.judul}`}
+            class:list={[
+              'absolute bottom-5 right-5 flex size-11 items-center justify-center rounded-md border transition-colors',
+              s.dark
+                ? 'border-white/25 text-white hover:border-yellow hover:bg-yellow hover:text-ink'
+                : 'border-ink/15 text-ink hover:bg-ink hover:text-white',
+            ]}
+          >
+            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M7 17 17 7M9 7h8v8" />
+            </svg>
+          </a>
+        </article>
+      ))
+    }
+  </div>
+</Section>

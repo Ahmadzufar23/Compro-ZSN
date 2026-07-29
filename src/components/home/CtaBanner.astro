@@ -1,0 +1,20 @@
+---
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+---
+
+<Section bg="white" size="lg" aria-label="Ajakan bertindak">
+  <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
+    <div class="max-w-2xl">
+      <h2 class="text-h2">Siap Membangun Infrastruktur Anda?</h2>
+      <p class="mt-4">
+        Ceritakan kebutuhan Anda — tim kami akan survei lokasi dan menyiapkan
+        rencana kerja tanpa biaya.
+      </p>
+    </div>
+    <div class="flex shrink-0 gap-4">
+      <Button href="/kontak" size="lg">Konsultasi Gratis</Button>
+      <Button href="/layanan" variant="outline-dark" size="lg">Lihat Layanan</Button>
+    </div>
+  </div>
+</Section>

@@ -1,0 +1,24 @@
+---
+import Section from '@/components/ui/Section.astro';
+
+/* Klaim terlarang (99% Uptime, headcount) sudah dihindari — lihat CLAUDE.md */
+const stats = [
+  { angka: '50+', label: 'Project Selesai' },
+  { angka: 'Sejak 2023', label: 'Tahun Beroperasi' },
+  { angka: 'Jabodetabek', label: 'Area Layanan' },
+  { angka: 'Garansi 90 Hari', label: 'Jaminan Instalasi' },
+];
+---
+
+<Section bg="graphite" size="sm" aria-label="Statistik">
+  <dl class="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4">
+    {
+      stats.map(({ angka, label }) => (
+        <div class="border-l-2 border-steel pl-4">
+          <dt class="font-display text-3xl font-bold text-yellow">{angka}</dt>
+          <dd class="label-tech mt-1 text-slate-muted">{label}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</Section>

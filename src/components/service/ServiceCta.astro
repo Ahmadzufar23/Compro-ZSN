@@ -1,0 +1,31 @@
+---
+/**
+ * ServiceCta — banner ink + tombol WhatsApp. Situs static tanpa
+ * backend -> deeplink WhatsApp yang menyusun pesan, bukan form submit.
+ */
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+
+interface Props {
+  judul: string;
+  ctaLabel: string;
+}
+const { judul, ctaLabel } = Astro.props;
+
+const nomorWa = '6281234567890';
+const pesan = encodeURIComponent(`Halo ZSN, saya ingin konsultasi soal ${judul}.`);
+const waHref = `https://wa.me/${nomorWa}?text=${pesan}`;
+---
+
+<Section bg="ink" size="lg" blueprint aria-label="Ajakan bertindak">
+  <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
+    <div class="max-w-2xl">
+      <h2 class="text-h2 text-white">Siap Memulai {judul}?</h2>
+      <p class="mt-4 text-white/70">
+        Ceritakan kebutuhan lokasi Anda lewat WhatsApp — tim kami akan
+        merespons dengan rencana survei.
+      </p>
+    </div>
+    <Button href={waHref} size="lg" external class="shrink-0">{ctaLabel}</Button>
+  </div>
+</Section>

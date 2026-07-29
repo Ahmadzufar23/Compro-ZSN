@@ -1,0 +1,78 @@
+---
+import '@/styles/global.css';
+import Navbar from '@/components/layout/Navbar.astro';
+import Footer from '@/components/layout/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path gambar OG. Fase 4 akan menggantinya dengan OG dinamis. */
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { title, description, ogImage = '/og-default.jpg', noindex = false } =
+  Astro.props;
+
+const judulPenuh = `${title} · ZSN`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogUrl = new URL(ogImage, Astro.site);
+
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'PT Zufar Solusi Nawasena',
+  alternateName: 'ZSN Technology Solution',
+  description:
+    'Vendor instalasi fiber optic FTTH, CCTV, jaringan enterprise, dan pengembangan sistem di Jabodetabek.',
+  url: Astro.site?.toString(),
+  areaServed: 'Jabodetabek, Indonesia',
+  // TODO fase 5: telephone, address, geo — menunggu data kantor
+};
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{judulPenuh}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ZSN" />
+    <meta property="og:title" content={judulPenuh} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:locale" content="id_ID" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#0A0A0A" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(localBusiness)}
+    />
+  </head>
+
+  <body class="flex min-h-dvh flex-col">
+    <a
+      href="#konten"
+      class="label-tech sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-yellow focus:px-4 focus:py-3 focus:text-ink"
+    >
+      Lompat ke konten
+    </a>
+
+    <Navbar />
+
+    <main id="konten" class="flex-1">
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>

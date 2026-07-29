@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+/* Font self-hosted — jangan ganti ke Google Fonts CDN */
+@import "@fontsource/chakra-petch/600.css";
+@import "@fontsource/chakra-petch/700.css";
+@import "@fontsource-variable/archivo";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+@theme {
+  /* ── Brand ─────────────────────────────────────────────
+     Diekstrak dari file logo ZSN. Jangan ubah nilai hex.
+     Kuning di atas putih = 1.49:1 → GAGAL WCAG.
+     Kuning hanya boleh jadi isian, bukan teks di latar terang. */
+  --color-yellow:        #FFCE00;
+  --color-yellow-hover:  #E6B900;
+  --color-amber-text:    #8A6600;  /* 5.27:1 — satu-satunya kuning legal sebagai teks di putih */
+
+  /* ── Netral ───────────────────────────────────────────── */
+  --color-ink:           #0A0A0A;  /* 19.80:1 di putih */
+  --color-graphite:      #1C1C1E;
+  --color-steel:         #2E3033;
+  --color-slate:         #4A5259;  /* 7.95:1 — body text di putih */
+  --color-slate-muted:   #9AA0A6;
+  --color-mist:          #F4F4F5;
+
+  /* ── Semantik ─────────────────────────────────────────
+     Kuning TIDAK dipakai untuk peringatan — sudah milik brand. */
+  --color-success:       #16794C;
+  --color-error:         #C4342B;
+
+  /* ── Tipografi ────────────────────────────────────────── */
+  --font-display: "Chakra Petch", system-ui, sans-serif;
+  --font-body:    "Archivo Variable", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+
+  --text-hero:  clamp(2.5rem, 1.5rem + 4.5vw, 5.5rem);
+  --text-h1:    clamp(2rem, 1.4rem + 2.6vw, 3.5rem);
+  --text-h2:    clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+  --text-h3:    clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
+  --text-body:  clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --text-label: 0.75rem;
+
+  /* ── Bentuk ───────────────────────────────────────────
+     Logo ZSN bersudut tajam. Tidak ada pill shape. */
+  --radius-sm: 2px;
+  --radius-md: 4px;   /* default seluruh situs -> rounded-md */
+  --radius-lg: 8px;
+
+  /* ── Ritme vertikal ───────────────────────────────────── */
+  --spacing-section-sm: 3rem;
+  --spacing-section-md: 5rem;
+  --spacing-section-lg: 7.5rem;
+
+  --container-content: 1200px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.65;
+    color: var(--color-slate);
+    background: #fff;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  p { text-wrap: pretty; }
+
+  /* Focus ring: kuning di latar gelap, ink di latar terang.
+     Diatur per-konteks lewat utility .focus-dark / .focus-light */
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-yellow);
+  }
+
+  ::selection {
+    background: var(--color-yellow);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  /* Label teknis — dipakai di stat, eyebrow, stempel foto */
+  .label-tech {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+  }
+
+  /* Grid blueprint untuk section gelap.
+     Murni CSS, 0 KB, mendukung konsep As-Built. */
+  .blueprint {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .container-content {
+    width: 100%;
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-content { padding-inline: 2rem; }
+  }
+}
+
+/* Hormati preferensi pengguna. Diagram hero tetap tampil, hanya diam. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

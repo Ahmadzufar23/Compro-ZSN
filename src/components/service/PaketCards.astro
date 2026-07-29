@@ -1,0 +1,74 @@
+---
+/**
+ * PaketCards — kartu paket. hargaMulai kosong -> "Minta Penawaran" +
+ * tombol "Konsultasi" (bukan "Pilih Paket", bahasa e-commerce yang
+ * tidak cocok untuk situs tanpa checkout).
+ */
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+
+interface PaketItem {
+  nama: string;
+  ringkas: string;
+  hargaMulai?: string;
+  satuan?: string;
+  durasi?: string;
+  unggulan: boolean;
+  isi: (string | { label: string; nilai: string })[];
+}
+
+interface Props {
+  items: PaketItem[];
+}
+const { items } = Astro.props;
+---
+
+<Section bg="mist" size="md" aria-label="Paket">
+  <p class="label-tech text-amber-text">Paket</p>
+  <h2 class="mt-3 text-h2">Pilihan Paket</h2>
+
+  <div class="mt-10 grid gap-6 md:grid-cols-3">
+    {
+      items.map((p) => (
+        <div
+          class:list={[
+            'flex flex-col rounded-md border bg-white p-6',
+            p.unggulan ? 'border-yellow ring-1 ring-yellow' : 'border-ink/10',
+          ]}
+        >
+          <h3 class="text-h3">{p.nama}</h3>
+          <p class="mt-2 text-sm text-slate">{p.ringkas}</p>
+
+          <p class="mt-5 font-display text-2xl font-bold text-ink">
+            {p.hargaMulai ? (
+              <>
+                Mulai dari Rp {p.hargaMulai} juta
+                {p.satuan && <span class="text-sm font-normal text-slate">{p.satuan}</span>}
+              </>
+            ) : (
+              'Minta Penawaran'
+            )}
+          </p>
+          {p.durasi && <p class="label-tech mt-1 text-slate-muted">Estimasi durasi: {p.durasi}</p>}
+
+          <ul class="mt-6 flex-1 space-y-2.5 border-t border-mist pt-5 text-sm">
+            {p.isi.map((row) =>
+              typeof row === 'string' ? (
+                <li class="text-slate">{row}</li>
+              ) : (
+                <li class="flex justify-between gap-4">
+                  <span class="text-slate">{row.label}</span>
+                  <span class="font-medium text-ink">{row.nilai}</span>
+                </li>
+              )
+            )}
+          </ul>
+
+          <Button href="/kontak" variant={p.unggulan ? 'primary' : 'outline-dark'} class="mt-6">
+            Konsultasi
+          </Button>
+        </div>
+      ))
+    }
+  </div>
+</Section>

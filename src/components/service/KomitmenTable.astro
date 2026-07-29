@@ -1,0 +1,63 @@
+---
+/**
+ * KomitmenTable — tabel perbandingan komitmen layanan (mis. SLA,
+ * waktu respons per tingkat layanan). Kolom terakhir dianggap
+ * kolom unggulan/direkomendasikan dan disorot kuning -> urutkan
+ * `kolom` dan `nilai` di konten dari yang paling dasar ke paling
+ * direkomendasikan.
+ */
+import Section from '@/components/ui/Section.astro';
+
+interface Props {
+  kolom: string[];
+  baris: { label: string; nilai: string[] }[];
+}
+const { kolom, baris } = Astro.props;
+const unggulanIdx = kolom.length - 1;
+---
+
+<Section bg="white" size="md" aria-label="Komitmen layanan">
+  <p class="label-tech text-amber-text">Komitmen</p>
+  <h2 class="mt-3 text-h2">Komitmen Layanan</h2>
+
+  <div class="mt-10 overflow-x-auto">
+    <table class="w-full min-w-[560px] border-collapse text-sm">
+      <thead>
+        <tr>
+          <th class="w-1/3 border-b border-ink/15 py-3 text-left font-normal text-slate-muted" />
+          {
+            kolom.map((k, i) => (
+              <th
+                class:list={[
+                  'border-b py-3 text-left font-semibold uppercase tracking-tight text-ink',
+                  i === unggulanIdx ? 'border-yellow bg-yellow/10 px-4' : 'border-ink/15',
+                ]}
+              >
+                {k}
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        {
+          baris.map((b) => (
+            <tr>
+              <td class="border-b border-mist py-3 pr-4 text-slate">{b.label}</td>
+              {b.nilai.map((v, i) => (
+                <td
+                  class:list={[
+                    'border-b py-3 text-ink',
+                    i === unggulanIdx ? 'border-yellow bg-yellow/10 px-4 font-medium' : 'border-mist',
+                  ]}
+                >
+                  {v}
+                </td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</Section>
