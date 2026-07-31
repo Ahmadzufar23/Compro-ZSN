@@ -1,25 +1,41 @@
 ---
+/**
+ * SoftwareBanner — satu-satunya tempat software tampil di homepage
+ * (dikeluarkan dari ServiceGrid lewat `tampilDiGrid: false`). Semua
+ * teks diambil dari software.mdx, bukan disalin manual ke sini, supaya
+ * tidak melenceng dari konten layanan yang sebenarnya.
+ */
+import { getCollection } from 'astro:content';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 
 /* Nempel ke ServiceGrid dengan gap 16px total:
    ServiceGrid pakai flushBottom, banner ini pakai flushTop. */
-const tags = ['Dashboard Monitoring', 'Sistem Inventaris', 'Portal Pelaporan', 'Integrasi CCTV'];
+const software = (await getCollection('layanan')).find((entry) => entry.id === 'software');
 ---
 
-<Section bg="ink" size="md" blueprint flushTop aria-label="Software">
-  <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
-    <div class="max-w-2xl">
-      <p class="label-tech text-yellow">Software</p>
-      <h2 class="mt-3 text-h2 text-white">Sistem yang Menjalankan Infrastruktur Anda</h2>
-      <div class="mt-6 flex flex-wrap gap-2">
-        {
-          tags.map((t) => (
-            <span class="label-tech rounded-md border border-white/25 px-3 py-1.5 text-white/80">{t}</span>
-          ))
-        }
+{
+  software && (
+    <Section bg="ink" size="md" blueprint flushTop aria-label="Software">
+      <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
+        <div class="max-w-2xl">
+          <p class="label-tech text-yellow">Software</p>
+          <h2 class="mt-3 text-h2 text-white">{software.data.judul}</h2>
+          <p class="mt-4 text-white/70">{software.data.subjudul}</p>
+          {software.data.paket && (
+            <div class="mt-6 flex flex-wrap gap-2">
+              {software.data.paket.map((p) => (
+                <span class="label-tech rounded-md border border-white/25 px-3 py-1.5 text-white/80">
+                  {p.nama}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        <Button href={`/layanan/${software.id}`} size="lg" class="shrink-0">
+          Lihat Detail Layanan
+        </Button>
       </div>
-    </div>
-    <Button href="/layanan/software" size="lg" class="shrink-0">Lihat Sistem Kami</Button>
-  </div>
-</Section>
+    </Section>
+  )
+}

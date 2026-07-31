@@ -4,7 +4,7 @@
  * di src/pages/project/index.astro, supaya markup kartu tidak duplikat.
  */
 import type { CollectionEntry } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 
 interface Props {
   project: CollectionEntry<'project'>;
@@ -25,11 +25,15 @@ const { data } = project;
     class="relative overflow-hidden"
     style={data.unggulan ? 'aspect-ratio: 21/9;' : 'aspect-ratio: 4/3;'}
   >
-    <Image
+    <Picture
       src={data.cover}
+      formats={['avif', 'webp']}
+      fallbackFormat="webp"
       alt={data.coverAlt}
       width={data.unggulan ? 1200 : 700}
       height={data.unggulan ? 514 : 525}
+      loading="lazy"
+      pictureAttributes={{ class: 'block size-full' }}
       class="size-full object-cover transition-transform duration-300 group-hover:scale-105"
     />
     <span class="label-tech absolute right-3 top-3 rounded-sm border border-yellow/40 bg-ink/80 px-2 py-1 text-yellow">

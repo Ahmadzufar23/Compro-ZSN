@@ -18,8 +18,8 @@ const { items } = Astro.props;
   <div class="mt-8 divide-y divide-mist border-t border-mist">
     {
       items.map((item) => (
-        <details class="group py-5 [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-ink">
+        <details class="group [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 py-5 text-base font-semibold text-ink">
             {item.tanya}
             <svg
               class="size-4 shrink-0 transition-transform group-open:rotate-45"
@@ -32,7 +32,7 @@ const { items } = Astro.props;
               <path d="M12 5v14M5 12h14" />
             </svg>
           </summary>
-          <p class="mt-3 text-sm text-slate">{item.jawab}</p>
+          <p class="pb-5 text-sm text-slate">{item.jawab}</p>
         </details>
       ))
     }

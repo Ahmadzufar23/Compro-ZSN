@@ -107,4 +107,14 @@ const centers = [
       stroke-dashoffset: -100;
     }
   }
+
+  /* Tanpa ini, titik berhenti tepat di offset 0 (di belakang node ODP)
+     dan jadi tak terlihat — bukan cuma diam, tapi hilang. Kunci di
+     tengah jalur (antar-node) supaya titik cahaya tetap kelihatan. */
+  @media (prefers-reduced-motion: reduce) {
+    .topo-travel {
+      animation: none;
+      stroke-dashoffset: -50;
+    }
+  }
 </style>

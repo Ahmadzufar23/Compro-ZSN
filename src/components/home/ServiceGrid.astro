@@ -1,39 +1,40 @@
 ---
+/**
+ * ServiceGrid — dibaca langsung dari getCollection('layanan'), diurutkan
+ * pakai field `urutan`. Judul dan href tidak pernah hardcode di sini,
+ * supaya kartu tidak bisa melenceng dari konten layanan yang sebenarnya
+ * ada (pernah terjadi: kartu "Pengujian & Sertifikasi Kabel" tanpa file
+ * layanan, dan link ke slug yang tidak pernah dibuat).
+ *
+ * Hanya menampilkan layanan infrastruktur fisik — difilter lewat field
+ * schema `tampilDiGrid`, BUKAN dicocokkan ke slug 'software' secara
+ * hardcode (itu masalah yang sama yang baru diperbaiki di tempat lain).
+ * Software punya SoftwareBanner sendiri di bawah grid ini.
+ *
+ * icon/dark murni presentasi, dipetakan per slug di sini. Layanan baru
+ * tanpa entri di `tampilan` otomatis dapat ikon 'default' — tidak akan
+ * gagal build, tapi sebaiknya ditambahkan ikon teknis yang sesuai.
+ *
+ * `urutan` cuma dipakai untuk sorting, tidak pernah dirender — layanan
+ * bukan sekuens (lihat CLAUDE.md).
+ */
+import { getCollection } from 'astro:content';
 import Section from '@/components/ui/Section.astro';
 import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
 import ServiceIcon from './ServiceIcon.astro';
 
-/* Layanan bukan sekuens -> tidak ada penomoran 01/02/03 di sini. */
-const services = [
-  {
-    judul: 'Instalasi Fiber Optic',
-    desc: 'Pemasangan FTTH dan backbone fiber, dari ODP sampai terminasi akhir.',
-    icon: 'konektor' as const,
-    href: '/layanan/fiber-optic',
-    dark: true,
-  },
-  {
-    judul: 'CCTV & Keamanan',
-    desc: 'Kamera pengawas, perekaman, dan integrasi monitoring untuk lokasi Anda.',
-    icon: 'kamera' as const,
-    href: '/layanan/cctv',
-    dark: false,
-  },
-  {
-    judul: 'Jaringan Enterprise',
-    desc: 'Rancang bangun jaringan kantor dan gedung, dari rack sampai access point.',
-    icon: 'patch-panel' as const,
-    href: '/layanan/network',
-    dark: false,
-  },
-  {
-    judul: 'Pengujian & Sertifikasi Kabel',
-    desc: 'Pengukuran OTDR dan laporan uji sebagai bukti kualitas instalasi.',
-    icon: 'cable-tester' as const,
-    href: '/layanan/pengujian-kabel',
-    dark: false,
-  },
-];
+type IconType = 'konektor' | 'kamera' | 'patch-panel' | 'wrench' | 'terminal' | 'default';
+
+const tampilan: Record<string, { icon: IconType; dark: boolean }> = {
+  'fiber-optic': { icon: 'konektor', dark: true },
+  cctv: { icon: 'kamera', dark: false },
+  network: { icon: 'patch-panel', dark: false },
+  maintenance: { icon: 'wrench', dark: false },
+};
+
+const layanan = (await getCollection('layanan', ({ data }) => data.tampilDiGrid)).sort(
+  (a, b) => a.data.urutan - b.data.urutan
+);
 ---
 
 <Section bg="white" size="md" flushBottom aria-label="Layanan">
@@ -42,36 +43,39 @@ const services = [
 
   <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
     {
-      services.map((s) => (
-        <article
-          class:list={[
-            'group relative flex flex-col rounded-md p-6 pb-20',
-            s.dark ? 'bg-ink text-white' : 'border border-mist bg-white',
-          ]}
-        >
-          <ServiceIcon type={s.icon} class={s.dark ? 'size-8 text-yellow' : 'size-8 text-amber-text'} />
-
-          <PlaceholderPhoto ratio="3/4" label="Foto layanan" dark={s.dark} class="mt-4" />
-
-          <h3 class:list={['mt-5 text-h3', s.dark ? 'text-white' : 'text-ink']}>{s.judul}</h3>
-          <p class:list={['mt-2 text-sm', s.dark ? 'text-white/70' : 'text-slate']}>{s.desc}</p>
-
-          <a
-            href={s.href}
-            aria-label={`Lihat detail layanan ${s.judul}`}
+      layanan.map((entry) => {
+        const { icon, dark } = tampilan[entry.id] ?? { icon: 'default', dark: false };
+        return (
+          <article
             class:list={[
-              'absolute bottom-5 right-5 flex size-11 items-center justify-center rounded-md border transition-colors',
-              s.dark
-                ? 'border-white/25 text-white hover:border-yellow hover:bg-yellow hover:text-ink'
-                : 'border-ink/15 text-ink hover:bg-ink hover:text-white',
+              'group relative flex flex-col rounded-md p-6 pb-20',
+              dark ? 'bg-ink text-white' : 'border border-mist bg-white',
             ]}
           >
-            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <path d="M7 17 17 7M9 7h8v8" />
-            </svg>
-          </a>
-        </article>
-      ))
+            <ServiceIcon type={icon} class={dark ? 'size-8 text-yellow' : 'size-8 text-amber-text'} />
+
+            <PlaceholderPhoto ratio="3/4" label="Foto layanan" dark={dark} class="mt-4" />
+
+            <h3 class:list={['mt-5 text-h3', dark ? 'text-white' : 'text-ink']}>{entry.data.judul}</h3>
+            <p class:list={['mt-2 text-sm', dark ? 'text-white/70' : 'text-slate']}>{entry.data.ringkas}</p>
+
+            <a
+              href={`/layanan/${entry.id}`}
+              aria-label={`Lihat detail layanan ${entry.data.judul}`}
+              class:list={[
+                'absolute bottom-5 right-5 flex size-11 items-center justify-center rounded-md border transition-colors',
+                dark
+                  ? 'border-white/25 text-white hover:border-yellow hover:bg-yellow hover:text-ink'
+                  : 'border-ink/15 text-ink hover:bg-ink hover:text-white',
+              ]}
+            >
+              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8" />
+              </svg>
+            </a>
+          </article>
+        );
+      })
     }
   </div>
 </Section>

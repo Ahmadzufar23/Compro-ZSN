@@ -40,6 +40,11 @@ const layanan = defineCollection({
       ringkas: z.string().max(160),
       subjudul: z.string(),
 
+      /* Grid layanan di homepage khusus infrastruktur fisik — software
+         punya SoftwareBanner sendiri. Default true supaya layanan baru
+         otomatis muncul di grid tanpa perlu diset manual. */
+      tampilDiGrid: z.boolean().default(true),
+
       /* Software memakai panel navy, bukan foto */
       heroStyle: z.enum(['foto', 'panel']).default('foto'),
       heroImage: image().optional(),

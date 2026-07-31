@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import Section from '@/components/ui/Section.astro';
 
@@ -30,11 +30,15 @@ const layanan = (await getCollection('layanan')).sort((a, b) => a.data.urutan - 
           >
             {entry.data.heroStyle === 'foto' && entry.data.heroImage ? (
               <div class="relative overflow-hidden" style="aspect-ratio: 16/9;">
-                <Image
+                <Picture
                   src={entry.data.heroImage}
+                  formats={['avif', 'webp']}
+                  fallbackFormat="webp"
                   alt={entry.data.heroAlt ?? ''}
                   width={800}
                   height={450}
+                  loading="lazy"
+                  pictureAttributes={{ class: 'block size-full' }}
                   class="size-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent" />

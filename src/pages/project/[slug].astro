@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
@@ -42,11 +42,16 @@ const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal project serupa denga
     </p>
 
     <div class="relative mt-6 overflow-hidden rounded-md" style="aspect-ratio: 21/9;">
-      <Image
+      <Picture
         src={data.cover}
+        formats={['avif', 'webp']}
+        fallbackFormat="webp"
         alt={data.coverAlt}
         width={1600}
         height={686}
+        loading="eager"
+        fetchpriority="high"
+        pictureAttributes={{ class: 'block size-full' }}
         class="size-full object-cover"
       />
       <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />

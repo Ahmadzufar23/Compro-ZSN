@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="ZSN">
+  <!-- TODO fase 5: ganti dengan mark resmi dari brand guideline ZSN bila tersedia -->
+  <circle cx="16" cy="16" r="16" fill="#0A0A0A" />
+  <path d="M7,7 H25 V11 L14,21 H25 V25 H7 V21 L18,11 H7 Z" fill="#FFCE00" />
+</svg>
