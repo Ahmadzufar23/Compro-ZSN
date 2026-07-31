@@ -1,0 +1,155 @@
+---
+/**
+ * Kontak — situs static tanpa backend. Form hanya menyusun pesan
+ * WhatsApp di sisi klien. Progressive enhancement: tanpa JS, tombol
+ * kirim tetap berfungsi sebagai link WhatsApp dengan pesan generik.
+ */
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import { site, waLink } from '@/config/site';
+
+const layananOptions = [
+  { value: 'Fiber Optic & FTTH', label: 'Fiber Optic & FTTH' },
+  { value: 'CCTV & Security', label: 'CCTV & Security' },
+  { value: 'Network Infrastructure', label: 'Network Infrastructure' },
+  { value: 'Maintenance & IT Support', label: 'Maintenance & IT Support' },
+  { value: 'Pengembangan Sistem', label: 'Pengembangan Sistem' },
+  { value: 'lainnya', label: 'Lainnya' },
+];
+
+const waFallback = waLink('Halo ZSN, saya ingin konsultasi kebutuhan layanan.');
+const waLangsung = waLink('Halo ZSN, saya ingin bertanya soal layanan Anda.');
+---
+
+<Base
+  title="Kontak"
+  description="Hubungi ZSN untuk konsultasi kebutuhan instalasi fiber optic, CCTV, jaringan, dan sistem di Jabodetabek."
+>
+  <Section bg="ink" size="md" blueprint aria-label="Hero kontak">
+    <p class="label-tech text-yellow">Kontak</p>
+    <h1 class="mt-3 text-h1 text-white">Hubungi Kami</h1>
+    <p class="mt-4 max-w-2xl text-white/70">
+      Ceritakan kebutuhan lokasi Anda — tim kami akan merespons lewat
+      WhatsApp dengan rencana survei.
+    </p>
+  </Section>
+
+  <Section bg="white" size="lg" id="survei" aria-label="Form dan informasi kontak">
+    <div class="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+      <form id="form-kontak" class="flex flex-col gap-5">
+        <div>
+          <label for="nama" class="label-tech block text-slate">Nama</label>
+          <input
+            id="nama" name="nama" type="text" required
+            class="mt-2 w-full rounded-md border border-ink/15 px-4 py-3 text-ink outline-none focus-visible:border-ink"
+            placeholder="Nama Anda"
+          />
+        </div>
+
+        <div>
+          <label for="layanan" class="label-tech block text-slate">Jenis Layanan</label>
+          <select
+            id="layanan" name="layanan" required
+            class="mt-2 w-full rounded-md border border-ink/15 px-4 py-3 text-ink outline-none focus-visible:border-ink"
+          >
+            {layananOptions.map((o) => <option value={o.value}>{o.label}</option>)}
+          </select>
+        </div>
+
+        <div>
+          <label for="lokasi" class="label-tech block text-slate">Lokasi</label>
+          <input
+            id="lokasi" name="lokasi" type="text"
+            class="mt-2 w-full rounded-md border border-ink/15 px-4 py-3 text-ink outline-none focus-visible:border-ink"
+            placeholder="Kota / area lokasi pekerjaan"
+          />
+        </div>
+
+        <div>
+          <label for="pesan" class="label-tech block text-slate">Pesan</label>
+          <textarea
+            id="pesan" name="pesan" rows="4"
+            class="mt-2 w-full rounded-md border border-ink/15 px-4 py-3 text-ink outline-none focus-visible:border-ink"
+            placeholder="Ceritakan kebutuhan Anda"
+          ></textarea>
+        </div>
+
+        <Button
+          id="tombol-kirim"
+          href={waFallback}
+          data-wa={site.whatsapp}
+          size="lg"
+          external
+          class="mt-2 self-start"
+        >
+          Kirim via WhatsApp
+        </Button>
+      </form>
+
+      <div class="flex flex-col gap-8">
+        <div>
+          <p class="label-tech text-amber-text">Alamat</p>
+          <p class="mt-2 text-ink">
+            {site.alamat.jalan || 'TODO: alamat jalan'}<br />
+            {(site.alamat.kota || 'TODO: kota')}{site.alamat.kodePos ? `, ${site.alamat.kodePos}` : ''}
+          </p>
+        </div>
+
+        <div>
+          <p class="label-tech text-amber-text">Jam Operasional</p>
+          <p class="mt-2 text-ink">{site.jamOperasional}</p>
+        </div>
+
+        <div>
+          <p class="label-tech text-amber-text">Email</p>
+          <p class="mt-2 text-ink">
+            <a href={`mailto:${site.email}`} class="hover:text-amber-text">{site.email}</a>
+          </p>
+        </div>
+
+        <Button href={waLangsung} variant="outline-dark" external class="self-start">
+          Chat via WhatsApp
+        </Button>
+
+        <div>
+          <p class="label-tech text-amber-text">Peta Lokasi</p>
+          {site.maps.embedUrl ? (
+            <iframe
+              class="mt-2 h-64 w-full rounded-md border border-ink/10"
+              src={site.maps.embedUrl}
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Lokasi kantor ZSN"
+            />
+          ) : (
+            <div class="mt-2 flex h-64 w-full flex-col items-center justify-center gap-2 rounded-md border border-dashed border-slate-muted/40 bg-mist px-4 text-center">
+              <span class="label-tech text-slate-muted">TODO: isi embedUrl peta di src/config/site.ts</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<script>
+  const form = document.getElementById('form-kontak') as HTMLFormElement | null;
+  const tombol = document.getElementById('tombol-kirim') as HTMLAnchorElement | null;
+  if (form && tombol) {
+    const nomor = tombol.dataset.wa;
+    const update = () => {
+      const data = new FormData(form);
+      const nama = String(data.get('nama') || '').trim();
+      const layanan = String(data.get('layanan') || '');
+      const lokasi = String(data.get('lokasi') || '').trim();
+      const pesan = String(data.get('pesan') || '').trim();
+      let teks = `Halo ZSN, saya ${nama || 'calon pelanggan'} ingin konsultasi soal ${layanan}.`;
+      if (lokasi) teks += ` Lokasi: ${lokasi}.`;
+      if (pesan) teks += ` ${pesan}`;
+      tombol.href = `https://wa.me/${nomor}?text=${encodeURIComponent(teks)}`;
+    };
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+  }
+</script>

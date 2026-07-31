@@ -40,28 +40,33 @@ const {
   ...rest
 } = Astro.props;
 
-const bgClass = {
+type Bg = NonNullable<Props['bg']>;
+type Size = NonNullable<Props['size']>;
+
+const bgClasses: Record<Bg, string> = {
   white: 'bg-white',
   mist: 'bg-mist',
   ink: 'on-dark bg-ink text-slate-muted',
   graphite: 'on-dark bg-graphite text-slate-muted',
-}[bg];
+};
 
-const topClass = {
+const topClasses: Record<Size, string> = {
   sm: 'pt-12 md:pt-16',
   md: 'pt-16 md:pt-20',
   lg: 'pt-20 md:pt-30',
-}[size];
+};
 
-const bottomClass = {
+const bottomClasses: Record<Size, string> = {
   sm: 'pb-12 md:pb-16',
   md: 'pb-16 md:pb-20',
   lg: 'pb-20 md:pb-30',
-}[size];
+};
+
+const bgClass = bgClasses[bg];
 
 /* 16px total antara dua section yang ditempel: pt-0 di section bawah + pb-4 di section atas */
-const finalTop = flushTop ? 'pt-0' : topClass;
-const finalBottom = flushBottom ? 'pb-4' : bottomClass;
+const finalTop = flushTop ? 'pt-0' : topClasses[size];
+const finalBottom = flushBottom ? 'pb-4' : bottomClasses[size];
 
 const isDark = bg === 'ink' || bg === 'graphite';
 ---

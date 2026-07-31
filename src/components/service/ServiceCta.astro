@@ -5,6 +5,7 @@
  */
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
+import { waLink } from '@/config/site';
 
 interface Props {
   judul: string;
@@ -12,9 +13,7 @@ interface Props {
 }
 const { judul, ctaLabel } = Astro.props;
 
-const nomorWa = '6281234567890';
-const pesan = encodeURIComponent(`Halo ZSN, saya ingin konsultasi soal ${judul}.`);
-const waHref = `https://wa.me/${nomorWa}?text=${pesan}`;
+const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal ${judul}.`);
 ---
 
 <Section bg="ink" size="lg" blueprint aria-label="Ajakan bertindak">

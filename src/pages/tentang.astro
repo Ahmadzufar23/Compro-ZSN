@@ -1,0 +1,126 @@
+---
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import { site } from '@/config/site';
+
+const prinsip = [
+  {
+    judul: 'Tim Internal',
+    detail: 'Instalasi dan konfigurasi dikerjakan tim ZSN sendiri, bukan subkontraktor lepas.',
+  },
+  {
+    judul: 'Dokumentasi Lengkap',
+    detail: 'Setiap pekerjaan disertai laporan uji dan dokumentasi as-built sebagai bukti kualitas.',
+  },
+  {
+    judul: 'Garansi 90 Hari',
+    detail: 'Perbaikan akibat kesalahan instalasi kami tangani tanpa biaya tambahan.',
+  },
+  {
+    judul: 'Transparansi Harga',
+    detail: 'Estimasi biaya dijelaskan berdasarkan faktor nyata di lapangan, bukan angka mengambang.',
+  },
+];
+
+const legalitas = [
+  { label: 'Nomor Akta Pendirian', nilai: site.legalitas.akta },
+  { label: 'NIB', nilai: site.legalitas.nib },
+  { label: 'NPWP', nilai: site.legalitas.npwp },
+];
+---
+
+<Base
+  title="Tentang"
+  description="PT Zufar Solusi Nawasena (ZSN) — vendor infrastruktur jaringan, keamanan, dan pengembangan sistem di Jabodetabek."
+>
+  <Section bg="ink" size="lg" blueprint aria-label="Hero tentang">
+    <p class="label-tech text-yellow">Tentang Kami</p>
+    <h1 class="mt-3 text-h1 text-white">{site.namaLegal}</h1>
+  </Section>
+
+  <Section bg="white" size="md" aria-label="Cerita perusahaan">
+    <div class="max-w-[65ch]">
+      <p>
+        {site.namaLegal} ({site.nama}) adalah vendor infrastruktur jaringan,
+        keamanan, dan pengembangan sistem yang melayani bisnis di Jabodetabek.
+      </p>
+      <p class="mt-4">
+        Kami menangani pekerjaan dari survei lokasi, instalasi fiber optic dan
+        CCTV, konfigurasi jaringan enterprise, sampai pengembangan sistem yang
+        menjalankan operasional klien sehari-hari.
+      </p>
+      <p class="mt-4">
+        TODO: lengkapi paragraf ketiga dengan cerita asli berdirinya ZSN —
+        jangan mengarang tanggal, pendiri, atau pencapaian yang belum
+        diverifikasi.
+      </p>
+    </div>
+  </Section>
+
+  <Section bg="mist" size="md" aria-label="Cara kami bekerja">
+    <p class="label-tech text-amber-text">Prinsip Kerja</p>
+    <h2 class="mt-3 text-h2">Cara Kami Bekerja</h2>
+
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        prinsip.map((p) => (
+          <div class="rounded-md border border-ink/10 bg-white p-6">
+            <h3 class="text-base font-semibold uppercase tracking-tight text-ink">{p.judul}</h3>
+            <p class="mt-2 text-sm text-slate">{p.detail}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section bg="white" size="md" aria-label="Legalitas perusahaan">
+    <p class="label-tech text-amber-text">Legalitas</p>
+    <h2 class="mt-3 text-h2">Data Legal Perusahaan</h2>
+
+    <div class="mt-8 max-w-xl overflow-hidden rounded-md border border-ink/10">
+      <table class="w-full text-left">
+        <tbody>
+          {
+            legalitas.map((row, i) => (
+              <tr class:list={[i !== 0 && 'border-t border-ink/10']}>
+                <th class="label-tech w-1/2 bg-mist px-4 py-3 font-medium text-slate">
+                  {row.label}
+                </th>
+                <td class="px-4 py-3 text-ink">{row.nilai || '—'}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </Section>
+
+  <Section bg="mist" size="md" aria-label="Area layanan">
+    <div class="flex flex-col gap-6 md:flex-row md:items-start">
+      <p class="label-tech shrink-0 text-amber-text md:w-48">Area Layanan</p>
+      <div class="flex flex-wrap gap-3">
+        {
+          site.coverage.map((kota) => (
+            <span class="label-tech rounded-md border border-ink/15 bg-white px-3 py-1.5 text-ink">
+              {kota}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </Section>
+
+  <Section bg="ink" size="lg" blueprint aria-label="Ajakan bertindak">
+    <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="text-h2 text-white">Siap Bekerja Sama?</h2>
+        <p class="mt-4 text-white/70">
+          Hubungi tim kami untuk konsultasi kebutuhan infrastruktur jaringan
+          Anda.
+        </p>
+      </div>
+      <Button href="/kontak" size="lg" class="shrink-0">Hubungi Kami</Button>
+    </div>
+  </Section>
+</Base>

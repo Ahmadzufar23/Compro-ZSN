@@ -1,0 +1,96 @@
+---
+/**
+ * Listing project. Filter kategori butuh state per-request yang tidak
+ * tersedia di situs static tanpa JavaScript — jadi alih-alih filter
+ * interaktif, project dikelompokkan per kategori dengan heading
+ * (izin eksplisit dari spec: "kalau butuh JS, lewati filter").
+ *
+ * Pengelompokan itu sendiri hanya masuk akal kalau tiap kategori
+ * punya cukup isi. Di bawah AMBANG_KELOMPOK_KATEGORI, satu grid
+ * gabungan lebih enak dilihat daripada beberapa section yang
+ * masing-masing cuma berisi satu-dua kartu.
+ */
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/ui/Section.astro';
+import ProjectCard from '@/components/project/ProjectCard.astro';
+
+/**
+ * Ambang jumlah total project sebelum listing dipecah per kategori.
+ * Di bawah ini (mis. 3 project di 3 kategori berbeda), pengelompokan
+ * membuat tiap section terlihat kosong — satu grid gabungan lebih baik.
+ */
+const AMBANG_KELOMPOK_KATEGORI = 9;
+
+const kategoriInfo: Record<string, { label: string; slug: string }> = {
+  fiber: { label: 'Fiber Optic & FTTH', slug: 'fiber-optic' },
+  cctv: { label: 'CCTV & Security', slug: 'cctv' },
+  network: { label: 'Network Infrastructure', slug: 'network' },
+  maintenance: { label: 'Maintenance & IT Support', slug: 'maintenance' },
+  software: { label: 'Pengembangan Sistem', slug: 'software' },
+};
+
+const urutanKategori = ['fiber', 'cctv', 'network', 'maintenance', 'software'] as const;
+
+const semua = await getCollection('project');
+semua.sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf());
+
+const kelompokPerKategori = urutanKategori
+  .map((kategori) => ({
+    info: kategoriInfo[kategori],
+    items: semua.filter((p) => p.data.kategori === kategori),
+  }))
+  .filter((k) => k.items.length > 0);
+
+const tampilkanPerKategori = semua.length >= AMBANG_KELOMPOK_KATEGORI;
+---
+
+<Base
+  title="Project"
+  description="Dokumentasi project instalasi fiber optic, CCTV, jaringan, dan sistem yang sudah dikerjakan ZSN di Jabodetabek."
+>
+  <Section bg="ink" size="sm" aria-label="Hero project">
+    <p class="label-tech text-yellow">Project</p>
+    <h1 class="mt-3 text-h1 text-white">Yang Sudah Kami Kerjakan</h1>
+    <p class="mt-4 max-w-2xl text-white/70">
+      Dokumentasi lapangan dari project fiber optic, CCTV, jaringan, dan
+      sistem yang telah diselesaikan ZSN di Jabodetabek.
+    </p>
+  </Section>
+
+  {
+    semua.length === 0 && (
+      <Section bg="white" size="md" aria-label="Project belum tersedia">
+        <p class="text-slate">Dokumentasi project sedang disiapkan dan akan segera tayang di sini.</p>
+      </Section>
+    )
+  }
+
+  {
+    semua.length > 0 && !tampilkanPerKategori && (
+      <Section bg="white" size="md" aria-label="Semua project">
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {semua.map((project) => (
+            <ProjectCard project={project} kategoriLabel={kategoriInfo[project.data.kategori].label} />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  {
+    tampilkanPerKategori &&
+      kelompokPerKategori.map(({ info, items }) => (
+        <Section bg="white" size="md" aria-label={`Project ${info.label}`}>
+          <p class="label-tech text-amber-text">Kategori</p>
+          <h2 class="mt-3 text-h2">{info.label}</h2>
+
+          <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((project) => (
+              <ProjectCard project={project} kategoriLabel={info.label} />
+            ))}
+          </div>
+        </Section>
+      ))
+  }
+</Base>

@@ -163,6 +163,27 @@ const project = defineCollection({
 
         stats: z.array(z.object({ label: z.string(), nilai: z.string() })).max(4),
 
+        /* Galeri As-Built — sama bentuknya dengan galeri layanan,
+           supaya komponen Gallery.astro bisa dipakai ulang tanpa ubah. */
+        galeri: z
+          .array(
+            z.object({
+              src: image(),
+              alt: z.string().min(10),
+              stempel: z.string().optional(),
+              anotasi: z
+                .array(
+                  z.object({
+                    label: z.string(),
+                    x: z.number().min(0).max(100),
+                    y: z.number().min(0).max(100),
+                  })
+                )
+                .optional(),
+            })
+          )
+          .optional(),
+
         /* GATE IZIN KLIEN — default mati. Nama klien tidak tayang
            sebelum izin tertulis diperoleh dan flag dinyalakan manual. */
         klienTampil: z.boolean().default(false),

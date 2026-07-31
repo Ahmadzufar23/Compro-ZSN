@@ -1,0 +1,105 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import StatBand from '@/components/service/StatBand.astro';
+import Gallery from '@/components/service/Gallery.astro';
+import { waLink } from '@/config/site';
+
+export async function getStaticPaths() {
+  const project = await getCollection('project');
+  return project.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const data = entry.data;
+const { Content } = await render(entry);
+
+const kategoriInfo: Record<string, { label: string; slug: string }> = {
+  fiber: { label: 'Fiber Optic & FTTH', slug: 'fiber-optic' },
+  cctv: { label: 'CCTV & Security', slug: 'cctv' },
+  network: { label: 'Network Infrastructure', slug: 'network' },
+  maintenance: { label: 'Maintenance & IT Support', slug: 'maintenance' },
+  software: { label: 'Pengembangan Sistem', slug: 'software' },
+};
+const info = kategoriInfo[data.kategori];
+
+const stats = data.stats.map((s) => ({ angka: s.nilai, label: s.label }));
+const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal project serupa dengan "${data.judul}".`);
+---
+
+<Base title={data.judul} description={data.ringkas}>
+  <Section bg="ink" size="lg" aria-label="Hero project">
+    <p class="label-tech text-white/50">
+      <a href="/project" class="hover:text-yellow">Project</a>
+      <span class="mx-2">/</span>
+      <span class="text-yellow">{data.judul}</span>
+    </p>
+
+    <div class="relative mt-6 overflow-hidden rounded-md" style="aspect-ratio: 21/9;">
+      <Image
+        src={data.cover}
+        alt={data.coverAlt}
+        width={1600}
+        height={686}
+        class="size-full object-cover"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
+      <span class="label-tech absolute right-4 top-4 rounded-sm border border-yellow/40 bg-ink/80 px-2 py-1 text-yellow">
+        {data.kodeProject}
+      </span>
+      <div class="absolute inset-x-0 bottom-0 p-6 md:p-10">
+        <h1 class="text-h1 text-white">{data.judul}</h1>
+        <p class="label-tech mt-3 text-white/70">{data.lokasi}</p>
+      </div>
+    </div>
+  </Section>
+
+  <StatBand stats={stats} />
+
+  <Section bg="white" size="md" aria-label="Cerita project">
+    <div class="prose-project mx-auto max-w-[65ch]">
+      <Content />
+    </div>
+  </Section>
+
+  {data.galeri && <Gallery items={data.galeri} />}
+
+  <Section bg="mist" size="md" aria-label="Layanan terkait">
+    <p class="label-tech text-amber-text">Layanan Terkait</p>
+    <h2 class="mt-3 text-h2">Butuh Pekerjaan Serupa?</h2>
+    <p class="mt-3 max-w-prose">
+      Project ini merupakan bagian dari layanan {info.label}.
+    </p>
+    <Button href={`/layanan/${info.slug}`} variant="outline-dark" class="mt-6">
+      Lihat Layanan {info.label}
+    </Button>
+  </Section>
+
+  <Section bg="ink" size="lg" blueprint aria-label="Ajakan bertindak">
+    <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="text-h2 text-white">Ingin Project Seperti Ini?</h2>
+        <p class="mt-4 text-white/70">
+          Ceritakan kebutuhan lokasi Anda lewat WhatsApp — tim kami akan
+          merespons dengan rencana survei.
+        </p>
+      </div>
+      <Button href={waHref} size="lg" external class="shrink-0">Konsultasi via WhatsApp</Button>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .prose-project :global(p) {
+    margin-top: 1em;
+  }
+  .prose-project :global(p:first-child) {
+    margin-top: 0;
+  }
+</style>
