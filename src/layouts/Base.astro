@@ -2,6 +2,7 @@
 import '@/styles/global.css';
 import Navbar from '@/components/layout/Navbar.astro';
 import Footer from '@/components/layout/Footer.astro';
+import { site } from '@/config/site';
 
 interface Props {
   title: string;
@@ -13,6 +14,11 @@ interface Props {
 
 const { title, description, ogImage = '/og-default.jpg', noindex = false } =
   Astro.props;
+
+/* Selama domain asli belum aktif (site.isProduction === false), SEMUA
+   halaman wajib noindex — menimpa prop noindex per-halaman. Ini
+   mencegah Google mengindeks URL Vercel sementara. */
+const shouldNoindex = !site.isProduction || noindex;
 
 const judulPenuh = `${title} · ZSN`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -39,7 +45,7 @@ const localBusiness = {
     <title>{judulPenuh}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {shouldNoindex && <meta name="robots" content="noindex, nofollow" />}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="ZSN" />

@@ -5,7 +5,10 @@ import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 
 export default defineConfig({
-  site: 'https://zsn.co.id',
+  // TODO fase go-live: domain asli belum aktif. Ganti ke domain asli
+  // dan set site.isProduction: true di src/config/site.ts saat rilis.
+  // TODO: cek ulang URL Vercel sebenarnya (belum dikonfirmasi).
+  site: 'https://compro-zsn.vercel.app',
   integrations: [mdx(), sitemap(), icon()],
   vite: { plugins: [tailwindcss()] },
   image: {

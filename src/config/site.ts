@@ -7,6 +7,10 @@
  */
 
 export const site = {
+  /** Set true HANYA saat domain asli sudah aktif dan astro.config.mjs
+   * sudah menunjuk ke domain tersebut. */
+  isProduction: false as boolean,
+
   nama: 'ZSN',
   namaLegal: 'PT Zufar Solusi Nawasena',
   tagline: 'Infrastruktur Jaringan & Pengembangan Sistem', // TODO: konfirmasi tagline final

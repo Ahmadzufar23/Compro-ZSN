@@ -1,5 +1,22 @@
 # GO-LIVE — Checklist Sebelum Tayang
 
+## Langkah wajib pertama — lepas proteksi noindex
+
+Situs ini dideploy sementara ke URL Vercel sebelum domain asli aktif,
+dan sengaja diblokir total dari indexing Google (lihat `Base.astro`,
+`robots.txt.ts`, `site.isProduction`). Sebelum tayang ke publik:
+
+1. Ganti `site` di `astro.config.mjs` dari URL Vercel sementara ke
+   domain asli.
+2. Set `isProduction: true` di `src/config/site.ts`.
+3. `npm run build`, lalu verifikasi `dist/index.html` **TIDAK** lagi
+   mengandung `<meta name="robots" content="noindex, nofollow">`.
+4. Verifikasi `dist/robots.txt` sudah `Allow: /` dan baris `Sitemap:`
+   menunjuk ke domain asli (bukan URL Vercel).
+
+Tanpa langkah ini, situs tetap tersembunyi dari Google walau sudah
+tayang di domain asli.
+
 ## Saat foto asli masuk
 
 Placeholder foto (Fase 2–4) dipakai ulang dari beberapa file generik yang
