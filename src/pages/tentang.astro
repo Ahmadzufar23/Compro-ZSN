@@ -14,7 +14,7 @@ const prinsip = [
     detail: 'Setiap pekerjaan disertai laporan uji dan dokumentasi as-built sebagai bukti kualitas.',
   },
   {
-    judul: 'Garansi 90 Hari',
+    judul: 'Garansi 30 Hari',
     detail: 'Perbaikan akibat kesalahan instalasi kami tangani tanpa biaya tambahan.',
   },
   {
@@ -51,11 +51,6 @@ const legalitas = [
         Kami menangani pekerjaan dari survei lokasi, instalasi fiber optic dan
         CCTV, konfigurasi jaringan enterprise, sampai pengembangan sistem yang
         menjalankan operasional klien sehari-hari.
-      </p>
-      <p class="mt-4">
-        TODO: lengkapi paragraf ketiga dengan cerita asli berdirinya ZSN,
-        jangan mengarang tanggal, pendiri, atau pencapaian yang belum
-        diverifikasi.
       </p>
     </div>
   </Section>
@@ -101,19 +96,22 @@ const legalitas = [
     </div>
   </Section>
 
-  <Section bg="mist" size="md" aria-label="Area layanan">
-    <div class="flex flex-col gap-6 md:flex-row md:items-start">
-      <p class="label-tech shrink-0 text-amber-text md:w-48">Area Layanan</p>
-      <div class="flex flex-wrap gap-3">
-        {
-          site.coverage.map((kota) => (
-            <span class="label-tech rounded-md border border-ink/15 bg-white px-3 py-1.5 text-ink">
-              {kota}
-            </span>
-          ))
-        }
-      </div>
+  <Section bg="ink" size="md" blueprint aria-label="Area layanan">
+    <p class="label-tech text-yellow">Area Layanan</p>
+
+    <div class="mt-6 grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
+      {
+        site.coverage.map((kota) => (
+          <div class="border-l-2 border-white/15 pl-4">
+            <p class="font-display text-2xl font-bold text-white md:text-3xl">{kota}</p>
+          </div>
+        ))
+      }
     </div>
+
+    <p class="mt-6 text-sm text-slate-muted">
+      Survei dan pengerjaan mencakup seluruh Jabodetabek.
+    </p>
   </Section>
 
   <Section bg="ink" size="lg" blueprint aria-label="Ajakan bertindak">

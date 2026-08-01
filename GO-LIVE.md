@@ -52,3 +52,22 @@ wajib diperiksa ulang satu per satu, bukan asumsi otomatis masih benar:
 - Field `site.legalitas.npwp` di `src/config/site.ts` tetap
   dipertahankan untuk dipakai di dokumen internal nanti — jangan
   menghubungkannya ke komponen halaman publik mana pun.
+
+## Narasi project (body cerita)
+
+Catatan kerja "TODO: tulis cerita project ini..." pernah tampil langsung
+di halaman `/project/[slug]` (bocor ke pengunjung). Sudah dihapus dari
+tampilan. Body tiap file di `src/content/project/*.mdx` untuk sementara
+memakai ulang teks `ringkas` dari frontmatter-nya sendiri (sudah
+terverifikasi, bukan karangan) supaya halaman tidak kosong.
+
+- **Ganti body tiap project dengan narasi asli** sebelum tayang ke
+  publik: konteks kebutuhan klien, tantangan lapangan, dan hasil
+  setelah pekerjaan selesai. Jangan mengarang detail teknis atau nama
+  klien.
+- Field `site.alamat.jalan` dan `site.alamat.kota` yang masih kosong di
+  `src/config/site.ts` membuat `/kontak` menampilkan "Alamat kantor akan
+  segera tersedia." — isi field itu begitu alamat kantor final tersedia.
+- `site.maps.embedUrl` yang masih kosong membuat `/kontak` menampilkan
+  placeholder "Peta lokasi kantor akan ditambahkan" alih-alih peta asli
+  — isi field itu begitu URL embed Google Maps tersedia.

@@ -160,7 +160,8 @@ Contoh:
 
 Ini pernah masuk ke draf desain dan harus dicegah:
 
-- **`99% Uptime`** — ZSN memasang jaringan, tidak mengoperasikannya. Uptime ditentukan ISP dan listrik. Klaim ini memberi dasar tuntutan hukum. Ganti dengan `Garansi 90 Hari`.
+- **`99% Uptime`** — ZSN memasang jaringan, tidak mengoperasikannya. Uptime ditentukan ISP dan listrik. Klaim ini memberi dasar tuntutan hukum. Ganti dengan `Garansi 30 Hari`.
+- **Durasi garansi selain 30 hari** — kebijakan garansi ZSN adalah 30 hari, seragam di semua layanan. Jangan menulis 60 atau 90 hari di mana pun.
 - **`8 Teknisi Lapangan`** — jumlah headcount tidak ditampilkan di mana pun.
 - **Harga hasil karangan** — jangan mengisi placeholder harga dengan angka apa pun. Biarkan `Rp __` sampai pemilik mengisi.
 - **Nama klien tanpa izin** — dikunci oleh flag `klienTampil` di schema.

@@ -90,10 +90,16 @@ const waLangsung = waLink('Halo ZSN, saya ingin bertanya soal layanan Anda.');
       <div class="flex flex-col gap-8">
         <div>
           <p class="label-tech text-amber-text">Alamat</p>
-          <p class="mt-2 text-ink">
-            {site.alamat.jalan || 'TODO: alamat jalan'}<br />
-            {(site.alamat.kota || 'TODO: kota')}{site.alamat.kodePos ? `, ${site.alamat.kodePos}` : ''}
-          </p>
+          {
+            site.alamat.jalan || site.alamat.kota ? (
+              <p class="mt-2 text-ink">
+                {site.alamat.jalan}<br />
+                {site.alamat.kota}{site.alamat.kodePos ? `, ${site.alamat.kodePos}` : ''}
+              </p>
+            ) : (
+              <p class="mt-2 text-ink">Alamat kantor akan segera tersedia.</p>
+            )
+          }
         </div>
 
         <div>
@@ -124,7 +130,7 @@ const waLangsung = waLink('Halo ZSN, saya ingin bertanya soal layanan Anda.');
             />
           ) : (
             <div class="mt-2 flex h-64 w-full flex-col items-center justify-center gap-2 rounded-md border border-dashed border-slate-muted/40 bg-mist px-4 text-center">
-              <span class="label-tech text-slate-muted">TODO: isi embedUrl peta di src/config/site.ts</span>
+              <span class="label-tech text-slate-muted">Peta lokasi kantor akan ditambahkan</span>
             </div>
           )}
         </div>
