@@ -1,0 +1,60 @@
+---
+/**
+ * TentangPreview — ringkasan halaman /tentang di beranda, jadi anchor
+ * navigasi #tentang punya isi nyata, bukan cuma jalan pintas kosong.
+ * Paragraf dan blok legalitas mengambil pola yang sama dengan
+ * src/pages/tentang.astro, disingkat untuk konteks beranda.
+ */
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import { site } from '@/config/site';
+
+/* NPWP sengaja tidak ditampilkan di halaman publik mana pun — lihat
+   CLAUDE.md bagian "Klaim yang DILARANG muncul di konten". Nomor itu
+   hanya dipakai untuk dokumen transaksi (penawaran, invoice, kontrak). */
+const legalitas = [
+  { label: 'Akta', nilai: site.legalitas.akta },
+  { label: 'NIB', nilai: site.legalitas.nib },
+];
+---
+
+<Section bg="mist" size="md" id="tentang" aria-label="Tentang">
+  <span class="label-tech inline-block rounded-md bg-yellow px-3 py-1.5 text-ink">
+    Tentang Kami
+  </span>
+  <h2 class="mt-4 text-h2">Vendor Infrastruktur Jaringan di Jabodetabek</h2>
+
+  <div class="mt-8 grid gap-10 lg:grid-cols-[1.3fr_0.7fr]">
+    <div class="max-w-[60ch]">
+      <p>
+        {site.namaLegal} ({site.nama}) adalah vendor infrastruktur jaringan,
+        keamanan, dan pengembangan sistem yang melayani bisnis di Jabodetabek.
+      </p>
+      <p class="mt-4">
+        Kami menangani pekerjaan dari survei lokasi, instalasi fiber optic dan
+        CCTV, konfigurasi jaringan enterprise, sampai pengembangan sistem yang
+        menjalankan operasional klien sehari-hari.
+      </p>
+      <Button href="/tentang" variant="outline-dark" class="mt-6">
+        Selengkapnya tentang ZSN
+      </Button>
+    </div>
+
+    <div class="rounded-md border border-ink/10 bg-white p-6">
+      <p class="label-tech text-amber-text">Legalitas</p>
+      <dl class="mt-4 flex flex-col gap-3">
+        {
+          legalitas.map((row) => (
+            <div class="flex items-center justify-between gap-4 border-t border-ink/10 pt-3 first:border-t-0 first:pt-0">
+              <dt class="label-tech text-slate">{row.label}</dt>
+              <dd class="text-sm text-ink">{row.nilai || '-'}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="mt-4 text-xs text-slate-muted">
+        NPWP tersedia atas permintaan untuk keperluan kontrak.
+      </p>
+    </div>
+  </div>
+</Section>

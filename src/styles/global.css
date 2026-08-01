@@ -128,6 +128,12 @@
   }
 }
 
+/* Navbar sticky setinggi h-18 (72px): seksi ber-id tidak boleh
+   tertutup navbar saat digulir dari anchor navigasi. */
+[id] {
+  scroll-margin-top: 5rem;
+}
+
 /* Hormati preferensi pengguna. Diagram hero tetap tampil, hanya diam. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

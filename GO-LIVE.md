@@ -39,3 +39,16 @@ wajib diperiksa ulang satu per satu, bukan asumsi otomatis masih benar:
   Foto asli hampir pasti punya komposisi berbeda, sehingga garis callout
   bisa menunjuk ke objek yang salah atau ke area kosong kalau
   koordinatnya tidak disesuaikan ulang.
+
+## Data legalitas dan data pribadi
+
+- **NPWP tidak boleh dirender di halaman publik mana pun** (beranda
+  maupun `/tentang`). Nomor itu hanya untuk dokumen transaksi
+  (penawaran, invoice, kontrak). Akta dan NIB aman ditampilkan karena
+  terdaftar publik lewat AHU dan OSS — lihat `CLAUDE.md` bagian
+  "Klaim yang DILARANG muncul di konten".
+- **Data pribadi** (KTP direktur, NPWP pribadi, rekening bank, alamat
+  rumah) tidak boleh muncul di mana pun di situs ini.
+- Field `site.legalitas.npwp` di `src/config/site.ts` tetap
+  dipertahankan untuk dipakai di dokumen internal nanti — jangan
+  menghubungkannya ke komponen halaman publik mana pun.

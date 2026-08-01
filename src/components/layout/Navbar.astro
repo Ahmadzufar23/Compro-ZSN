@@ -7,21 +7,31 @@
  * secara struktural.
  *
  * Menu mobile memakai <details>/<summary> — 0 KB JavaScript.
+ *
+ * Navigasi hibrida: di beranda, menu bergulir ke anchor seksi
+ * (#layanan dst). Di halaman lain, menu kembali ke beranda lalu
+ * bergulir (/#layanan dst) — halaman penuh tetap ada dan tetap
+ * terindeks, menu hanya jadi jalan pintas dari beranda.
+ *
+ * State aktif TIDAK memakai scroll-spy JavaScript. Di beranda,
+ * underline aktif sengaja tidak pernah muncul (tidak ada cara statis
+ * mengetahui seksi mana yang sedang dilihat). Underline hanya muncul
+ * di halaman terpisah, dicocokkan lewat prefix path.
  */
 import Logo from '@/components/ui/Logo.astro';
 
 const menu = [
-  { label: 'Layanan', href: '/layanan' },
-  { label: 'Software', href: '/layanan/software' },
-  { label: 'Project', href: '/project' },
-  { label: 'Tim', href: '/tim' },
-  { label: 'Tentang', href: '/tentang' },
-  { label: 'Kontak', href: '/kontak' },
+  { label: 'Layanan', id: 'layanan', page: '/layanan' },
+  { label: 'Project', id: 'project', page: '/project' },
+  { label: 'Tentang', id: 'tentang', page: '/tentang' },
+  { label: 'Tim', id: 'tim', page: '/tim' },
+  { label: 'Kontak', id: 'kontak', page: '/kontak' },
 ];
 
 const path = Astro.url.pathname;
-const isActive = (href: string) =>
-  href === '/' ? path === '/' : path.startsWith(href);
+const isHome = path === '/';
+const hrefFor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
+const isActive = (page: string) => !isHome && path.startsWith(page);
 ---
 
 <header class="sticky top-0 z-50 border-b border-black/10 bg-white">
@@ -29,20 +39,20 @@ const isActive = (href: string) =>
     class="container-content flex h-18 items-center justify-between gap-6"
     aria-label="Navigasi utama"
   >
-    <a href="/" aria-label="ZSN — Beranda" class="flex min-h-11 items-center">
+    <a href="/" aria-label="ZSN, Beranda" class="flex min-h-11 items-center">
       <Logo variant="dark" />
     </a>
 
     {/* Desktop */}
     <ul class="hidden items-center gap-5 lg:flex">
-      {menu.map(({ label, href }) => (
+      {menu.map(({ label, id, page }) => (
         <li>
           <a
-            href={href}
-            aria-current={isActive(href) ? 'page' : undefined}
+            href={hrefFor(id)}
+            aria-current={isActive(page) ? 'page' : undefined}
             class:list={[
               'label-tech relative flex min-h-11 items-center px-2.5 text-slate transition-colors hover:text-ink',
-              isActive(href) &&
+              isActive(page) &&
                 'text-ink after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-yellow',
             ]}
           >
@@ -91,14 +101,14 @@ const isActive = (href: string) =>
         class="absolute inset-x-0 top-18 border-b border-black/10 bg-white px-5 pb-6 pt-2 shadow-lg"
       >
         <ul class="flex flex-col">
-          {menu.map(({ label, href }) => (
+          {menu.map(({ label, id, page }) => (
             <li>
               <a
-                href={href}
-                aria-current={isActive(href) ? 'page' : undefined}
+                href={hrefFor(id)}
+                aria-current={isActive(page) ? 'page' : undefined}
                 class:list={[
                   'label-tech block border-b border-black/10 py-4 text-slate',
-                  isActive(href) && 'border-l-2 border-l-yellow pl-3 text-ink',
+                  isActive(page) && 'border-l-2 border-l-yellow pl-3 text-ink',
                 ]}
               >
                 {label}

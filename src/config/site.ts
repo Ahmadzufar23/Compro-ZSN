@@ -26,11 +26,13 @@ export const site = {
     kodePos: '', // TODO: isi kode pos
   },
 
-  jamOperasional: 'Senin–Jumat, 09.00–17.00 WIB', // TODO: konfirmasi jam operasional
+  jamOperasional: 'Senin-Jumat, 09.00-17.00 WIB', // TODO: konfirmasi jam operasional
 
   legalitas: {
     akta: '', // TODO: nomor akta pendirian
     nib: '', // TODO: Nomor Induk Berusaha
+    /** JANGAN tampilkan di halaman publik. Hanya untuk dokumen
+     *  penawaran, invoice, dan kontrak. */
     npwp: '', // TODO: NPWP perusahaan
   },
 

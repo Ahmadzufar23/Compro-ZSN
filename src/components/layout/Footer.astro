@@ -12,6 +12,7 @@ const kolom = [
   {
     judul: 'Layanan',
     tautan: [
+      { label: 'Semua Layanan', href: '/layanan' },
       { label: 'Fiber Optic & FTTH', href: '/layanan/fiber-optic' },
       { label: 'CCTV & Security', href: '/layanan/cctv' },
       { label: 'Network Infrastructure', href: '/layanan/network' },
@@ -42,11 +43,11 @@ const tahun = new Date().getFullYear();
 <footer class="on-dark blueprint bg-ink">
   <div class="container-content grid gap-12 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)] md:py-20">
     <div>
-      <a href="/" aria-label="ZSN — Beranda" class="flex min-h-11 w-fit items-center">
+      <a href="/" aria-label="ZSN, Beranda" class="flex min-h-11 w-fit items-center">
         <Logo variant="light" />
       </a>
       <p class="mt-3 max-w-xs text-sm leading-relaxed text-slate-muted">
-        PT Zufar Solusi Nawasena — infrastruktur jaringan, keamanan, dan
+        PT Zufar Solusi Nawasena, infrastruktur jaringan, keamanan, dan
         pengembangan sistem untuk bisnis di Jabodetabek.
       </p>
     </div>
@@ -75,9 +76,11 @@ const tahun = new Date().getFullYear();
       <p class="label-tech text-slate-muted">
         © {tahun} PT Zufar Solusi Nawasena
       </p>
-      {/* TODO fase 5: isi setelah data legalitas tersedia */}
+      {/* TODO fase 5: isi setelah data legalitas tersedia. NPWP sengaja
+          tidak ditampilkan di sini — lihat CLAUDE.md bagian "Klaim yang
+          DILARANG muncul di konten". */}
       <p class="label-tech text-slate-muted">
-        NIB · NPWP — menunggu data
+        NIB (menunggu data)
       </p>
     </div>
   </div>

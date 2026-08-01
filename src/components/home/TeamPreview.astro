@@ -1,5 +1,6 @@
 ---
 import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
 import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
 
 /* Tanpa foto individu atau nama personal di homepage — lihat gate tim di content.config.ts */
@@ -19,12 +20,12 @@ const divisi = [
 ];
 ---
 
-<Section bg="ink" size="lg" blueprint aria-label="Tim">
+<Section bg="ink" size="lg" blueprint id="tim" aria-label="Tim">
   <p class="label-tech text-yellow">Tim</p>
   <h2 class="mt-3 text-h2 text-white">Orang di Balik Setiap Pemasangan</h2>
 
-  <div class="mt-10 grid gap-8 lg:grid-cols-[55%_45%]">
-    <PlaceholderPhoto ratio="16/9" label="Foto tim di lapangan" dark />
+  <div class="mt-10 grid items-stretch gap-8 lg:grid-cols-[55%_45%]">
+    <PlaceholderPhoto ratio="16/9" label="Foto tim di lapangan" dark class="lg:h-full lg:w-full" />
 
     <div class="grid gap-4">
       {
@@ -36,5 +37,9 @@ const divisi = [
         ))
       }
     </div>
+  </div>
+
+  <div class="mt-8">
+    <Button href="/tim" variant="outline-light">Lihat Semua Tim</Button>
   </div>
 </Section>

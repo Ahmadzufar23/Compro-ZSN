@@ -116,6 +116,23 @@ Semua animasi wajib menghormati `prefers-reduced-motion`.
 - Halaman layanan memakai **satu** template `[slug].astro` — jangan buat file per layanan
 - Copy tombol memakai kata kerja aktif: "Minta Survei", bukan "Submit". Jangan pakai "Pilih Paket" (bahasa e-commerce, tidak ada checkout)
 
+### Larangan tanda baca
+
+JANGAN pernah memakai em dash (—) atau en dash (–) di copy
+website mana pun: heading, paragraf, deskripsi kartu, alt text,
+maupun konten MDX.
+
+Alasan: tanda hubung panjang bukan kebiasaan penulisan Bahasa
+Indonesia dan merupakan penanda teks hasil AI yang paling
+mudah dikenali.
+
+Ganti dengan: koma, titik, titik dua, atau kurung.
+Contoh:
+  SALAH  "Kami membangun sistem — dashboard monitoring, sampai
+          portal pelaporan."
+  BENAR  "Kami membangun sistem: dashboard monitoring, sistem
+          inventaris, sampai portal pelaporan."
+
 ---
 
 ## Quality Gate
@@ -148,6 +165,8 @@ Ini pernah masuk ke draf desain dan harus dicegah:
 - **Harga hasil karangan** — jangan mengisi placeholder harga dengan angka apa pun. Biarkan `Rp __` sampai pemilik mengisi.
 - **Nama klien tanpa izin** — dikunci oleh flag `klienTampil` di schema.
 - **Klaim kemitraan perangkat** — ZSN menangani perangkat Hikvision/MikroTik/dll, tetapi **bukan** partner resmi mereka. Heading harus "Perangkat yang Kami Tangani", jangan pernah menulis "Mitra".
+- **NPWP** — tidak boleh dirender di halaman publik mana pun. Nomor itu hanya untuk dokumen transaksi (penawaran, invoice, kontrak). Akta dan NIB aman ditampilkan (terdaftar publik lewat AHU dan OSS).
+- **Data pribadi** — KTP direktur, NPWP pribadi, rekening bank, alamat rumah tidak boleh muncul di mana pun.
 
 ---
 

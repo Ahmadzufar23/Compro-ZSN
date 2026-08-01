@@ -23,16 +23,18 @@ const prinsip = [
   },
 ];
 
+/* NPWP sengaja tidak ditampilkan di halaman publik mana pun — lihat
+   CLAUDE.md bagian "Klaim yang DILARANG muncul di konten". Nomor itu
+   hanya dipakai untuk dokumen transaksi (penawaran, invoice, kontrak). */
 const legalitas = [
   { label: 'Nomor Akta Pendirian', nilai: site.legalitas.akta },
   { label: 'NIB', nilai: site.legalitas.nib },
-  { label: 'NPWP', nilai: site.legalitas.npwp },
 ];
 ---
 
 <Base
   title="Tentang"
-  description="PT Zufar Solusi Nawasena (ZSN) — vendor infrastruktur jaringan, keamanan, dan pengembangan sistem di Jabodetabek."
+  description="PT Zufar Solusi Nawasena (ZSN): vendor infrastruktur jaringan, keamanan, dan pengembangan sistem di Jabodetabek."
 >
   <Section bg="ink" size="lg" blueprint aria-label="Hero tentang">
     <p class="label-tech text-yellow">Tentang Kami</p>
@@ -51,7 +53,7 @@ const legalitas = [
         menjalankan operasional klien sehari-hari.
       </p>
       <p class="mt-4">
-        TODO: lengkapi paragraf ketiga dengan cerita asli berdirinya ZSN —
+        TODO: lengkapi paragraf ketiga dengan cerita asli berdirinya ZSN,
         jangan mengarang tanggal, pendiri, atau pencapaian yang belum
         diverifikasi.
       </p>
@@ -87,12 +89,15 @@ const legalitas = [
                 <th class="label-tech w-1/2 bg-mist px-4 py-3 font-medium text-slate">
                   {row.label}
                 </th>
-                <td class="px-4 py-3 text-ink">{row.nilai || '—'}</td>
+                <td class="px-4 py-3 text-ink">{row.nilai || '-'}</td>
               </tr>
             ))
           }
         </tbody>
       </table>
+      <p class="mt-3 text-xs text-slate-muted">
+        NPWP tersedia atas permintaan untuk keperluan kontrak.
+      </p>
     </div>
   </Section>
 

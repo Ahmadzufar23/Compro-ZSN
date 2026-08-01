@@ -11,25 +11,29 @@
  * hardcode (itu masalah yang sama yang baru diperbaiki di tempat lain).
  * Software punya SoftwareBanner sendiri di bawah grid ini.
  *
- * icon/dark murni presentasi, dipetakan per slug di sini. Layanan baru
+ * icon murni presentasi, dipetakan per slug di sini. Layanan baru
  * tanpa entri di `tampilan` otomatis dapat ikon 'default' — tidak akan
  * gagal build, tapi sebaiknya ditambahkan ikon teknis yang sesuai.
+ *
+ * Semua kartu memakai gaya yang sama (latar ink, border 2px transparan),
+ * tidak ada varian putih — konsistensi grid lebih penting daripada
+ * variasi. Hover/focus mengubah border jadi kuning tebal.
  *
  * `urutan` cuma dipakai untuk sorting, tidak pernah dirender — layanan
  * bukan sekuens (lihat CLAUDE.md).
  */
 import { getCollection } from 'astro:content';
 import Section from '@/components/ui/Section.astro';
-import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
+import Button from '@/components/ui/Button.astro';
 import ServiceIcon from './ServiceIcon.astro';
 
 type IconType = 'konektor' | 'kamera' | 'patch-panel' | 'wrench' | 'terminal' | 'default';
 
-const tampilan: Record<string, { icon: IconType; dark: boolean }> = {
-  'fiber-optic': { icon: 'konektor', dark: true },
-  cctv: { icon: 'kamera', dark: false },
-  network: { icon: 'patch-panel', dark: false },
-  maintenance: { icon: 'wrench', dark: false },
+const tampilan: Record<string, { icon: IconType }> = {
+  'fiber-optic': { icon: 'konektor' },
+  cctv: { icon: 'kamera' },
+  network: { icon: 'patch-panel' },
+  maintenance: { icon: 'wrench' },
 };
 
 const layanan = (await getCollection('layanan', ({ data }) => data.tampilDiGrid)).sort(
@@ -37,37 +41,32 @@ const layanan = (await getCollection('layanan', ({ data }) => data.tampilDiGrid)
 );
 ---
 
-<Section bg="white" size="md" flushBottom aria-label="Layanan">
+<Section bg="white" size="md" id="layanan" aria-label="Layanan">
   <p class="label-tech text-amber-text">Layanan</p>
   <h2 class="mt-3 text-h2">Layanan End-to-End</h2>
 
   <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
     {
       layanan.map((entry) => {
-        const { icon, dark } = tampilan[entry.id] ?? { icon: 'default', dark: false };
+        const { icon } = tampilan[entry.id] ?? { icon: 'default' as IconType };
         return (
-          <article
-            class:list={[
-              'group relative flex flex-col rounded-md p-6 pb-20',
-              dark ? 'bg-ink text-white' : 'border border-mist bg-white',
-            ]}
-          >
-            <ServiceIcon type={icon} class={dark ? 'size-8 text-yellow' : 'size-8 text-amber-text'} />
+          <article class="on-dark group relative flex flex-col rounded-md border-2 border-transparent bg-ink p-6 pb-20 transition-colors hover:border-yellow focus-within:border-yellow">
+            <ServiceIcon type={icon} class="size-8 text-yellow" />
 
-            <PlaceholderPhoto ratio="3/4" label="Foto layanan" dark={dark} class="mt-4" />
+            <div
+              class="relative mt-4 flex items-center justify-center overflow-hidden rounded-md border border-dashed border-steel bg-graphite"
+              style="aspect-ratio: 3/4;"
+            >
+              <span class="label-tech px-4 text-center text-slate-muted">Foto layanan</span>
+            </div>
 
-            <h3 class:list={['mt-5 text-h3', dark ? 'text-white' : 'text-ink']}>{entry.data.judul}</h3>
-            <p class:list={['mt-2 text-sm', dark ? 'text-white/70' : 'text-slate']}>{entry.data.ringkas}</p>
+            <h3 class="mt-5 text-h3 text-white">{entry.data.judul}</h3>
+            <p class="mt-2 text-sm text-slate-muted">{entry.data.ringkas}</p>
 
             <a
               href={`/layanan/${entry.id}`}
               aria-label={`Lihat detail layanan ${entry.data.judul}`}
-              class:list={[
-                'absolute bottom-5 right-5 flex size-11 items-center justify-center rounded-md border transition-colors',
-                dark
-                  ? 'border-white/25 text-white hover:border-yellow hover:bg-yellow hover:text-ink'
-                  : 'border-ink/15 text-ink hover:bg-ink hover:text-white',
-              ]}
+              class="absolute bottom-5 right-5 flex size-11 items-center justify-center rounded-md bg-white text-ink transition-colors hover:bg-yellow"
             >
               <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                 <path d="M7 17 17 7M9 7h8v8" />
@@ -77,5 +76,9 @@ const layanan = (await getCollection('layanan', ({ data }) => data.tampilDiGrid)
         );
       })
     }
+  </div>
+
+  <div class="mt-10 flex justify-center">
+    <Button href="/layanan" variant="outline-dark">Lihat Semua Layanan</Button>
   </div>
 </Section>
