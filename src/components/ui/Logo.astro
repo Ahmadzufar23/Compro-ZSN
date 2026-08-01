@@ -8,32 +8,86 @@
  * Kalau salah satu file belum ada di src/assets/foto/logo/, jangan
  * gagalkan build — tampilkan wordmark teks "ZSN" sebagai fallback.
  * Lihat README di folder itu untuk spesifikasi lengkap tiap file.
+ *
+ * File di-inline (bukan lewat astro:assets Image) supaya viewBox bisa
+ * di-crop ke area artwork nyata tanpa menyentuh file aslinya. File dari
+ * desainer punya artboard kosong di sekeliling artwork (lihat CROPS di
+ * bawah), jadi kalau dirender apa adanya pada viewBox penuh, artwork
+ * jadi jauh lebih kecil dari tinggi yang diminta.
  */
-import type { ImageMetadata } from 'astro';
-import { Image } from 'astro:assets';
-
 interface Props {
   variant?: 'dark' | 'light';
   height?: number;
   class?: string;
 }
 
-const { variant = 'dark', height = 26, class: extra = '' } = Astro.props;
+const { variant = 'dark', height = 34, class: extra = '' } = Astro.props;
 
-const logos = import.meta.glob<{ default: ImageMetadata }>('/src/assets/foto/logo/*.svg', {
+const rawLogos = import.meta.glob<string>('/src/assets/foto/logo/*.svg', {
   eager: true,
+  query: '?raw',
+  import: 'default',
 });
 
 const file = variant === 'light' ? 'zsn-logo-putih.svg' : 'zsn-logo.svg';
-const entry = Object.entries(logos).find(([path]) => path.endsWith(`/${file}`));
-const image = entry?.[1].default;
+const entry = Object.entries(rawLogos).find(([path]) => path.endsWith(`/${file}`));
+const rawSvg = entry?.[1];
 
-const width = image ? Math.round((image.width / image.height) * height) : undefined;
+/**
+ * Bounding box artwork nyata (bukan viewBox artboard), diukur lewat
+ * getBBox() tiap <path> di browser lalu ditambah sedikit padding.
+ * zsn-logo.svg: artboard 281x150, tapi artwork cuma mengisi kira-kira
+ * x 32-259, y 45-101 (path pertama di file itu adalah fill latar
+ * kanvas #FCFCFB, bukan bagian logo, jadi dibuang).
+ */
+const CROPS: Record<string, { x: number; y: number; w: number; h: number; dropFirstPath?: boolean }> = {
+  'zsn-logo.svg': { x: 25.8, y: 38.8, w: 239.2, h: 68.4, dropFirstPath: true },
+};
+const crop = CROPS[file];
+
+let inner = '';
+let viewBox = '0 0 281 150';
+let aspect = 281 / 150;
+
+if (rawSvg) {
+  const body = rawSvg.match(/<svg[^>]*>([\s\S]*)<\/svg>/i);
+  inner = body ? body[1] : '';
+
+  if (crop) {
+    if (crop.dropFirstPath) {
+      inner = inner.replace(/<path\b[^>]*?\/>/, '');
+    }
+    viewBox = `${crop.x} ${crop.y} ${crop.w} ${crop.h}`;
+    aspect = crop.w / crop.h;
+  } else {
+    const vb = rawSvg.match(/viewBox="([^"]+)"/i);
+    if (vb) {
+      viewBox = vb[1];
+      const [, , w, h] = vb[1].split(/\s+/).map(Number);
+      aspect = w / h;
+    } else {
+      const w = rawSvg.match(/width="([\d.]+)"/i);
+      const h = rawSvg.match(/height="([\d.]+)"/i);
+      if (w && h) aspect = Number(w[1]) / Number(h[1]);
+    }
+  }
+}
+
+const width = Math.round(height * aspect);
 ---
 
 {
-  image ? (
-    <Image src={image} alt="" width={width} height={height} class={extra} />
+  rawSvg ? (
+    <svg
+      width={width}
+      height={height}
+      viewBox={viewBox}
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label="ZSN"
+      class={extra}
+      set:html={inner}
+    />
   ) : (
     <span
       class:list={[
