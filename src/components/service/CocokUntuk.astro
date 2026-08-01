@@ -1,6 +1,9 @@
 ---
 /**
- * CocokUntuk — label kiri + baris chip outline. Rata kiri, bukan rata tengah.
+ * CocokUntuk — kartu kecil ink berikon, bukan chip outline datar.
+ * Ikon dipilih otomatis dari kata kunci di teks item (bukan dari field
+ * terpisah di schema) supaya konten tetap `string[]` sederhana di
+ * frontmatter, tanpa perlu menulis nama ikon manual per baris.
  */
 import Section from '@/components/ui/Section.astro';
 
@@ -8,19 +11,55 @@ interface Props {
   items: string[];
 }
 const { items } = Astro.props;
+
+type IconType = 'gedung' | 'rumah' | 'pabrik' | 'ruko' | 'sekolah' | 'antena';
+
+function iconFor(text: string): IconType {
+  const t = text.toLowerCase();
+  if (/pabrik|gudang|industri/.test(t)) return 'pabrik';
+  if (/rumah|perumahan|apartemen/.test(t)) return 'rumah';
+  if (/ruko|retail|minimarket|parkir/.test(t)) return 'ruko';
+  if (/sekolah|kampus|pendidikan/.test(t)) return 'sekolah';
+  if (/isp|rt\/rw|antena|menara|tower|backbone/.test(t)) return 'antena';
+  return 'gedung';
+}
+
+/* Ikon teknis kustom, monoline 32x32 — bukan ikon generik dari library. */
+const ICON_PATHS: Record<IconType, string> = {
+  gedung:
+    '<rect x="10" y="6" width="12" height="20" rx="1"/><path d="M13 10h2M17 10h2M13 14h2M17 14h2M13 18h2M17 18h2M13 22h2M17 22h2"/>',
+  rumah: '<path d="M6 16 16 7l10 9"/><path d="M9 15v11h14V15"/><path d="M14 26v-6h4v6"/>',
+  pabrik: '<path d="M5 26V16l5 4v-4l5 4v-4l5 4V12h4v14z"/><path d="M24 12v-4"/>',
+  ruko: '<rect x="7" y="10" width="18" height="16" rx="1"/><path d="M7 16h18"/><path d="M11 20h4M17 20h4"/>',
+  sekolah:
+    '<path d="M16 5v4"/><path d="M16 5l3 2-3 2z" fill="currentColor"/><path d="M8 13 16 9l8 4"/><rect x="9" y="13" width="14" height="13" rx="1"/><path d="M15 26v-5h2v5"/>',
+  antena:
+    '<circle cx="16" cy="4" r="1.2" fill="currentColor"/><path d="M16 5v21M12 16h8M13 21h6M16 5l-5 21M16 5l5 21"/>',
+};
 ---
 
 <Section bg="white" size="sm" aria-label="Cocok untuk">
-  <div class="flex flex-col gap-6 md:flex-row md:items-start">
-    <p class="label-tech shrink-0 text-amber-text md:w-48">Cocok Untuk</p>
-    <div class="flex flex-wrap gap-3">
-      {
-        items.map((item) => (
-          <span class="label-tech rounded-md border border-ink/15 px-3 py-1.5 text-ink">
-            {item}
-          </span>
-        ))
-      }
-    </div>
+  <p class="label-tech text-amber-text">Cocok Untuk</p>
+
+  <div class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3">
+    {
+      items.map((item) => {
+        const icon = iconFor(item);
+        return (
+          <div class="on-dark flex items-center gap-3 rounded-md border-2 border-transparent bg-ink px-4 py-3.5 transition-colors hover:border-yellow focus-within:border-yellow">
+            <svg
+              viewBox="0 0 32 32"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              class="size-6 shrink-0 text-yellow"
+              aria-hidden="true"
+              set:html={ICON_PATHS[icon]}
+            />
+            <span class="text-sm font-medium text-white">{item}</span>
+          </div>
+        );
+      })
+    }
   </div>
 </Section>

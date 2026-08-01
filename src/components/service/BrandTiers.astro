@@ -9,7 +9,6 @@ interface Tier {
   tier: string;
   nama: string;
   ringkas: string;
-  unggulan: boolean;
   spek: { label: string; nilai: string }[];
 }
 
@@ -40,20 +39,15 @@ const { merek, tierPerangkat } = Astro.props;
     tierPerangkat && (
       <div class="mt-10 grid gap-6 md:grid-cols-3">
         {tierPerangkat.map((t) => (
-          <div
-            class:list={[
-              'flex flex-col rounded-md border p-6',
-              t.unggulan ? 'border-yellow bg-white ring-1 ring-yellow' : 'border-ink/10 bg-white',
-            ]}
-          >
-            <p class="label-tech text-amber-text">{t.tier}</p>
-            <h3 class="mt-2 text-h3">{t.nama}</h3>
-            <p class="mt-2 text-sm text-slate">{t.ringkas}</p>
-            <dl class="mt-5 flex-1 divide-y divide-mist border-t border-mist">
+          <div class="on-dark flex flex-col rounded-md border-2 border-transparent bg-ink p-6 transition-colors hover:border-yellow focus-within:border-yellow">
+            <p class="label-tech text-yellow">{t.tier}</p>
+            <h3 class="mt-2 text-h3 text-white">{t.nama}</h3>
+            <p class="mt-2 text-sm text-slate-muted">{t.ringkas}</p>
+            <dl class="mt-5 flex-1 divide-y divide-steel border-t border-steel">
               {t.spek.map((s) => (
                 <div class="flex justify-between gap-4 py-2.5 text-sm">
-                  <dt class="text-slate">{s.label}</dt>
-                  <dd class="text-right font-medium text-ink">{s.nilai}</dd>
+                  <dt class="text-slate-muted">{s.label}</dt>
+                  <dd class="text-right font-medium text-white">{s.nilai}</dd>
                 </div>
               ))}
             </dl>

@@ -18,7 +18,7 @@ export const site = {
   /** Format internasional tanpa tanda "+". TODO: ganti dengan nomor asli. */
   whatsapp: '628xxxxxxxxxx',
 
-  email: 'info@zsn.co.id', // TODO: konfirmasi alamat email resmi
+  email: 'zufarsolusinawasena@gmail.com',
 
   alamat: {
     jalan: '', // TODO: isi nama jalan dan nomor
@@ -26,7 +26,7 @@ export const site = {
     kodePos: '', // TODO: isi kode pos
   },
 
-  jamOperasional: 'Senin-Jumat, 09.00-17.00 WIB', // TODO: konfirmasi jam operasional
+  jamOperasional: 'Senin sampai Sabtu, 08.00 sampai 17.00 WIB',
 
   legalitas: {
     akta: '', // TODO: nomor akta pendirian

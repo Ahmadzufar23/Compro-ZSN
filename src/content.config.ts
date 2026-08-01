@@ -20,7 +20,6 @@ const paketSchema = z.object({
   hargaMulai: z.string().optional(),   // "12" -> dirender "Mulai dari Rp 12 juta"
   satuan: z.string().optional(),       // "/bulan" untuk maintenance
   durasi: z.string().optional(),       // "4-8 minggu"
-  unggulan: z.boolean().default(false),
   /** Baris label:nilai (maintenance) atau daftar isi paket (software) */
   isi: z.array(
     z.union([
@@ -115,7 +114,6 @@ const layanan = defineCollection({
             tier: z.string(),
             nama: z.string(),
             ringkas: z.string(),
-            unggulan: z.boolean().default(false),
             spek: z.array(z.object({ label: z.string(), nilai: z.string() })),
           })
         )

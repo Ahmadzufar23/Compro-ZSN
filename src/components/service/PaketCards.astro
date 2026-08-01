@@ -13,7 +13,6 @@ interface PaketItem {
   hargaMulai?: string;
   satuan?: string;
   durasi?: string;
-  unggulan: boolean;
   isi: (string | { label: string; nilai: string })[];
 }
 
@@ -30,20 +29,15 @@ const { items } = Astro.props;
   <div class="mt-10 grid gap-6 md:grid-cols-3">
     {
       items.map((p) => (
-        <div
-          class:list={[
-            'flex flex-col rounded-md border bg-white p-6',
-            p.unggulan ? 'border-yellow ring-1 ring-yellow' : 'border-ink/10',
-          ]}
-        >
-          <h3 class="text-h3">{p.nama}</h3>
-          <p class="mt-2 text-sm text-slate">{p.ringkas}</p>
+        <div class="on-dark flex flex-col rounded-md border-2 border-transparent bg-ink p-6 transition-colors hover:border-yellow focus-within:border-yellow">
+          <h3 class="text-h3 text-white">{p.nama}</h3>
+          <p class="mt-2 text-sm text-slate-muted">{p.ringkas}</p>
 
-          <p class="mt-5 font-display text-2xl font-bold text-ink">
+          <p class="mt-5 font-display text-2xl font-bold text-white">
             {p.hargaMulai ? (
               <>
                 Mulai dari Rp {p.hargaMulai} juta
-                {p.satuan && <span class="text-sm font-normal text-slate">{p.satuan}</span>}
+                {p.satuan && <span class="text-sm font-normal text-slate-muted">{p.satuan}</span>}
               </>
             ) : (
               'Minta Penawaran'
@@ -51,20 +45,20 @@ const { items } = Astro.props;
           </p>
           {p.durasi && <p class="label-tech mt-1 text-slate-muted">Estimasi durasi: {p.durasi}</p>}
 
-          <ul class="mt-6 flex-1 space-y-2.5 border-t border-mist pt-5 text-sm">
+          <ul class="mt-6 flex-1 space-y-2.5 border-t border-steel pt-5 text-sm">
             {p.isi.map((row) =>
               typeof row === 'string' ? (
-                <li class="text-slate">{row}</li>
+                <li class="text-slate-muted">{row}</li>
               ) : (
                 <li class="flex justify-between gap-4">
-                  <span class="text-slate">{row.label}</span>
-                  <span class="font-medium text-ink">{row.nilai}</span>
+                  <span class="text-slate-muted">{row.label}</span>
+                  <span class="font-medium text-white">{row.nilai}</span>
                 </li>
               )
             )}
           </ul>
 
-          <Button href="/kontak" variant={p.unggulan ? 'primary' : 'outline-dark'} class="mt-6">
+          <Button href="/kontak" variant="outline-light" class="mt-6">
             Konsultasi
           </Button>
         </div>

@@ -1,7 +1,9 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
+import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
 import { site } from '@/config/site';
 
 const prinsip = [
@@ -30,6 +32,15 @@ const legalitas = [
   { label: 'Nomor Akta Pendirian', nilai: site.legalitas.akta },
   { label: 'NIB', nilai: site.legalitas.nib },
 ];
+
+const jumlahLayanan = (await getCollection('layanan')).length;
+
+const stats = [
+  { angka: 'Sejak 2023', label: 'Tahun Beroperasi' },
+  { angka: `${site.coverage.length} Kota`, label: 'Area Layanan' },
+  { angka: '30 Hari', label: 'Garansi Instalasi' },
+  { angka: String(jumlahLayanan), label: 'Layanan Tersedia' },
+];
 ---
 
 <Base
@@ -42,33 +53,33 @@ const legalitas = [
   </Section>
 
   <Section bg="white" size="md" aria-label="Cerita perusahaan">
-    <div class="max-w-[65ch]">
-      <p>
-        {site.namaLegal} ({site.nama}) adalah vendor infrastruktur jaringan,
-        keamanan, dan pengembangan sistem yang melayani bisnis di Jabodetabek.
-      </p>
-      <p class="mt-4">
-        Kami menangani pekerjaan dari survei lokasi, instalasi fiber optic dan
-        CCTV, konfigurasi jaringan enterprise, sampai pengembangan sistem yang
-        menjalankan operasional klien sehari-hari.
-      </p>
+    <div class="grid gap-10 lg:grid-cols-[55fr_45fr] lg:items-start">
+      <div class="max-w-[65ch]">
+        <p>
+          {site.namaLegal} ({site.nama}) adalah vendor infrastruktur jaringan,
+          keamanan, dan pengembangan sistem yang melayani bisnis di Jabodetabek.
+        </p>
+        <p class="mt-4">
+          Kami menangani pekerjaan dari survei lokasi, instalasi fiber optic dan
+          CCTV, konfigurasi jaringan enterprise, sampai pengembangan sistem yang
+          menjalankan operasional klien sehari-hari.
+        </p>
+      </div>
+      <PlaceholderPhoto ratio="4/3" label="Foto Tim ZSN di Lapangan" graphite />
     </div>
-  </Section>
 
-  <Section bg="mist" size="md" aria-label="Cara kami bekerja">
-    <p class="label-tech text-amber-text">Prinsip Kerja</p>
-    <h2 class="mt-3 text-h2">Cara Kami Bekerja</h2>
-
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <dl class="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 rounded-md bg-mist p-6 md:grid-cols-4 md:p-8">
       {
-        prinsip.map((p) => (
-          <div class="rounded-md border border-ink/10 bg-white p-6">
-            <h3 class="text-base font-semibold uppercase tracking-tight text-ink">{p.judul}</h3>
-            <p class="mt-2 text-sm text-slate">{p.detail}</p>
+        stats.map(({ angka, label }) => (
+          <div class="min-w-0 border-l-2 border-ink/15 pl-4">
+            <dt class="font-display break-words text-2xl font-bold text-ink md:text-3xl">
+              {angka}
+            </dt>
+            <dd class="label-tech mt-1 text-slate">{label}</dd>
           </div>
         ))
       }
-    </div>
+    </dl>
   </Section>
 
   <Section bg="white" size="md" aria-label="Legalitas perusahaan">
@@ -96,7 +107,7 @@ const legalitas = [
     </div>
   </Section>
 
-  <Section bg="ink" size="md" blueprint aria-label="Area layanan">
+  <Section bg="ink" size="sm" blueprint aria-label="Area layanan">
     <p class="label-tech text-yellow">Area Layanan</p>
 
     <div class="mt-6 grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
@@ -112,6 +123,22 @@ const legalitas = [
     <p class="mt-6 text-sm text-slate-muted">
       Survei dan pengerjaan mencakup seluruh Jabodetabek.
     </p>
+  </Section>
+
+  <Section bg="white" size="md" aria-label="Cara kami bekerja">
+    <p class="label-tech text-amber-text">Prinsip Kerja</p>
+    <h2 class="mt-3 text-h2">Cara Kami Bekerja</h2>
+
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        prinsip.map((p) => (
+          <div class="rounded-md border border-ink/10 bg-mist p-6">
+            <h3 class="text-base font-semibold uppercase tracking-tight text-ink">{p.judul}</h3>
+            <p class="mt-2 text-sm text-slate">{p.detail}</p>
+          </div>
+        ))
+      }
+    </div>
   </Section>
 
   <Section bg="ink" size="lg" blueprint aria-label="Ajakan bertindak">

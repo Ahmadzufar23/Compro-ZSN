@@ -108,6 +108,19 @@ Semua animasi wajib menghormati `prefers-reduced-motion`.
 
 ---
 
+## Ritme Halaman
+
+Latar gelap (`bg="ink"` atau `bg="graphite"` di `Section.astro`) dan
+latar terang (`white`, `mist`) wajib berselang-seling menuruni halaman.
+
+**JANGAN pernah ada tiga seksi gelap berturut-turut**, termasuk footer
+(footer selalu `bg-ink`). Kalau urutan konten alami menghasilkan dua
+seksi gelap yang saling menempel lalu disusul footer, sisipkan satu
+seksi terang di antaranya, atau kecilkan salah satu jadi `size="sm"`
+supaya tidak terasa satu blok hitam raksasa.
+
+---
+
 ## Konvensi
 
 - Slug dan copy dalam **Bahasa Indonesia**: `/layanan/fiber-optic`, bukan `/services/fiber`

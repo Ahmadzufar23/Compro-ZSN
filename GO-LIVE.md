@@ -19,6 +19,21 @@ tayang di domain asli.
 
 ## Saat foto asli masuk
 
+**Anotasi As-Built dan stempel galeri sengaja dimatikan sementara**
+(field `anotasi` dan `stempel` dikosongkan di semua `src/content/layanan/*.mdx`
+dan `src/content/project/*.mdx`). Fotonya masih placeholder abu polos,
+jadi label callout menempel di ruang kosong dan terlihat buruk. Kode
+pendukungnya tetap utuh di `src/components/service/Gallery.astro`,
+tidak dihapus. Begitu foto asli terpasang:
+
+1. Isi kembali `stempel` (kode project dan lokasi asli) dan `anotasi`
+   (koordinat `x`/`y` menunjuk ke objek nyata di foto baru) di file
+   `.mdx` terkait.
+2. Lihat hasilnya di atas foto nyata, baru putuskan apakah anotasi
+   As-Built dipertahankan. Ini signature element konsep As-Built di
+   spec desain, tapi keputusan akhir memakainya atau tidak baru bisa
+   diambil setelah terlihat di atas foto sungguhan, bukan placeholder.
+
 Placeholder foto (Fase 2–4) dipakai ulang dari beberapa file generik yang
 sama di banyak tempat — alt text, stempel, dan anotasi As-Built ditulis
 mengikuti pola visual placeholder tersebut, **bukan** foto lokasi
@@ -39,6 +54,27 @@ wajib diperiksa ulang satu per satu, bukan asumsi otomatis masih benar:
   Foto asli hampir pasti punya komposisi berbeda, sehingga garis callout
   bisa menunjuk ke objek yang salah atau ke area kosong kalau
   koordinatnya tidak disesuaikan ulang.
+
+## Foto tim
+
+Halaman `/tim` sudah dibangun penuh dengan struktur per divisi, tapi
+`src/content/tim/index.json` masih kosong (gate `izinTampil: z.literal(true)`
+di `content.config.ts` sengaja menggagalkan build kalau ada entri tanpa
+persetujuan tertulis — jangan dilemahkan). Sebelum mengisi data tim:
+
+- **Wajib satu sesi, satu latar, satu pencahayaan.** Grid wajah di halaman
+  ini berdampingan langsung, paling tidak memaafkan foto yang beda gaya
+  antar anggota.
+- **Persetujuan tertulis tiap orang wajib diperoleh sebelum tayang.** Foto
+  dan nama yang masuk ke `index.json` akan publik dan terindeks Google,
+  bukan sekadar tampil di situs.
+- **Jangan sertakan foto yang menampilkan wajah klien atau lokasi yang
+  mengidentifikasi klien** (nama gedung, plat nomor, dokumen di layar,
+  dsb.) — foto tim harus difoto khusus, bukan diambil dari dokumentasi
+  project.
+- Halaman ini tidak pernah menampilkan jumlah anggota tim di mana pun
+  (lihat `CLAUDE.md` bagian "Klaim yang DILARANG muncul di konten").
+  Jangan menambahkan angka headcount saat mengisi konten nanti.
 
 ## Data legalitas dan data pribadi
 

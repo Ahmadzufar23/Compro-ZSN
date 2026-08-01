@@ -6,24 +6,39 @@
 interface Props {
   ratio: string; // '21/9' | '3/4' | '4/3' | '16/9'
   label?: string;
+  /** Untuk dipakai di atas section gelap: kotak transparan tipis. */
   dark?: boolean;
+  /** Kotak solid latar graphite, dipakai di atas section terang. */
+  graphite?: boolean;
   class?: string;
 }
 
-const { ratio, label = 'Foto placeholder', dark = false, class: extra = '' } = Astro.props;
+const {
+  ratio,
+  label = 'Foto placeholder',
+  dark = false,
+  graphite = false,
+  class: extra = '',
+} = Astro.props;
+
+const toneClass = graphite
+  ? 'border-steel bg-graphite'
+  : dark
+    ? 'border-white/20 bg-white/5'
+    : 'border-slate-muted/40 bg-mist';
+
+const textClass = dark && !graphite ? 'text-white/40' : 'text-slate-muted';
 ---
 
 <div
   class:list={[
     'relative flex items-center justify-center overflow-hidden rounded-md border border-dashed',
-    dark ? 'border-white/20 bg-white/5' : 'border-slate-muted/40 bg-mist',
+    toneClass,
     extra,
   ]}
   style={`aspect-ratio: ${ratio};`}
 >
-  <span
-    class:list={['label-tech px-4 text-center', dark ? 'text-white/40' : 'text-slate-muted']}
-  >
+  <span class:list={['label-tech px-4 text-center', textClass]}>
     {label}
   </span>
 </div>

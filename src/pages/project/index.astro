@@ -72,11 +72,15 @@ const tampilkanPerKategori = semua.length >= AMBANG_KELOMPOK_KATEGORI;
         <p class="label-tech text-amber-text">Daftar</p>
         <h2 class="mt-3 text-h2">Semua Project</h2>
 
-        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="mt-8 grid gap-6 sm:grid-cols-2">
           {semua.map((project) => (
             <ProjectCard project={project} kategoriLabel={kategoriInfo[project.data.kategori].label} />
           ))}
         </div>
+
+        <p class="mt-8 text-sm text-slate-muted">
+          Dokumentasi project lain sedang kami siapkan.
+        </p>
       </Section>
     )
   }

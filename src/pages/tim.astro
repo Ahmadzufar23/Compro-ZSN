@@ -3,11 +3,18 @@
  * Tim — collection tim digerbang oleh izinTampil (lihat content.config.ts).
  * Saat kosong, halaman tetap tampil rapi lewat struktur divisi + deskripsi
  * peran, bukan grid kosong atau kartu placeholder abu-abu.
+ *
+ * JUMLAH anggota tim tidak pernah ditampilkan di halaman ini (lihat
+ * CLAUDE.md bagian "Klaim yang DILARANG muncul di konten": headcount
+ * tidak boleh tayang). Yang tampil adalah orangnya (foto, nama, peran),
+ * bukan angkanya.
  */
 import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
 
 const semua = await getCollection('tim');
 semua.sort((a, b) => a.data.urutan - b.data.urutan);
@@ -16,18 +23,38 @@ const divisiInfo = {
   manajemen: {
     label: 'Manajemen',
     deskripsi: 'Menentukan arah project, hubungan klien, dan standar kerja ZSN.',
+    tanggungJawab: [
+      'Menyusun rencana kerja dan estimasi biaya berdasarkan hasil survei lapangan',
+      'Menjadi kontak utama klien selama project berjalan',
+      'Menetapkan standar mutu dan prosedur kerja tim lapangan',
+    ],
   },
   instalasi: {
     label: 'Tim Instalasi',
-    deskripsi: 'Pemasangan jaringan fiber optic, CCTV, dan perangkat langsung di lapangan.',
+    deskripsi: 'Penarikan kabel, mounting perangkat, dan pemasangan langsung di lapangan.',
+    tanggungJawab: [
+      'Penarikan dan penataan kabel fiber optic maupun tembaga sesuai jalur rancangan',
+      'Pemasangan bracket, rack, dan mounting perangkat aktif',
+      'Perapian jalur kabel dan pelabelan titik instalasi',
+    ],
   },
   teknis: {
     label: 'Tim Teknis & Konfigurasi',
-    deskripsi: 'Konfigurasi perangkat, pengujian OTDR, dan dokumentasi as-built.',
+    deskripsi: 'Splicing, terminasi, konfigurasi router dan NVR, serta pengujian OTDR.',
+    tanggungJawab: [
+      'Fusion splicing dan terminasi konektor fiber optic',
+      'Konfigurasi router, switch, access point, dan NVR sesuai kebutuhan klien',
+      'Pengujian OTDR dan pengukuran loss sebelum serah terima',
+    ],
   },
   operasional: {
     label: 'Tim Operasional & QC',
-    deskripsi: 'Quality control, garansi, dan dukungan purna pasang.',
+    deskripsi: 'Penjadwalan, dokumentasi as-built, quality control, dan serah terima ke klien.',
+    tanggungJawab: [
+      'Penjadwalan kunjungan lapangan dan koordinasi tim instalasi',
+      'Penyusunan laporan uji dan dokumentasi as-built',
+      'Pemeriksaan akhir kualitas pekerjaan sebelum serah terima ke klien',
+    ],
   },
 } as const;
 
@@ -38,6 +65,31 @@ const kelompok = urutanDivisi.map((divisi) => ({
   info: divisiInfo[divisi],
   anggota: semua.filter((a) => a.data.divisi === divisi),
 }));
+
+const alurKerja = [
+  {
+    judul: 'Survei Bersama',
+    detail:
+      'Teknisi senior dan tim instalasi turun bersama ke lokasi, memastikan rencana kerja cocok dengan kondisi lapangan sebelum jadwal eksekusi ditentukan.',
+  },
+  {
+    judul: 'Eksekusi Berpasangan',
+    detail:
+      'Pemasangan selalu dikerjakan minimal dua orang: satu fokus instalasi, satu fokus keselamatan kerja dan pengujian sambungan secara langsung.',
+  },
+  {
+    judul: 'Serah Terima Berdokumentasi',
+    detail:
+      'Setiap project ditutup dengan laporan uji dan dokumentasi as-built yang diperiksa tim teknis lebih dulu sebelum diserahkan ke klien.',
+  },
+];
+
+const kategoriSertifikasi = [
+  'Instalasi & Terminasi Fiber Optic',
+  'Pengujian OTDR & Pengukuran Loss',
+  'Konfigurasi Jaringan & Perangkat Aktif',
+  'Keselamatan Kerja (K3) di Lapangan',
+];
 ---
 
 <Base
@@ -45,25 +97,49 @@ const kelompok = urutanDivisi.map((divisi) => ({
   description="Tim internal ZSN yang menangani instalasi, konfigurasi teknis, dan operasional project jaringan di Jabodetabek."
 >
   <Section bg="ink" size="lg" blueprint aria-label="Hero tim">
-    <p class="label-tech text-yellow">Tim</p>
+    <p class="label-tech text-yellow">Tim Kami</p>
     <h1 class="mt-3 text-h1 text-white">Orang di Balik Setiap Pemasangan</h1>
     <p class="mt-4 max-w-2xl text-white/70">
-      Seluruh pekerjaan ZSN dikerjakan oleh tim internal (bukan subkontraktor
-      lepas) yang terbagi menurut peran di setiap tahap project.
+      Seluruh pekerjaan ZSN dikerjakan oleh tim internal bersertifikat, bukan
+      subkontraktor lepas, yang terbagi menurut peran di setiap tahap project.
     </p>
+  </Section>
+
+  <Section bg="white" size="md" aria-label="Cara tim kami bekerja">
+    <p class="label-tech text-amber-text">Prinsip Kerja</p>
+    <h2 class="mt-3 text-h2">Cara Tim Kami Bekerja</h2>
+
+    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+      {
+        alurKerja.map((a) => (
+          <div class="on-dark rounded-md border-2 border-transparent bg-ink p-6 transition-colors hover:border-yellow">
+            <h3 class="text-h3 text-white">{a.judul}</h3>
+            <p class="mt-2 text-sm text-slate-muted">{a.detail}</p>
+          </div>
+        ))
+      }
+    </div>
   </Section>
 
   {
     kelompok.map(({ divisi, info, anggota }) => (
       <Section bg={divisi === 'instalasi' || divisi === 'operasional' ? 'mist' : 'white'} size="md" aria-label={info.label}>
-        <p class="label-tech text-amber-text">{info.label}</p>
-        <h2 class="mt-3 text-h2">{info.label}</h2>
+        <h2 class="text-h2">{info.label}</h2>
         <p class="mt-3 max-w-prose">{info.deskripsi}</p>
+
+        <ul class="mt-5 flex max-w-prose flex-col gap-2.5">
+          {info.tanggungJawab.map((t) => (
+            <li class="flex items-start gap-3 text-sm text-slate">
+              <span class="mt-2 size-1.5 shrink-0 rounded-full bg-yellow" />
+              <span>{t}</span>
+            </li>
+          ))}
+        </ul>
 
         {anggota.length > 0 ? (
           <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {anggota.map((a) => (
-              <article class="rounded-md border border-ink/10 bg-white p-5">
+              <article class="on-dark group rounded-md border-2 border-transparent bg-ink p-5 transition-colors hover:border-yellow focus-within:border-yellow">
                 <div class="overflow-hidden rounded-md" style="aspect-ratio: 1/1;">
                   <Picture
                     src={a.data.foto}
@@ -77,14 +153,14 @@ const kelompok = urutanDivisi.map((divisi) => ({
                     class="size-full object-cover"
                   />
                 </div>
-                <h3 class="mt-4 text-base font-semibold uppercase tracking-tight text-ink">
+                <h3 class="mt-4 text-base font-semibold uppercase tracking-tight text-white">
                   {a.data.nama}
                 </h3>
                 <p class="label-tech mt-1 text-slate-muted">{a.data.jabatan}</p>
                 {a.data.sertifikasi && (
                   <div class="mt-3 flex flex-wrap gap-2">
                     {a.data.sertifikasi.map((s) => (
-                      <span class="label-tech rounded-sm border border-ink/15 px-2 py-1 text-ink">
+                      <span class="label-tech rounded-sm border border-yellow/40 px-2 py-1 text-yellow">
                         {s}
                       </span>
                     ))}
@@ -94,9 +170,54 @@ const kelompok = urutanDivisi.map((divisi) => ({
             ))}
           </div>
         ) : (
-          <p class="label-tech mt-6 text-slate-muted">Profil anggota segera hadir.</p>
+          <>
+            <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:w-1/2">
+              {[0, 1].map(() => (
+                <div class="on-dark rounded-md border-2 border-transparent bg-ink p-5">
+                  <PlaceholderPhoto ratio="1/1" label="Foto Anggota" dark />
+                  <div class="mt-4 h-3 w-2/3 rounded-full bg-white/15" />
+                  <div class="mt-2 h-2.5 w-1/3 rounded-full bg-white/10" />
+                </div>
+              ))}
+            </div>
+            <p class="label-tech mt-5 text-slate-muted">Profil anggota sedang kami siapkan.</p>
+          </>
         )}
       </Section>
     ))
   }
+
+  <Section bg="mist" size="md" aria-label="Sertifikasi dan standar kerja">
+    <p class="label-tech text-amber-text">Sertifikasi</p>
+    <h2 class="mt-3 text-h2">Sertifikasi & Standar Kerja</h2>
+    <p class="mt-3 max-w-prose">
+      Tim teknis ZSN dibekali sertifikasi resmi pada kategori kerja berikut.
+      Nama dan nomor sertifikat masing-masing anggota dicantumkan begitu
+      dokumen selesai diverifikasi.
+    </p>
+
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        kategoriSertifikasi.map((k) => (
+          <div class="rounded-md border border-ink/10 bg-white p-6">
+            <h3 class="text-base font-semibold uppercase tracking-tight text-ink">{k}</h3>
+            <p class="label-tech mt-3 text-slate-muted">Sertifikat segera dicantumkan</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section bg="ink" size="lg" blueprint aria-label="Ajakan bertindak">
+    <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="text-h2 text-white">Siap Bekerja Sama?</h2>
+        <p class="mt-4 text-white/70">
+          Hubungi tim kami untuk konsultasi kebutuhan infrastruktur jaringan
+          Anda.
+        </p>
+      </div>
+      <Button href="/kontak" size="lg" class="shrink-0">Hubungi Kami</Button>
+    </div>
+  </Section>
 </Base>
