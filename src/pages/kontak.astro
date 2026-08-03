@@ -24,7 +24,7 @@ const waLangsung = waLink('Halo ZSN, saya ingin bertanya soal layanan Anda.');
 
 <Base
   title="Kontak"
-  description="Hubungi ZSN untuk konsultasi kebutuhan instalasi fiber optic, CCTV, jaringan, dan sistem di Jabodetabek."
+  description="Hubungi ZSN untuk konsultasi kebutuhan instalasi fiber optic, CCTV, jaringan, dan sistem."
 >
   <Section bg="ink" size="md" blueprint aria-label="Hero kontak">
     <p class="label-tech text-yellow">Kontak</p>
@@ -90,16 +90,11 @@ const waLangsung = waLink('Halo ZSN, saya ingin bertanya soal layanan Anda.');
       <div class="flex flex-col gap-8">
         <div>
           <p class="label-tech text-amber-text">Alamat</p>
-          {
-            site.alamat.jalan || site.alamat.kota ? (
-              <p class="mt-2 text-ink">
-                {site.alamat.jalan}<br />
-                {site.alamat.kota}{site.alamat.kodePos ? `, ${site.alamat.kodePos}` : ''}
-              </p>
-            ) : (
-              <p class="mt-2 text-ink">Alamat kantor akan segera tersedia.</p>
-            )
-          }
+          <p class="mt-2 text-ink">
+            {site.alamat.jalan}<br />
+            {site.alamat.kelurahan}, {site.alamat.kecamatan}<br />
+            {site.alamat.kota}, {site.alamat.provinsi} {site.alamat.kodePos}
+          </p>
         </div>
 
         <div>
@@ -120,19 +115,9 @@ const waLangsung = waLink('Halo ZSN, saya ingin bertanya soal layanan Anda.');
 
         <div>
           <p class="label-tech text-amber-text">Peta Lokasi</p>
-          {site.maps.embedUrl ? (
-            <iframe
-              class="mt-2 h-64 w-full rounded-md border border-ink/10"
-              src={site.maps.embedUrl}
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              title="Lokasi kantor ZSN"
-            />
-          ) : (
-            <div class="mt-2 flex h-64 w-full flex-col items-center justify-center gap-2 rounded-md border border-dashed border-slate-muted/40 bg-mist px-4 text-center">
-              <span class="label-tech text-slate-muted">Peta lokasi kantor akan ditambahkan</span>
-            </div>
-          )}
+          <Button href={site.maps.url} variant="outline-dark" external class="mt-2 self-start">
+            Buka di Google Maps
+          </Button>
         </div>
       </div>
     </div>

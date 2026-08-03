@@ -9,7 +9,18 @@ export default defineConfig({
   // dan set site.isProduction: true di src/config/site.ts saat rilis.
   // TODO: cek ulang URL Vercel sebenarnya (belum dikonfirmasi).
   site: 'https://compro-zsn.vercel.app',
-  integrations: [mdx(), sitemap(), icon()],
+  integrations: [
+    mdx(),
+    sitemap({
+      // /tim dan /project belum siap tayang (menunggu foto asli dan
+      // persetujuan tertulis) — lihat site.halamanAktif di config/site.ts.
+      filter: (page) => {
+        const url = new URL(page);
+        return !/^\/(tim|project)(\/|$)/.test(url.pathname);
+      },
+    }),
+    icon(),
+  ],
   vite: { plugins: [tailwindcss()] },
   image: {
     // Foto lapangan besar — batasi lebar yang di-generate agar build cepat

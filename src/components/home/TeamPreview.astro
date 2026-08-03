@@ -2,6 +2,7 @@
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
+import { site } from '@/config/site';
 
 /* Tanpa foto individu atau nama personal di homepage — lihat gate tim di content.config.ts */
 const divisi = [
@@ -39,7 +40,9 @@ const divisi = [
     </div>
   </div>
 
-  <div class="mt-8">
-    <Button href="/tim" variant="outline-light">Lihat Semua Tim</Button>
-  </div>
+  {site.halamanAktif.tim && (
+    <div class="mt-8">
+      <Button href="/tim" variant="outline-light">Lihat Semua Tim</Button>
+    </div>
+  )}
 </Section>

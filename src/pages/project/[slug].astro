@@ -33,7 +33,7 @@ const stats = data.stats.map((s) => ({ angka: s.nilai, label: s.label }));
 const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal project serupa dengan "${data.judul}".`);
 ---
 
-<Base title={data.judul} description={data.ringkas}>
+<Base title={data.judul} description={data.ringkas} noindex>
   <Section bg="ink" size="lg" aria-label="Hero project">
     <p class="label-tech text-white/50">
       <a href="/project" class="hover:text-yellow">Project</a>

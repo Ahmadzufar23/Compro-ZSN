@@ -37,7 +37,7 @@ const jumlahLayanan = (await getCollection('layanan')).length;
 
 const stats = [
   { angka: 'Sejak 2023', label: 'Tahun Beroperasi' },
-  { angka: `${site.coverage.length} Kota`, label: 'Area Layanan' },
+  { angka: 'Nasional', label: 'Cakupan Layanan' },
   { angka: '30 Hari', label: 'Garansi Instalasi' },
   { angka: String(jumlahLayanan), label: 'Layanan Tersedia' },
 ];
@@ -45,7 +45,7 @@ const stats = [
 
 <Base
   title="Tentang"
-  description="PT Zufar Solusi Nawasena (ZSN): vendor infrastruktur jaringan, keamanan, dan pengembangan sistem di Jabodetabek."
+  description="PT Zufar Solusi Nawasena (ZSN): vendor infrastruktur jaringan, keamanan, dan pengembangan sistem untuk bisnis di Indonesia."
 >
   <Section bg="ink" size="lg" blueprint aria-label="Hero tentang">
     <p class="label-tech text-yellow">Tentang Kami</p>
@@ -57,7 +57,8 @@ const stats = [
       <div class="max-w-[65ch]">
         <p>
           {site.namaLegal} ({site.nama}) adalah vendor infrastruktur jaringan,
-          keamanan, dan pengembangan sistem yang melayani bisnis di Jabodetabek.
+          keamanan, dan pengembangan sistem untuk bisnis di berbagai kota di
+          Indonesia.
         </p>
         <p class="mt-4">
           Kami menangani pekerjaan dari survei lokasi, instalasi fiber optic dan
@@ -107,21 +108,13 @@ const stats = [
     </div>
   </Section>
 
-  <Section bg="ink" size="sm" blueprint aria-label="Area layanan">
-    <p class="label-tech text-yellow">Area Layanan</p>
-
-    <div class="mt-6 grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
-      {
-        site.coverage.map((kota) => (
-          <div class="border-l-2 border-white/15 pl-4">
-            <p class="font-display text-2xl font-bold text-white md:text-3xl">{kota}</p>
-          </div>
-        ))
-      }
-    </div>
-
-    <p class="mt-6 text-sm text-slate-muted">
-      Survei dan pengerjaan mencakup seluruh Jabodetabek.
+  <Section bg="ink" size="sm" blueprint aria-label="Cakupan layanan">
+    <p class="label-tech text-yellow">Cakupan Layanan</p>
+    <h2 class="mt-3 text-h2 text-white">Nasional, Tidak Dibatasi Wilayah</h2>
+    <p class="mt-4 max-w-2xl text-white/70">
+      Survei dan pengerjaan ZSN tidak dibatasi wilayah tertentu. Kantor kami
+      berada di {site.alamat.kota}, dan tim siap menangani project di kota
+      lain di Indonesia sesuai kebutuhan klien.
     </p>
   </Section>
 

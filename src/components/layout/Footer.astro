@@ -7,6 +7,7 @@
  * seperti yang sempat muncul di draf desain.
  */
 import Logo from '@/components/ui/Logo.astro';
+import { site } from '@/config/site';
 
 const kolom = [
   {
@@ -24,8 +25,8 @@ const kolom = [
     judul: 'Perusahaan',
     tautan: [
       { label: 'Tentang', href: '/tentang' },
-      { label: 'Project', href: '/project' },
-      { label: 'Tim', href: '/tim' },
+      ...(site.halamanAktif.project ? [{ label: 'Project', href: '/project' }] : []),
+      ...(site.halamanAktif.tim ? [{ label: 'Tim', href: '/tim' }] : []),
     ],
   },
   {
@@ -48,8 +49,19 @@ const tahun = new Date().getFullYear();
       </a>
       <p class="mt-3 max-w-xs text-sm leading-relaxed text-slate-muted">
         PT Zufar Solusi Nawasena, infrastruktur jaringan, keamanan, dan
-        pengembangan sistem untuk bisnis di Jabodetabek.
+        pengembangan sistem untuk bisnis di berbagai kota di Indonesia.
       </p>
+      <address class="mt-4 max-w-xs text-sm not-italic leading-relaxed text-slate-muted">
+        {site.alamat.jalan}, {site.alamat.kota}<br />
+        <a
+          href={site.maps.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-11 items-center text-sm text-slate-muted underline decoration-slate-muted/40 underline-offset-2 transition-colors hover:text-white"
+        >
+          Buka di Google Maps
+        </a>
+      </address>
     </div>
 
     {kolom.map(({ judul, tautan }) => (

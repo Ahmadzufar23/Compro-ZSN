@@ -19,12 +19,13 @@
  * di halaman terpisah, dicocokkan lewat prefix path.
  */
 import Logo from '@/components/ui/Logo.astro';
+import { site } from '@/config/site';
 
 const menu = [
   { label: 'Layanan', id: 'layanan', page: '/layanan' },
-  { label: 'Project', id: 'project', page: '/project' },
+  ...(site.halamanAktif.project ? [{ label: 'Project', id: 'project', page: '/project' }] : []),
   { label: 'Tentang', id: 'tentang', page: '/tentang' },
-  { label: 'Tim', id: 'tim', page: '/tim' },
+  ...(site.halamanAktif.tim ? [{ label: 'Tim', id: 'tim', page: '/tim' }] : []),
   { label: 'Kontak', id: 'kontak', page: '/kontak' },
 ];
 

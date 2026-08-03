@@ -15,15 +15,18 @@ export const site = {
   namaLegal: 'PT Zufar Solusi Nawasena',
   tagline: 'Infrastruktur Jaringan & Pengembangan Sistem', // TODO: konfirmasi tagline final
 
-  /** Format internasional tanpa tanda "+". TODO: ganti dengan nomor asli. */
-  whatsapp: '628xxxxxxxxxx',
+  /** Format internasional tanpa tanda "+". */
+  whatsapp: '6282210323080',
 
   email: 'zufarsolusinawasena@gmail.com',
 
   alamat: {
-    jalan: '', // TODO: isi nama jalan dan nomor
-    kota: '', // TODO: isi kota/kabupaten
-    kodePos: '', // TODO: isi kode pos
+    jalan: 'Jl. Delman Utama No. 23, RT.12/RW.9',
+    kelurahan: 'Kebayoran Lama Utara',
+    kecamatan: 'Kebayoran Lama',
+    kota: 'Jakarta Selatan',
+    provinsi: 'DKI Jakarta',
+    kodePos: '12240',
   },
 
   jamOperasional: 'Senin sampai Sabtu, 08.00 sampai 17.00 WIB',
@@ -36,18 +39,15 @@ export const site = {
     npwp: '', // TODO: NPWP perusahaan
   },
 
-  coverage: [
-    'Jakarta',
-    'Bogor',
-    'Depok',
-    'Tangerang',
-    'Bekasi',
-  ], // TODO: konfirmasi cakupan area layanan aktual
+  /** Halaman yang belum punya foto asli / persetujuan tertulis.
+   * Aktifkan setelah foto asli dan persetujuan tertulis tersedia. */
+  halamanAktif: {
+    tim: false,
+    project: false,
+  },
 
   maps: {
-    lat: 0, // TODO: koordinat lokasi kantor
-    lng: 0, // TODO: koordinat lokasi kantor
-    embedUrl: '', // TODO: URL embed Google Maps kantor
+    url: 'https://maps.app.goo.gl/f7bCnxDp139qH7qL9',
   },
 } as const;
 

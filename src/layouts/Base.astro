@@ -30,10 +30,18 @@ const localBusiness = {
   name: 'PT Zufar Solusi Nawasena',
   alternateName: 'ZSN Technology Solution',
   description:
-    'Vendor instalasi fiber optic FTTH, CCTV, jaringan enterprise, dan pengembangan sistem di Jabodetabek.',
+    'Vendor instalasi fiber optic FTTH, CCTV, jaringan enterprise, dan pengembangan sistem.',
   url: Astro.site?.toString(),
-  areaServed: 'Jabodetabek, Indonesia',
-  // TODO fase 5: telephone, address, geo — menunggu data kantor
+  areaServed: 'Indonesia',
+  telephone: `+${site.whatsapp}`,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.alamat.jalan,
+    addressLocality: site.alamat.kota,
+    addressRegion: site.alamat.provinsi,
+    postalCode: site.alamat.kodePos,
+    addressCountry: 'ID',
+  },
 };
 ---
 

@@ -2,6 +2,7 @@
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
+import { site } from '@/config/site';
 ---
 
 <Section bg="mist" id="project" aria-label="Project">
@@ -20,7 +21,9 @@ import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
         Deployment jaringan fiber optic end-to-end untuk gedung perkantoran,
         dari ODP hingga terminasi tiap lantai.
       </p>
-      <Button href="/project" variant="outline-dark" class="mt-5">Lihat Semua Project</Button>
+      {site.halamanAktif.project && (
+        <Button href="/project" variant="outline-dark" class="mt-5">Lihat Semua Project</Button>
+      )}
     </article>
 
     <div class="flex h-full flex-col gap-6 lg:col-span-2">
