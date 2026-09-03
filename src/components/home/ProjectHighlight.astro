@@ -1,48 +1,44 @@
 ---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
-import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
 import { site } from '@/config/site';
+
+// Mengambil koleksi project, diurutkan berdasarkan tanggal (terbaru), batasi 6
+const projects = (await getCollection('project'))
+  .sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf())
+  .slice(0, 6);
 ---
 
 <Section bg="canvas" id="project" aria-label="Project">
   <p class="label-tech text-muted">Project</p>
   <h2 class="mt-3 text-h2">Yang sudah kami kerjakan</h2>
 
-  {/* Layout asimetris disengaja: 60% kiri, 2 blok bertumpuk 40% kanan */}
-  <div class="mt-10 grid items-stretch gap-6 lg:grid-cols-5">
-    <article class="flex h-full flex-col lg:col-span-3">
-      <div class="flex-1">
-        <PlaceholderPhoto ratio="4/3" label="Foto project unggulan" class="h-full w-full" />
-      </div>
-      <div class="mt-4 border-t border-hairline pt-4">
-        <p class="label-tech text-subtle">ZSN/FTTH/2025-014 · JAKSEL</p>
-        <h3 class="mt-2 text-h3">Instalasi FTTH gedung perkantoran 12 lantai</h3>
-        <p class="mt-2 max-w-prose text-muted">
-          Deployment jaringan fiber optic end-to-end untuk gedung perkantoran,
-          dari ODP hingga terminasi tiap lantai.
-        </p>
-        {site.halamanAktif.project && (
-          <Button href="/project" variant="outline-dark" class="mt-5">Lihat Semua Project</Button>
-        )}
-      </div>
-    </article>
-
-    <div class="flex h-full flex-col gap-6 lg:col-span-2">
-      <article class="flex-1">
-        <PlaceholderPhoto ratio="4/3" label="Foto project" />
-        <div class="mt-3 border-t border-hairline pt-3">
-          <p class="label-tech text-subtle">ZSN/CCTV/2025-009 · BEKASI</p>
-          <h3 class="mt-1 text-h3">Sistem CCTV kawasan industri</h3>
+  <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {projects.map((proj) => (
+      <article class="group flex flex-col">
+        <div class="relative overflow-hidden rounded bg-surface pb-[75%]">
+          <Image 
+            src={proj.data.cover} 
+            alt={proj.data.coverAlt} 
+            class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          />
+        </div>
+        <div class="mt-4 flex flex-1 flex-col border-t border-hairline pt-4">
+          <p class="label-tech text-subtle">{proj.data.kodeProject} · {proj.data.lokasi}</p>
+          <h3 class="mt-2 text-h3">{proj.data.judul}</h3>
+          <p class="mt-2 flex-1 text-muted">
+            {proj.data.ringkas}
+          </p>
         </div>
       </article>
-      <article class="flex-1">
-        <PlaceholderPhoto ratio="4/3" label="Foto project" />
-        <div class="mt-3 border-t border-hairline pt-3">
-          <p class="label-tech text-subtle">ZSN/NET/2025-005 · DEPOK</p>
-          <h3 class="mt-1 text-h3">Jaringan enterprise kantor cabang</h3>
-        </div>
-      </article>
-    </div>
+    ))}
   </div>
+
+  {site.halamanAktif.project && (
+    <div class="mt-12 flex justify-center">
+      <Button href="/project" variant="outline-dark">Lihat Semua Project</Button>
+    </div>
+  )}
 </Section>

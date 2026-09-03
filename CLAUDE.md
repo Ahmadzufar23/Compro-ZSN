@@ -40,6 +40,16 @@ Baca file ini sebelum menulis kode apa pun. Aturan di sini mengalahkan preferens
   `rounded-full` (utility inti Tailwind, bukan token), yang tetap
   dipakai khusus avatar bulat.
 
+### Mematikan proses
+
+JANGAN pernah menjalankan taskkill /F /IM node.exe atau perintah
+sejenis yang menargetkan semua proses berdasarkan nama. Itu
+mematikan proses Node lain milik pengguna di luar proyek ini.
+
+Untuk menghentikan dev server atau preview, targetkan PID
+spesifik yang kamu jalankan sendiri, atau biarkan pengguna yang
+menutupnya.
+
 ---
 
 ## Warna
@@ -75,6 +85,12 @@ Kuning `#FFCE00` di atas putih hanya mencapai kontras **1.49:1**. Itu gagal WCAG
 tombol primer (dengan teks ink di atasnya) · penanda kotak kecil 8x8px
 di samping label · garis bawah nav aktif 2px · satu titik cahaya di
 diagram topologi.
+
+**Pengecualian: blok aksen kuning di hero beranda boleh sampai 8%.**
+Blok persegi bertumpuk di pojok kiri-atas dan kanan-bawah `Hero.astro`
+adalah elemen komposisi utama, bukan penanda kecil, sehingga aturan 3%
+terlalu ketat untuknya. Pengecualian ini **HANYA berlaku di hero
+beranda** — section lain di seluruh situs tetap tunduk pada batas 3%.
 
 **Kuning dilarang sebagai:** teks di atas latar terang · latar section ·
 border kartu · ikon berukuran besar · link dalam paragraf · warna
@@ -129,6 +145,13 @@ Tidak ada radius di mana pun. Tema tidak lagi punya token
 menghasilkan CSS apa pun (elemen tetap bersudut tegas secara default).
 Kecualinya cuma `rounded-full` untuk avatar bulat, karena itu utility
 inti Tailwind, bukan turunan token tema.
+
+Pengecualian kedua: bidang putih pembungkus mark ZSN di hero beranda
+(`HeroMark.astro`) pakai `rounded-[28%]`, sudut sangat membulat tapi
+BUKAN lingkaran penuh. Ini satu-satunya tempat di seluruh situs yang
+memakai radius arbitrer di luar `rounded-full`, karena bidang itu
+adalah elemen komposisi tunggal hero, bukan pola kartu yang berulang.
+Jangan jadikan ini preseden untuk radius di tempat lain.
 
 ---
 

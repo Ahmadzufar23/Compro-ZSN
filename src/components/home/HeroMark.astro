@@ -1,0 +1,15 @@
+---
+/**
+ * HeroMark — Varian flat/rapi menggunakan ikon bundar (HD SVG).
+ */
+interface Props {
+  class?: string;
+}
+const { class: extra = '' } = Astro.props;
+---
+
+<img 
+  src="/favicon.svg" 
+  alt="ZSN Mark" 
+  class:list={['shrink-0 object-contain drop-shadow-md transition-transform duration-500 hover:scale-110 hover:drop-shadow-xl', extra]} 
+/>

@@ -1,0 +1,44 @@
+---
+/**
+ * CoverageSection — rumah baru untuk TopologyDiagram, dipindah dari Hero
+ * karena headline yang sekarang rata tengah penuh lebar tidak lagi
+ * menyisakan kolom untuk diagram. Diagram tetap dipertahankan sesuai
+ * arahan CLAUDE.md — satu-satunya elemen visual khas ZSN dan
+ * satu-satunya animasi di situs.
+ *
+ * Di bawah 640px, diagram disembunyikan (label node tidak terbaca di
+ * lebar itu) dan diganti daftar 4 tahap bergaris rambut.
+ */
+import Section from '@/components/ui/Section.astro';
+import TopologyDiagram from './TopologyDiagram.astro';
+
+const tahap = ['ODP', 'Gedung', 'Rack Server', 'Dashboard'];
+---
+
+<Section bg="canvas" size="md" aria-label="Cakupan kerja">
+  <p class="flex items-center gap-2">
+    <span class="size-2 shrink-0 bg-yellow" aria-hidden="true" />
+    <span class="label-tech text-muted">Cakupan Kerja</span>
+  </p>
+  <h2 class="mt-3 text-h2">Dari titik distribusi sampai dashboard</h2>
+
+  <div class="mt-10 hidden sm:block">
+    <TopologyDiagram class="mx-auto max-w-3xl" />
+  </div>
+
+  <ol class="mt-2 divide-y divide-hairline border-t border-hairline sm:hidden">
+    {
+      tahap.map((label, i) => (
+        <li class="flex items-center gap-3 py-4">
+          <span class="label-tech text-subtle">{String(i + 1).padStart(2, '0')}</span>
+          <span class="text-base font-semibold text-ink">{label}</span>
+        </li>
+      ))
+    }
+  </ol>
+
+  <p class="mt-6 max-w-2xl text-sm text-muted">
+    Tiap titik distribusi terhubung ke gedung, dipantau lewat rack server,
+    sampai datanya tampil langsung di dashboard.
+  </p>
+</Section>

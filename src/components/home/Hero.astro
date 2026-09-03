@@ -1,29 +1,167 @@
 ---
+/**
+ * Hero — headline terbelah dengan mark ZSN di tengah (arah "enterprise
+ * terang" batch 3). Diagram topologi TIDAK lagi di sini — dipindah ke
+ * CoverageSection.astro (lihat index.astro), karena tidak lagi muat di
+ * samping headline yang sekarang rata tengah penuh lebar.
+ */
 import Section from '@/components/ui/Section.astro';
-import Button from '@/components/ui/Button.astro';
-import TopologyDiagram from './TopologyDiagram.astro';
+import HeroMark from './HeroMark.astro';
 ---
 
-<Section bg="canvas" size="lg" aria-label="Hero">
-  <div class="grid items-center gap-12 lg:grid-cols-[55fr_45fr] lg:gap-16">
-    <div>
-      <p class="flex items-center gap-2">
-        <span class="size-2 shrink-0 bg-yellow" aria-hidden="true" />
-        <span class="label-tech text-muted">PT Zufar Solusi Nawasena</span>
-      </p>
-      <h1 class="mt-5 text-hero text-ink">One stop solution</h1>
-      <p class="mt-6 max-w-xl text-muted">
-        Satu tim untuk infrastruktur jaringan dan sistem digital. Dari
-        perencanaan sampai pemeliharaan.
-      </p>
-      <div class="mt-9 flex flex-wrap gap-4">
-        <Button href="/kontak" size="lg">Konsultasi Gratis</Button>
-        <Button href="/layanan" size="lg" variant="outline-dark">Lihat Layanan</Button>
-      </div>
+<Section bg="surface" size="lg" class="relative isolate flex min-h-[85vh] items-center overflow-hidden" aria-label="Hero">
+  {/* Grid halus */}
+  <div
+    class="pointer-events-none absolute inset-0 z-0 opacity-70"
+    style="background-image: linear-gradient(to right, var(--color-hairline) 1px, transparent 1px), linear-gradient(to bottom, var(--color-hairline) 1px, transparent 1px); background-size: 64px 64px;"
+    aria-hidden="true"
+  />
+
+  {/* Garis horizontal putus-putus seperti referensi */}
+  <div class="pointer-events-none absolute left-0 right-0 top-1/2 z-0 -translate-y-[60px] border-t border-dashed border-zinc-300 md:-translate-y-[80px]" aria-hidden="true"></div>
+  <div class="pointer-events-none absolute left-0 right-0 top-1/2 z-0 translate-y-[60px] border-t border-dashed border-zinc-300 md:translate-y-[80px]" aria-hidden="true"></div>
+  
+  {/* Panah dekoratif di garis */}
+  <div class="pointer-events-none absolute left-0 top-1/2 z-0 flex w-full -translate-y-[60px] justify-between px-10 opacity-30 md:-translate-y-[80px]" aria-hidden="true">
+    <span class="text-[10px] tracking-[4px] text-zinc-500">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
+    <span class="text-[10px] tracking-[4px] text-zinc-500">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+  </div>
+  <div class="pointer-events-none absolute left-0 top-1/2 z-0 flex w-full translate-y-[60px] justify-between px-10 opacity-30 md:translate-y-[80px]" aria-hidden="true">
+    <span class="text-[10px] tracking-[4px] text-zinc-500">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
+    <span class="text-[10px] tracking-[4px] text-zinc-500">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+  </div>
+
+  {/* Blok aksen kuning (pola referensi) — kiri atas */}
+  <div class="pointer-events-none absolute left-0 top-0 z-0 hidden md:grid grid-cols-3 gap-0" aria-hidden="true">
+    <div class="size-16 lg:size-20 bg-yellow"></div>
+    <div class="size-16 lg:size-20 bg-white"></div>
+    <div class="size-16 lg:size-20 bg-yellow"></div>
+    
+    <div class="size-16 lg:size-20 bg-white"></div>
+    <div class="size-16 lg:size-20 bg-yellow"></div>
+    <div class="size-16 lg:size-20"></div>
+    
+    <div class="size-16 lg:size-20 bg-yellow"></div>
+    <div class="size-16 lg:size-20"></div>
+    <div class="size-16 lg:size-20"></div>
+  </div>
+
+  {/* Blok aksen kuning (pola referensi) — kanan bawah */}
+  <div class="pointer-events-none absolute bottom-0 right-0 z-0 hidden md:grid grid-cols-3 gap-0" aria-hidden="true">
+    <div class="size-16 lg:size-20"></div>
+    <div class="size-16 lg:size-20"></div>
+    <div class="size-16 lg:size-20 bg-yellow"></div>
+    
+    <div class="size-16 lg:size-20"></div>
+    <div class="size-16 lg:size-20 bg-yellow"></div>
+    <div class="size-16 lg:size-20 bg-white"></div>
+    
+    <div class="size-16 lg:size-20 bg-yellow"></div>
+    <div class="size-16 lg:size-20 bg-white"></div>
+    <div class="size-16 lg:size-20 bg-yellow"></div>
+  </div>
+
+  {/* Blok aksen versi mobile (kiri atas & kanan bawah) */}
+  <div class="pointer-events-none absolute left-0 top-0 z-0 grid grid-cols-3 gap-0 md:hidden" aria-hidden="true">
+    <div class="size-8 bg-yellow"></div>
+    <div class="size-8 bg-white"></div>
+    <div class="size-8 bg-yellow"></div>
+    <div class="size-8 bg-white"></div>
+    <div class="size-8 bg-yellow"></div>
+    <div class="size-8"></div>
+    <div class="size-8 bg-yellow"></div>
+    <div class="size-8"></div>
+    <div class="size-8"></div>
+  </div>
+  <div class="pointer-events-none absolute bottom-0 right-0 z-0 grid grid-cols-3 gap-0 md:hidden" aria-hidden="true">
+    <div class="size-8"></div>
+    <div class="size-8"></div>
+    <div class="size-8 bg-yellow"></div>
+    <div class="size-8"></div>
+    <div class="size-8 bg-yellow"></div>
+    <div class="size-8 bg-white"></div>
+    <div class="size-8 bg-yellow"></div>
+    <div class="size-8 bg-white"></div>
+    <div class="size-8 bg-yellow"></div>
+  </div>
+
+  <div class="relative z-10 mx-auto flex w-full flex-col items-center text-center">
+    <h1 class="sr-only">One stop solution</h1>
+
+    {/* Headline desktop */}
+    <div aria-hidden="true" class="hidden w-full flex-wrap items-center justify-center gap-x-4 md:flex lg:gap-x-6">
+      <span class="text-hero flex items-center font-display font-medium tracking-tight text-ink">
+        ONE ST<HeroMark class="mx-[0.08em] size-[0.95em] -translate-y-[0.05em]" />P
+      </span>
+      <span class="text-hero font-display font-bold tracking-tight text-ink">
+        SOLUTION
+      </span>
     </div>
 
-    <div class="lg:pl-6">
-      <TopologyDiagram />
+    {/* Headline mobile */}
+    <div aria-hidden="true" class="flex flex-col items-center gap-1 md:hidden">
+      <span class="text-hero flex items-center font-display font-medium tracking-tight text-ink">
+        ONE ST<HeroMark class="mx-[0.08em] size-[0.95em] -translate-y-[0.05em]" />P
+      </span>
+      <span class="text-hero font-display font-bold tracking-tight text-ink">
+        SOLUTION
+      </span>
+    </div>
+
+    <p class="mt-8 max-w-xl text-ink font-medium tracking-wide">
+      Zufar Solusi Nawasena (ZSN) hadir sebagai satu tim ahli untuk infrastruktur jaringan dan sistem digital bisnis Anda. Dari perencanaan infrastruktur fisik hingga pemeliharaan sistem terintegrasi.
+    </p>
+
+    {/* Tombol gaya referensi */}
+    <div class="mt-9 flex w-full max-w-sm flex-col gap-4 sm:w-auto sm:max-w-none sm:flex-row sm:justify-center">
+      <a href="/layanan" class="group relative flex h-14 items-center justify-center rounded-xl border border-zinc-200 bg-white px-8 font-semibold text-ink shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] sm:w-auto">
+        Lihat Layanan
+      </a>
+      <a href="/kontak" class="group relative flex h-14 w-full sm:w-auto items-center rounded-xl bg-zinc-800 px-2 font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-zinc-900 overflow-hidden">
+        {/* Yellow expanding box */}
+        <span class="absolute left-2 z-10 flex h-10 w-10 items-center overflow-hidden rounded-lg bg-yellow text-zinc-900 transition-all duration-500 ease-[cubic-bezier(0.5,0,0,1)] group-hover:w-[calc(100%-1rem)]">
+          <div class="flex w-max items-center pl-[0.55rem]">
+            {/* SVG 1 */}
+            <svg viewBox="0 0 24 24" fill="currentColor" class="size-6 shrink-0" aria-hidden="true">
+              <circle cx="7" cy="6" r="1.5" /><circle cx="7" cy="10" r="1.5" /><circle cx="7" cy="14" r="1.5" /><circle cx="7" cy="18" r="1.5" />
+              <circle cx="11" cy="8" r="1.5" /><circle cx="11" cy="12" r="1.5" /><circle cx="11" cy="16" r="1.5" />
+              <circle cx="15" cy="10" r="1.5" /><circle cx="15" cy="14" r="1.5" />
+              <circle cx="19" cy="12" r="1.5" />
+            </svg>
+            {/* SVG 2 */}
+            <svg viewBox="0 0 24 24" fill="currentColor" class="ml-3 size-6 shrink-0 opacity-70" aria-hidden="true">
+              <circle cx="7" cy="6" r="1.5" /><circle cx="7" cy="10" r="1.5" /><circle cx="7" cy="14" r="1.5" /><circle cx="7" cy="18" r="1.5" />
+              <circle cx="11" cy="8" r="1.5" /><circle cx="11" cy="12" r="1.5" /><circle cx="11" cy="16" r="1.5" />
+              <circle cx="15" cy="10" r="1.5" /><circle cx="15" cy="14" r="1.5" />
+              <circle cx="19" cy="12" r="1.5" />
+            </svg>
+            {/* SVG 3 */}
+            <svg viewBox="0 0 24 24" fill="currentColor" class="ml-3 size-6 shrink-0 opacity-40" aria-hidden="true">
+              <circle cx="7" cy="6" r="1.5" /><circle cx="7" cy="10" r="1.5" /><circle cx="7" cy="14" r="1.5" /><circle cx="7" cy="18" r="1.5" />
+              <circle cx="11" cy="8" r="1.5" /><circle cx="11" cy="12" r="1.5" /><circle cx="11" cy="16" r="1.5" />
+              <circle cx="15" cy="10" r="1.5" /><circle cx="15" cy="14" r="1.5" />
+              <circle cx="19" cy="12" r="1.5" />
+            </svg>
+            {/* SVG 4 */}
+            <svg viewBox="0 0 24 24" fill="currentColor" class="ml-3 size-6 shrink-0 opacity-20" aria-hidden="true">
+              <circle cx="7" cy="6" r="1.5" /><circle cx="7" cy="10" r="1.5" /><circle cx="7" cy="14" r="1.5" /><circle cx="7" cy="18" r="1.5" />
+              <circle cx="11" cy="8" r="1.5" /><circle cx="11" cy="12" r="1.5" /><circle cx="11" cy="16" r="1.5" />
+              <circle cx="15" cy="10" r="1.5" /><circle cx="15" cy="14" r="1.5" />
+              <circle cx="19" cy="12" r="1.5" />
+            </svg>
+            {/* SVG 5 */}
+            <svg viewBox="0 0 24 24" fill="currentColor" class="ml-3 size-6 shrink-0 opacity-10" aria-hidden="true">
+              <circle cx="7" cy="6" r="1.5" /><circle cx="7" cy="10" r="1.5" /><circle cx="7" cy="14" r="1.5" /><circle cx="7" cy="18" r="1.5" />
+              <circle cx="11" cy="8" r="1.5" /><circle cx="11" cy="12" r="1.5" /><circle cx="11" cy="16" r="1.5" />
+              <circle cx="15" cy="10" r="1.5" /><circle cx="15" cy="14" r="1.5" />
+              <circle cx="19" cy="12" r="1.5" />
+            </svg>
+          </div>
+        </span>
+        {/* Text */}
+        <span class="relative z-0 pl-14 pr-6 transition-colors duration-300 group-hover:text-transparent">Konsultasi Gratis</span>
+      </a>
     </div>
   </div>
 </Section>
+

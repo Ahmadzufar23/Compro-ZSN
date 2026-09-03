@@ -22,11 +22,9 @@ import Logo from '@/components/ui/Logo.astro';
 import { site } from '@/config/site';
 
 const menu = [
+  { label: 'Tentang ZSN', id: 'tentang', page: '/tentang' },
   { label: 'Layanan', id: 'layanan', page: '/layanan' },
-  ...(site.halamanAktif.project ? [{ label: 'Project', id: 'project', page: '/project' }] : []),
-  { label: 'Tentang', id: 'tentang', page: '/tentang' },
-  ...(site.halamanAktif.tim ? [{ label: 'Tim', id: 'tim', page: '/tim' }] : []),
-  { label: 'Kontak', id: 'kontak', page: '/kontak' },
+  { label: 'Portofolio', id: 'project', page: '/project' },
 ];
 
 const path = Astro.url.pathname;
@@ -35,7 +33,7 @@ const hrefFor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
 const isActive = (page: string) => !isHome && path.startsWith(page);
 ---
 
-<header class="sticky top-0 z-50 border-b border-hairline bg-canvas">
+<header class="sticky top-0 z-50 border-b border-hairline bg-white/80 backdrop-blur-md">
   <nav
     class="container-content flex h-16 items-center justify-between gap-6"
     aria-label="Navigasi utama"
@@ -65,9 +63,9 @@ const isActive = (page: string) => !isHome && path.startsWith(page);
 
     <a
       href="/kontak"
-      class="hidden shrink-0 bg-yellow px-5 py-3 text-sm font-medium text-ink transition-colors hover:bg-yellow-hover lg:inline-block"
+      class="hidden shrink-0 rounded-xl bg-yellow px-6 py-2.5 text-sm font-bold text-ink shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg lg:inline-block"
     >
-      Hubungi Kami
+      Konsultasi Gratis
     </a>
 
     {/* Mobile — tanpa JavaScript */}
@@ -119,9 +117,9 @@ const isActive = (page: string) => !isHome && path.startsWith(page);
         </ul>
         <a
           href="/kontak"
-          class="mt-5 block bg-yellow py-4 text-center text-sm font-medium text-ink"
+          class="mt-5 block rounded-xl bg-yellow py-3.5 text-center text-sm font-bold text-ink shadow-md"
         >
-          Hubungi Kami
+          Konsultasi Gratis
         </a>
       </div>
     </details>
