@@ -2,22 +2,22 @@
 /**
  * ServiceGrid — dibaca langsung dari getCollection('layanan'), diurutkan
  * pakai field `urutan`. Judul dan href tidak pernah hardcode di sini,
- * supaya kartu tidak bisa melenceng dari konten layanan yang sebenarnya
+ * supaya baris tidak bisa melenceng dari konten layanan yang sebenarnya
  * ada (pernah terjadi: kartu "Pengujian & Sertifikasi Kabel" tanpa file
  * layanan, dan link ke slug yang tidak pernah dibuat).
  *
  * Hanya menampilkan layanan infrastruktur fisik — difilter lewat field
  * schema `tampilDiGrid`, BUKAN dicocokkan ke slug 'software' secara
  * hardcode (itu masalah yang sama yang baru diperbaiki di tempat lain).
- * Software punya SoftwareBanner sendiri di bawah grid ini.
+ * Software punya SoftwareBanner sendiri di bawah daftar ini.
  *
  * icon murni presentasi, dipetakan per slug di sini. Layanan baru
  * tanpa entri di `tampilan` otomatis dapat ikon 'default' — tidak akan
  * gagal build, tapi sebaiknya ditambahkan ikon teknis yang sesuai.
  *
- * Semua kartu memakai gaya yang sama (latar ink, border 2px transparan),
- * tidak ada varian putih — konsistensi grid lebih penting daripada
- * variasi. Hover/focus mengubah border jadi kuning tebal.
+ * Daftar bergaris rambut, bukan grid kartu — arah "enterprise terang"
+ * (lihat CLAUDE.md). Baris duduk langsung di atas canvas, dipisah
+ * `border-hairline`, hover mengubah latar jadi surface.
  *
  * `urutan` cuma dipakai untuk sorting, tidak pernah dirender — layanan
  * bukan sekuens (lihat CLAUDE.md).
@@ -41,38 +41,50 @@ const layanan = (await getCollection('layanan', ({ data }) => data.tampilDiGrid)
 );
 ---
 
-<Section bg="white" size="md" id="layanan" aria-label="Layanan">
-  <p class="label-tech text-amber-text">Layanan</p>
-  <h2 class="mt-3 text-h2">Layanan End-to-End</h2>
+<Section bg="canvas" size="md" id="layanan" aria-label="Layanan">
+  <p class="label-tech text-muted">Layanan</p>
+  <h2 class="mt-3 text-h2">Layanan end-to-end</h2>
 
-  <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="mt-10 border-t border-hairline">
     {
       layanan.map((entry) => {
         const { icon } = tampilan[entry.id] ?? { icon: 'default' as IconType };
         return (
-          <article class="on-dark group relative flex flex-col rounded-md border-2 border-transparent bg-ink p-6 pb-20 transition-colors hover:border-yellow focus-within:border-yellow">
-            <ServiceIcon type={icon} class="size-8 text-yellow" />
+          <a
+            href={`/layanan/${entry.id}`}
+            class="group -mx-4 flex flex-col gap-4 border-b border-hairline px-4 py-6 transition-colors hover:bg-surface sm:flex-row sm:items-center sm:gap-8"
+          >
+            <ServiceIcon type={icon} class="size-6 shrink-0 text-ink" />
 
-            <div
-              class="relative mt-4 flex items-center justify-center overflow-hidden rounded-md border border-dashed border-steel bg-graphite"
-              style="aspect-ratio: 3/4;"
-            >
-              <span class="label-tech px-4 text-center text-slate-muted">Foto layanan</span>
+            <div class="flex-1">
+              <h3 class="text-h3">{entry.data.judul}</h3>
+              <p class="mt-1 max-w-md text-sm text-muted">{entry.data.ringkas}</p>
             </div>
 
-            <h3 class="mt-5 text-h3 text-white">{entry.data.judul}</h3>
-            <p class="mt-2 text-sm text-slate-muted">{entry.data.ringkas}</p>
+            {
+              entry.data.spesifikasi && (
+                <dl class="flex shrink-0 flex-col gap-1 sm:w-56">
+                  {entry.data.spesifikasi.map((s) => (
+                    <div class="flex justify-between gap-4 font-mono text-xs">
+                      <dt class="text-subtle">{s.label}</dt>
+                      <dd class="text-right text-ink">{s.nilai}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )
+            }
 
-            <a
-              href={`/layanan/${entry.id}`}
-              aria-label={`Lihat detail layanan ${entry.data.judul}`}
-              class="absolute bottom-5 right-5 flex size-11 items-center justify-center rounded-md bg-white text-ink transition-colors hover:bg-yellow"
+            <svg
+              class="size-4 shrink-0 text-muted transition-colors group-hover:text-ink"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              aria-hidden="true"
             >
-              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                <path d="M7 17 17 7M9 7h8v8" />
-              </svg>
-            </a>
-          </article>
+              <path d="M7 17 17 7M9 7h8v8" />
+            </svg>
+          </a>
         );
       })
     }

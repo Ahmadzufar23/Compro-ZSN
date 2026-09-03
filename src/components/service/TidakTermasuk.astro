@@ -1,6 +1,6 @@
 ---
 /**
- * TidakTermasuk — strip ink, daftar eksklusi eksplisit. Sumber
+ * TidakTermasuk — strip surface, daftar eksklusi eksplisit. Sumber
  * sengketa nomor satu di kontrak adalah asumsi yang tidak pernah
  * ditulis -> ditulis eksplisit di sini.
  */
@@ -12,13 +12,13 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<Section bg="ink" size="sm" aria-label="Tidak termasuk">
-  <p class="label-tech text-yellow">Tidak Termasuk</p>
+<Section bg="surface" size="sm" aria-label="Tidak termasuk">
+  <p class="label-tech text-muted">Tidak Termasuk</p>
   <ul class="mt-5 grid gap-x-8 gap-y-3 sm:grid-cols-2">
     {
       items.map((item) => (
-        <li class="flex gap-3 text-sm text-white/70">
-          <span class="mt-2 size-1 shrink-0 rounded-full bg-white/40" />
+        <li class="flex gap-3 text-sm text-muted">
+          <span class="mt-2 size-1 shrink-0 bg-subtle" />
           {item}
         </li>
       ))

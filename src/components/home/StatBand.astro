@@ -6,17 +6,17 @@ const stats = [
   { angka: '1000+', label: 'Pekerjaan Selesai' },
   { angka: 'Sejak 2023', label: 'Tahun Beroperasi' },
   { angka: 'Nasional', label: 'Cakupan Layanan' },
-  { angka: 'Garansi 30 Hari', label: 'Jaminan Instalasi' },
+  { angka: 'Bergaransi', label: 'Setiap Pengerjaan' },
 ];
 ---
 
-<Section bg="graphite" size="sm" aria-label="Statistik">
+<Section bg="canvas" size="sm" aria-label="Statistik">
   <dl class="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4">
     {
       stats.map(({ angka, label }) => (
-        <div class="min-w-0 border-l-2 border-steel pl-4">
-          <dt class="font-display text-3xl font-bold text-yellow break-words">{angka}</dt>
-          <dd class="label-tech mt-1 text-slate-muted">{label}</dd>
+        <div class="min-w-0 border-l border-hairline pl-4">
+          <dt class="font-display text-3xl font-bold text-ink break-words">{angka}</dt>
+          <dd class="label-tech mt-1 text-subtle">{label}</dd>
         </div>
       ))
     }

@@ -11,11 +11,11 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<Section bg="white" size="md" aria-label="Pertanyaan umum">
-  <p class="label-tech text-amber-text">FAQ</p>
-  <h2 class="mt-3 text-h2">Pertanyaan Umum</h2>
+<Section bg="canvas" size="md" aria-label="Pertanyaan umum">
+  <p class="label-tech text-muted">FAQ</p>
+  <h2 class="mt-3 text-h2">Pertanyaan umum</h2>
 
-  <div class="mt-8 divide-y divide-mist border-t border-mist">
+  <div class="mt-8 divide-y divide-hairline border-t border-hairline">
     {
       items.map((item) => (
         <details class="group [&_summary::-webkit-details-marker]:hidden">
@@ -26,13 +26,13 @@ const { items } = Astro.props;
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2.5"
+              stroke-width="1.5"
               aria-hidden="true"
             >
               <path d="M12 5v14M5 12h14" />
             </svg>
           </summary>
-          <p class="pb-5 text-sm text-slate">{item.jawab}</p>
+          <p class="pb-5 text-sm text-muted">{item.jawab}</p>
         </details>
       ))
     }

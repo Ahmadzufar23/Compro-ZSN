@@ -34,14 +34,19 @@ const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal project serupa denga
 ---
 
 <Base title={data.judul} description={data.ringkas} noindex>
-  <Section bg="ink" size="lg" aria-label="Hero project">
-    <p class="label-tech text-white/50">
-      <a href="/project" class="hover:text-yellow">Project</a>
-      <span class="mx-2">/</span>
-      <span class="text-yellow">{data.judul}</span>
+  <Section bg="canvas" size="lg" aria-label="Hero project">
+    <p class="label-tech text-muted">
+      <a href="/project" class="hover:text-ink">Project</a>
+      <span class="mx-2 text-subtle">/</span>
+      <span class="text-ink">{data.judul}</span>
     </p>
 
-    <div class="relative mt-6 overflow-hidden rounded-md" style="aspect-ratio: 21/9;">
+    <div class="mt-6 max-w-2xl">
+      <h1 class="text-h1">{data.judul}</h1>
+      <p class="label-tech mt-3 text-muted">{data.lokasi}</p>
+    </div>
+
+    <div class="relative mt-10 overflow-hidden" style="aspect-ratio: 21/9;">
       <Picture
         src={data.cover}
         formats={['avif', 'webp']}
@@ -54,31 +59,26 @@ const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal project serupa denga
         pictureAttributes={{ class: 'block size-full' }}
         class="size-full object-cover"
       />
-      <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
-      <span class="label-tech absolute right-4 top-4 rounded-sm border border-yellow/40 bg-ink/80 px-2 py-1 text-yellow">
+      <span class="label-tech absolute right-4 top-4 bg-deep/80 px-2 py-1 text-white">
         {data.kodeProject}
       </span>
-      <div class="absolute inset-x-0 bottom-0 p-6 md:p-10">
-        <h1 class="text-h1 text-white">{data.judul}</h1>
-        <p class="label-tech mt-3 text-white/70">{data.lokasi}</p>
-      </div>
     </div>
   </Section>
 
   <StatBand stats={stats} />
 
-  <Section bg="white" size="md" aria-label="Cerita project">
-    <div class="prose-project mx-auto max-w-[65ch]">
+  <Section bg="canvas" size="md" aria-label="Cerita project">
+    <div class="prose-project mx-auto max-w-[65ch] text-muted">
       <Content />
     </div>
   </Section>
 
   {data.galeri && <Gallery items={data.galeri} />}
 
-  <Section bg="mist" size="md" aria-label="Layanan terkait">
-    <p class="label-tech text-amber-text">Layanan Terkait</p>
-    <h2 class="mt-3 text-h2">Butuh Pekerjaan Serupa?</h2>
-    <p class="mt-3 max-w-prose">
+  <Section bg="surface" size="md" aria-label="Layanan terkait">
+    <p class="label-tech text-muted">Layanan Terkait</p>
+    <h2 class="mt-3 text-h2">Butuh pekerjaan serupa?</h2>
+    <p class="mt-3 max-w-prose text-muted">
       Project ini merupakan bagian dari layanan {info.label}.
     </p>
     <Button href={`/layanan/${info.slug}`} variant="outline-dark" class="mt-6">
@@ -86,11 +86,11 @@ const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal project serupa denga
     </Button>
   </Section>
 
-  <Section bg="ink" size="lg" blueprint aria-label="Ajakan bertindak">
+  <Section bg="deep" size="lg" aria-label="Ajakan bertindak">
     <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div class="max-w-2xl">
-        <h2 class="text-h2 text-white">Ingin Project Seperti Ini?</h2>
-        <p class="mt-4 text-white/70">
+        <h2 class="text-h2 text-white">Ingin project seperti ini?</h2>
+        <p class="mt-4 text-subtle">
           Ceritakan kebutuhan lokasi Anda lewat WhatsApp, tim kami akan
           merespons dengan rencana survei.
         </p>

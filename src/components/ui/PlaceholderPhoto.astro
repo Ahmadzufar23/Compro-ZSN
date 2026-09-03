@@ -1,44 +1,26 @@
 ---
 /**
- * PlaceholderPhoto — placeholder foto dengan rasio terkunci.
- * Dipakai di seluruh homepage sampai foto asli tersedia di Fase 5.
+ * PlaceholderPhoto — blok surface polos dengan garis rambut, dipakai
+ * sampai foto asli tersedia di Fase 5. Tanpa border tebal, tanpa radius.
  */
 interface Props {
-  ratio: string; // '21/9' | '3/4' | '4/3' | '16/9'
+  ratio: string; // '21/9' | '3/4' | '4/3' | '16/9' | '1/1'
   label?: string;
-  /** Untuk dipakai di atas section gelap: kotak transparan tipis. */
+  /** Dipakai di atas section deep: tanpa isian, garis rambut putih tipis. */
   dark?: boolean;
-  /** Kotak solid latar graphite, dipakai di atas section terang. */
-  graphite?: boolean;
   class?: string;
 }
 
-const {
-  ratio,
-  label = 'Foto placeholder',
-  dark = false,
-  graphite = false,
-  class: extra = '',
-} = Astro.props;
+const { ratio, label = 'Foto placeholder', dark = false, class: extra = '' } = Astro.props;
 
-const toneClass = graphite
-  ? 'border-steel bg-graphite'
-  : dark
-    ? 'border-white/20 bg-white/5'
-    : 'border-slate-muted/40 bg-mist';
-
-const textClass = dark && !graphite ? 'text-white/40' : 'text-slate-muted';
+const toneClass = dark ? 'border-white/15' : 'border-hairline bg-surface';
 ---
 
 <div
-  class:list={[
-    'relative flex items-center justify-center overflow-hidden rounded-md border border-dashed',
-    toneClass,
-    extra,
-  ]}
+  class:list={['relative flex items-center justify-center overflow-hidden border', toneClass, extra]}
   style={`aspect-ratio: ${ratio};`}
 >
-  <span class:list={['label-tech px-4 text-center', textClass]}>
+  <span class="label-tech px-4 text-center text-subtle">
     {label}
   </span>
 </div>

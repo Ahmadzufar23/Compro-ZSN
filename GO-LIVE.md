@@ -78,16 +78,34 @@ persetujuan tertulis — jangan dilemahkan). Sebelum mengisi data tim:
 
 ## Data legalitas dan data pribadi
 
-- **NPWP tidak boleh dirender di halaman publik mana pun** (beranda
-  maupun `/tentang`). Nomor itu hanya untuk dokumen transaksi
-  (penawaran, invoice, kontrak). Akta dan NIB aman ditampilkan karena
-  terdaftar publik lewat AHU dan OSS — lihat `CLAUDE.md` bagian
-  "Klaim yang DILARANG muncul di konten".
+- **Nomor legalitas apa pun (akta, NIB, NPWP) tidak boleh dirender di
+  halaman publik mana pun** (beranda maupun `/tentang`) — keputusan
+  pemilik: data legalitas tidak ditampilkan di website. Nomornya
+  hanya untuk dokumen transaksi (penawaran, invoice, kontrak) — lihat
+  `CLAUDE.md` bagian "Klaim yang DILARANG muncul di konten".
 - **Data pribadi** (KTP direktur, NPWP pribadi, rekening bank, alamat
   rumah) tidak boleh muncul di mana pun di situs ini.
-- Field `site.legalitas.npwp` di `src/config/site.ts` tetap
-  dipertahankan untuk dipakai di dokumen internal nanti — jangan
+- Field `site.legalitas.akta`, `.nib`, dan `.npwp` di
+  `src/config/site.ts` tetap dipertahankan untuk dipakai di dokumen
+  internal (penawaran, invoice, kontrak) nanti — jangan
   menghubungkannya ke komponen halaman publik mana pun.
+
+## Durasi garansi per layanan
+
+Durasi garansi berbeda per layanan dan belum ditentukan pemilik.
+Beranda dan `/tentang` sengaja hanya menyebut "Bergaransi" tanpa
+angka. Di setiap halaman layanan, field stat "Garansi" sengaja
+dikosongkan menjadi "Menyesuaikan Lingkup Pekerjaan" (lihat
+`src/content/layanan/*.mdx`, key `stats`). Sebelum tayang:
+
+- Isi durasi garansi asli untuk **fiber-optic, cctv, network,
+  maintenance, dan software** (kalau layanan software juga
+  bergaransi) di `stats` masing-masing file `.mdx`.
+- Jangan mengarang angka. Tanyakan ke pemilik durasi per layanan,
+  boleh berbeda-beda antar layanan.
+- Perbaiki juga kalimat FAQ terkait garansi di `fiber-optic.mdx`
+  yang saat ini generik ("sesuai lingkup pekerjaan") begitu durasi
+  asli tersedia.
 
 ## Narasi project (body cerita)
 
@@ -101,9 +119,3 @@ terverifikasi, bukan karangan) supaya halaman tidak kosong.
   publik: konteks kebutuhan klien, tantangan lapangan, dan hasil
   setelah pekerjaan selesai. Jangan mengarang detail teknis atau nama
   klien.
-- Field `site.alamat.jalan` dan `site.alamat.kota` yang masih kosong di
-  `src/config/site.ts` membuat `/kontak` menampilkan "Alamat kantor akan
-  segera tersedia." — isi field itu begitu alamat kantor final tersedia.
-- `site.maps.embedUrl` yang masih kosong membuat `/kontak` menampilkan
-  placeholder "Peta lokasi kantor akan ditambahkan" alih-alih peta asli
-  — isi field itu begitu URL embed Google Maps tersedia.

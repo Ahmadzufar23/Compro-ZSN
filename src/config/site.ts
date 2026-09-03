@@ -31,11 +31,12 @@ export const site = {
 
   jamOperasional: 'Senin sampai Sabtu, 08.00 sampai 17.00 WIB',
 
+  /** JANGAN tampilkan di halaman publik mana pun (keputusan pemilik).
+   *  Field ini hanya dipakai untuk dokumen transaksi: penawaran,
+   *  invoice, dan kontrak. */
   legalitas: {
     akta: '', // TODO: nomor akta pendirian
     nib: '', // TODO: Nomor Induk Berusaha
-    /** JANGAN tampilkan di halaman publik. Hanya untuk dokumen
-     *  penawaran, invoice, dan kontrak. */
     npwp: '', // TODO: NPWP perusahaan
   },
 

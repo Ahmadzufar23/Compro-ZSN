@@ -55,9 +55,9 @@ const centers = [
   aria-label="Diagram topologi jaringan: dari ODP, gedung, rack server, hingga dashboard pemantauan"
 >
   {/* Jalur dasar */}
-  <path d={path} fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5" />
+  <path d={path} fill="none" stroke="#18181B" stroke-opacity="0.15" stroke-width="1.5" />
 
-  {/* Titik cahaya berjalan */}
+  {/* Titik cahaya berjalan — satu-satunya elemen kuning di diagram */}
   <path
     d={path}
     fill="none"
@@ -71,15 +71,15 @@ const centers = [
   {
     nodes.map((n) => (
       <g>
-        <path d={n.side} fill="#0A0A0A" stroke="#2E3033" stroke-width="1" />
-        <path d={n.top} fill="#2E3033" stroke="#4A5259" stroke-width="1" />
-        <path d={n.front} fill="#1C1C1E" stroke="#4A5259" stroke-width="1" />
+        <path d={n.side} fill="#FAFAF9" stroke="#E4E4E7" stroke-width="1" />
+        <path d={n.top} fill="#FAFAF9" stroke="#E4E4E7" stroke-width="1" />
+        <path d={n.front} fill="#FFFFFF" stroke="#E4E4E7" stroke-width="1" />
         <text
           x={n.labelX}
           y={n.labelY}
           text-anchor="middle"
           class="label-tech"
-          fill="#9AA0A6"
+          fill="#52525B"
           font-size="11"
         >
           {n.label}
@@ -90,7 +90,7 @@ const centers = [
 
   {
     centers.map((c) => (
-      <circle cx={c.cx} cy={c.cy} r="2.5" fill="#ffffff" fill-opacity="0.5" />
+      <circle cx={c.cx} cy={c.cy} r="2.5" fill="#18181B" fill-opacity="0.35" />
     ))
   }
 </svg>

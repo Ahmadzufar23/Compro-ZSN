@@ -4,17 +4,22 @@ import Button from '@/components/ui/Button.astro';
 import TopologyDiagram from './TopologyDiagram.astro';
 ---
 
-<Section bg="ink" size="lg" blueprint aria-label="Hero">
-  <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+<Section bg="canvas" size="lg" aria-label="Hero">
+  <div class="grid items-center gap-12 lg:grid-cols-[55fr_45fr] lg:gap-16">
     <div>
-      <p class="label-tech text-yellow">PT Zufar Solusi Nawasena</p>
-      <h1 class="mt-5 text-hero text-white">Dari kabel<br />sampai sistem.</h1>
-      <p class="mt-6 max-w-xl text-white/70">
-        Kami memasang jaringan fiber optic, CCTV, dan infrastruktur enterprise
-        di lapangan, lalu membangun sistem yang menjalankannya. Satu vendor,
-        dari kabel sampai dashboard.
+      <p class="flex items-center gap-2">
+        <span class="size-2 shrink-0 bg-yellow" aria-hidden="true" />
+        <span class="label-tech text-muted">PT Zufar Solusi Nawasena</span>
       </p>
-      <Button href="/kontak" size="lg" class="mt-9">Konsultasi Gratis</Button>
+      <h1 class="mt-5 text-hero text-ink">One stop solution</h1>
+      <p class="mt-6 max-w-xl text-muted">
+        Satu tim untuk infrastruktur jaringan dan sistem digital. Dari
+        perencanaan sampai pemeliharaan.
+      </p>
+      <div class="mt-9 flex flex-wrap gap-4">
+        <Button href="/kontak" size="lg">Konsultasi Gratis</Button>
+        <Button href="/layanan" size="lg" variant="outline-dark">Lihat Layanan</Button>
+      </div>
     </div>
 
     <div class="lg:pl-6">

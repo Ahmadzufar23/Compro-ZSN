@@ -97,25 +97,25 @@ const kategoriSertifikasi = [
   description="Tim internal ZSN yang menangani instalasi, konfigurasi teknis, dan operasional project jaringan."
   noindex
 >
-  <Section bg="ink" size="lg" blueprint aria-label="Hero tim">
-    <p class="label-tech text-yellow">Tim Kami</p>
-    <h1 class="mt-3 text-h1 text-white">Orang di Balik Setiap Pemasangan</h1>
-    <p class="mt-4 max-w-2xl text-white/70">
+  <Section bg="canvas" size="lg" aria-label="Hero tim">
+    <p class="label-tech text-muted">Tim Kami</p>
+    <h1 class="mt-3 text-h1">Orang di balik setiap pemasangan</h1>
+    <p class="mt-4 max-w-2xl text-muted">
       Seluruh pekerjaan ZSN dikerjakan oleh tim internal bersertifikat, bukan
       subkontraktor lepas, yang terbagi menurut peran di setiap tahap project.
     </p>
   </Section>
 
-  <Section bg="white" size="md" aria-label="Cara tim kami bekerja">
-    <p class="label-tech text-amber-text">Prinsip Kerja</p>
-    <h2 class="mt-3 text-h2">Cara Tim Kami Bekerja</h2>
+  <Section bg="surface" size="md" aria-label="Cara tim kami bekerja">
+    <p class="label-tech text-muted">Prinsip Kerja</p>
+    <h2 class="mt-3 text-h2">Cara tim kami bekerja</h2>
 
-    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+    <div class="mt-8 grid gap-x-8 gap-y-6 border-t border-hairline pt-6 sm:grid-cols-3">
       {
         alurKerja.map((a) => (
-          <div class="on-dark rounded-md border-2 border-transparent bg-ink p-6 transition-colors hover:border-yellow">
-            <h3 class="text-h3 text-white">{a.judul}</h3>
-            <p class="mt-2 text-sm text-slate-muted">{a.detail}</p>
+          <div>
+            <h3 class="text-h3">{a.judul}</h3>
+            <p class="mt-2 text-sm text-muted">{a.detail}</p>
           </div>
         ))
       }
@@ -124,24 +124,24 @@ const kategoriSertifikasi = [
 
   {
     kelompok.map(({ divisi, info, anggota }) => (
-      <Section bg={divisi === 'instalasi' || divisi === 'operasional' ? 'mist' : 'white'} size="md" aria-label={info.label}>
+      <Section bg={divisi === 'instalasi' || divisi === 'operasional' ? 'surface' : 'canvas'} size="md" aria-label={info.label}>
         <h2 class="text-h2">{info.label}</h2>
-        <p class="mt-3 max-w-prose">{info.deskripsi}</p>
+        <p class="mt-3 max-w-prose text-muted">{info.deskripsi}</p>
 
         <ul class="mt-5 flex max-w-prose flex-col gap-2.5">
           {info.tanggungJawab.map((t) => (
-            <li class="flex items-start gap-3 text-sm text-slate">
-              <span class="mt-2 size-1.5 shrink-0 rounded-full bg-yellow" />
+            <li class="flex items-start gap-3 text-sm text-muted">
+              <span class="mt-2 size-1.5 shrink-0 bg-ink" />
               <span>{t}</span>
             </li>
           ))}
         </ul>
 
         {anggota.length > 0 ? (
-          <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="mt-8 grid gap-x-8 gap-y-10 border-t border-hairline pt-8 sm:grid-cols-2 lg:grid-cols-4">
             {anggota.map((a) => (
-              <article class="on-dark group rounded-md border-2 border-transparent bg-ink p-5 transition-colors hover:border-yellow focus-within:border-yellow">
-                <div class="overflow-hidden rounded-md" style="aspect-ratio: 1/1;">
+              <article class="group">
+                <div class="overflow-hidden" style="aspect-ratio: 1/1;">
                   <Picture
                     src={a.data.foto}
                     formats={['avif', 'webp']}
@@ -154,14 +154,14 @@ const kategoriSertifikasi = [
                     class="size-full object-cover"
                   />
                 </div>
-                <h3 class="mt-4 text-base font-semibold uppercase tracking-tight text-white">
+                <h3 class="mt-4 text-base font-semibold text-ink">
                   {a.data.nama}
                 </h3>
-                <p class="label-tech mt-1 text-slate-muted">{a.data.jabatan}</p>
+                <p class="label-tech mt-1 text-muted">{a.data.jabatan}</p>
                 {a.data.sertifikasi && (
                   <div class="mt-3 flex flex-wrap gap-2">
                     {a.data.sertifikasi.map((s) => (
-                      <span class="label-tech rounded-sm border border-yellow/40 px-2 py-1 text-yellow">
+                      <span class="label-tech border border-hairline px-2 py-1 text-muted">
                         {s}
                       </span>
                     ))}
@@ -172,48 +172,48 @@ const kategoriSertifikasi = [
           </div>
         ) : (
           <>
-            <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:w-1/2">
+            <div class="mt-8 grid gap-x-8 gap-y-10 border-t border-hairline pt-8 sm:grid-cols-2 lg:w-1/2">
               {[0, 1].map(() => (
-                <div class="on-dark rounded-md border-2 border-transparent bg-ink p-5">
-                  <PlaceholderPhoto ratio="1/1" label="Foto Anggota" dark />
-                  <div class="mt-4 h-3 w-2/3 rounded-full bg-white/15" />
-                  <div class="mt-2 h-2.5 w-1/3 rounded-full bg-white/10" />
+                <div>
+                  <PlaceholderPhoto ratio="1/1" label="Foto Anggota" />
+                  <div class="mt-4 h-3 w-2/3 bg-hairline" />
+                  <div class="mt-2 h-2.5 w-1/3 bg-hairline" />
                 </div>
               ))}
             </div>
-            <p class="label-tech mt-5 text-slate-muted">Profil anggota sedang kami siapkan.</p>
+            <p class="label-tech mt-5 text-muted">Profil anggota sedang kami siapkan.</p>
           </>
         )}
       </Section>
     ))
   }
 
-  <Section bg="mist" size="md" aria-label="Sertifikasi dan standar kerja">
-    <p class="label-tech text-amber-text">Sertifikasi</p>
-    <h2 class="mt-3 text-h2">Sertifikasi & Standar Kerja</h2>
-    <p class="mt-3 max-w-prose">
+  <Section bg="canvas" size="md" aria-label="Sertifikasi dan standar kerja">
+    <p class="label-tech text-muted">Sertifikasi</p>
+    <h2 class="mt-3 text-h2">Sertifikasi & standar kerja</h2>
+    <p class="mt-3 max-w-prose text-muted">
       Tim teknis ZSN dibekali sertifikasi resmi pada kategori kerja berikut.
       Nama dan nomor sertifikat masing-masing anggota dicantumkan begitu
       dokumen selesai diverifikasi.
     </p>
 
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mt-8 grid gap-x-8 gap-y-6 border-t border-hairline pt-6 sm:grid-cols-2 lg:grid-cols-4">
       {
         kategoriSertifikasi.map((k) => (
-          <div class="rounded-md border border-ink/10 bg-white p-6">
-            <h3 class="text-base font-semibold uppercase tracking-tight text-ink">{k}</h3>
-            <p class="label-tech mt-3 text-slate-muted">Sertifikat segera dicantumkan</p>
+          <div>
+            <h3 class="text-base font-semibold text-ink">{k}</h3>
+            <p class="label-tech mt-3 text-subtle">Sertifikat segera dicantumkan</p>
           </div>
         ))
       }
     </div>
   </Section>
 
-  <Section bg="ink" size="lg" blueprint aria-label="Ajakan bertindak">
+  <Section bg="deep" size="lg" aria-label="Ajakan bertindak">
     <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div class="max-w-2xl">
-        <h2 class="text-h2 text-white">Siap Bekerja Sama?</h2>
-        <p class="mt-4 text-white/70">
+        <h2 class="text-h2 text-white">Siap bekerja sama?</h2>
+        <p class="mt-4 text-subtle">
           Hubungi tim kami untuk konsultasi kebutuhan infrastruktur jaringan
           Anda.
         </p>

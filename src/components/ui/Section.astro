@@ -6,16 +6,17 @@
  * manual di komponen anak, sehingga jarak antar-section konsisten
  * di seluruh situs dan tidak ada CSS yang saling membatalkan.
  *
- * Ritme halaman yang dikunci di spec:
- *   navbar ink -> hero ink -> stats graphite -> konten PUTIH
- *   -> CTA ink -> footer ink
- * Body konten tidak pernah gelap seluruhnya.
+ * Arah visual: enterprise terang, presisi, tertahan (lihat CLAUDE.md).
+ * Hanya SATU section gelap per halaman, yaitu CTA penutup, memakai
+ * bg="deep". Section lain berselang-seling canvas/surface.
+ *
+ * Migrasi dari palet lama (ink/graphite/mist/white) selesai per batch 2
+ * — tidak ada lagi alias, dan grid dekoratif di section gelap sudah
+ * dihapus permanen.
  */
 interface Props {
-  bg?: 'white' | 'mist' | 'ink' | 'graphite';
+  bg?: 'canvas' | 'surface' | 'deep';
   size?: 'sm' | 'md' | 'lg';
-  /** Grid blueprint hanya untuk latar gelap */
-  blueprint?: boolean;
   /**
    * Untuk dua section yang sengaja ditempel jadi satu blok visual
    * (mis. ServiceGrid -> SoftwareBanner, gap 16px total): section
@@ -30,9 +31,8 @@ interface Props {
 }
 
 const {
-  bg = 'white',
+  bg = 'canvas',
   size = 'md',
-  blueprint = false,
   flushTop = false,
   flushBottom = false,
   as: Tag = 'section',
@@ -44,10 +44,9 @@ type Bg = NonNullable<Props['bg']>;
 type Size = NonNullable<Props['size']>;
 
 const bgClasses: Record<Bg, string> = {
-  white: 'bg-white',
-  mist: 'bg-mist',
-  ink: 'on-dark bg-ink text-slate-muted',
-  graphite: 'on-dark bg-graphite text-slate-muted',
+  canvas: 'bg-canvas',
+  surface: 'bg-surface',
+  deep: 'on-dark bg-deep text-subtle',
 };
 
 const topClasses: Record<Size, string> = {
@@ -68,13 +67,9 @@ const bgClass = bgClasses[bg];
 const finalTop = flushTop ? 'pt-0' : topClasses[size];
 const finalBottom = flushBottom ? 'pb-4' : bottomClasses[size];
 
-const isDark = bg === 'ink' || bg === 'graphite';
 ---
 
-<Tag
-  class:list={[bgClass, finalTop, finalBottom, blueprint && isDark && 'blueprint', extra]}
-  {...rest}
->
+<Tag class:list={[bgClass, finalTop, finalBottom, extra]} {...rest}>
   <div class="container-content">
     <slot />
   </div>

@@ -1,9 +1,9 @@
 ---
 /**
- * CocokUntuk — kartu kecil ink berikon, bukan chip outline datar.
- * Ikon dipilih otomatis dari kata kunci di teks item (bukan dari field
- * terpisah di schema) supaya konten tetap `string[]` sederhana di
- * frontmatter, tanpa perlu menulis nama ikon manual per baris.
+ * CocokUntuk — baris label mono berikon dipisah titik tengah, bukan
+ * chip berbingkai. Ikon dipilih otomatis dari kata kunci di teks item
+ * (bukan dari field terpisah di schema) supaya konten tetap `string[]`
+ * sederhana di frontmatter, tanpa perlu menulis nama ikon manual per baris.
  */
 import Section from '@/components/ui/Section.astro';
 
@@ -38,26 +38,33 @@ const ICON_PATHS: Record<IconType, string> = {
 };
 ---
 
-<Section bg="white" size="sm" aria-label="Cocok untuk">
-  <p class="label-tech text-amber-text">Cocok Untuk</p>
+<Section bg="canvas" size="sm" aria-label="Cocok untuk">
+  <p class="label-tech text-muted">Cocok Untuk</p>
 
-  <div class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3">
+  <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-3">
     {
-      items.map((item) => {
+      items.map((item, i) => {
         const icon = iconFor(item);
         return (
-          <div class="on-dark flex items-center gap-3 rounded-md border-2 border-transparent bg-ink px-4 py-3.5 transition-colors hover:border-yellow focus-within:border-yellow">
-            <svg
-              viewBox="0 0 32 32"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              class="size-6 shrink-0 text-yellow"
-              aria-hidden="true"
-              set:html={ICON_PATHS[icon]}
-            />
-            <span class="text-sm font-medium text-white">{item}</span>
-          </div>
+          <>
+            <span class="inline-flex items-center gap-2">
+              <svg
+                viewBox="0 0 32 32"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                class="size-5 shrink-0 text-ink"
+                aria-hidden="true"
+                set:html={ICON_PATHS[icon]}
+              />
+              <span class="label-tech text-ink">{item}</span>
+            </span>
+            {i < items.length - 1 && (
+              <span class="text-subtle" aria-hidden="true">
+                &middot;
+              </span>
+            )}
+          </>
         );
       })
     }

@@ -1,51 +1,50 @@
 @import "tailwindcss";
 
 /* Font self-hosted — jangan ganti ke Google Fonts CDN */
-@import "@fontsource/chakra-petch/600.css";
-@import "@fontsource/chakra-petch/700.css";
-@import "@fontsource-variable/archivo";
+@import "@fontsource/archivo/700.css";
+@import "@fontsource/archivo/800.css";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 
 @theme {
   /* ── Brand ─────────────────────────────────────────────
-     Diekstrak dari file logo ZSN. Jangan ubah nilai hex.
-     Kuning di atas putih = 1.49:1 → GAGAL WCAG.
-     Kuning hanya boleh jadi isian, bukan teks di latar terang. */
+     Enterprise terang, presisi, tertahan (arah baru, lihat
+     CLAUDE.md). Kuning tetap dari logo ZSN, dibatasi maksimal
+     3% permukaan: isian tombol, penanda kecil, garis aktif.
+     Kuning di atas putih = 1.49:1 → GAGAL WCAG, tidak pernah
+     dipakai sebagai teks di latar terang. */
   --color-yellow:        #FFCE00;
-  --color-yellow-hover:  #E6B900;
-  --color-amber-text:    #8A6600;  /* 5.27:1 — satu-satunya kuning legal sebagai teks di putih */
+  --color-yellow-hover:  #E6B900;  /* turunan hover tombol primer, bukan bagian palet inti */
 
   /* ── Netral ───────────────────────────────────────────── */
-  --color-ink:           #0A0A0A;  /* 19.80:1 di putih */
-  --color-graphite:      #1C1C1E;
-  --color-steel:         #2E3033;
-  --color-slate:         #4A5259;  /* 7.95:1 — body text di putih */
-  --color-slate-muted:   #9AA0A6;
-  --color-mist:          #F4F4F5;
-
-  /* ── Semantik ─────────────────────────────────────────
-     Kuning TIDAK dipakai untuk peringatan — sudah milik brand. */
-  --color-success:       #16794C;
-  --color-error:         #C4342B;
+  --color-canvas:        #FFFFFF;  /* latar dasar */
+  --color-surface:       #FAFAF9;  /* off-white hangat, latar section berselang-seling */
+  --color-ink:           #18181B;  /* teks utama, heading */
+  --color-muted:         #52525B;  /* teks sekunder, body copy */
+  --color-subtle:        #A1A1AA;  /* teks tersier, label pendukung */
+  --color-hairline:      #E4E4E7;  /* garis pemisah 1px, pengganti border kartu */
+  --color-deep:          #0C0C0D;  /* hanya satu section gelap: CTA penutup */
 
   /* ── Tipografi ────────────────────────────────────────── */
-  --font-display: "Chakra Petch", system-ui, sans-serif;
-  --font-body:    "Archivo Variable", system-ui, sans-serif;
+  --font-display: "Archivo", system-ui, sans-serif;
+  --font-body:    "IBM Plex Sans", system-ui, sans-serif;
   --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
 
-  --text-hero:  clamp(2.5rem, 1.5rem + 4.5vw, 5.5rem);
-  --text-h1:    clamp(2rem, 1.4rem + 2.6vw, 3.5rem);
-  --text-h2:    clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
-  --text-h3:    clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
-  --text-body:  clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
-  --text-label: 0.75rem;
+  --text-hero:  clamp(2.25rem, 1.6rem + 2.8vw, 4rem);
+  --text-h1:    clamp(1.875rem, 1.5rem + 1.6vw, 2.75rem);
+  --text-h2:    clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+  --text-h3:    clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
+  --text-body:  1rem;
+  --text-label: 0.6875rem;
 
   /* ── Bentuk ───────────────────────────────────────────
-     Logo ZSN bersudut tajam. Tidak ada pill shape. */
-  --radius-sm: 2px;
-  --radius-md: 4px;   /* default seluruh situs -> rounded-md */
-  --radius-lg: 8px;
+     Tidak ada radius token: seluruh situs bersudut tegas.
+     `rounded-*` jadi no-op di seluruh kode lama sampai
+     dibersihkan di batch berikutnya. Kecuali rounded-full
+     untuk avatar bulat (utility inti Tailwind, bukan token). */
 
   /* ── Ritme vertikal ───────────────────────────────────── */
   --spacing-section-sm: 3rem;
@@ -65,18 +64,20 @@
     font-family: var(--font-body);
     font-size: var(--text-body);
     line-height: 1.65;
-    color: var(--color-slate);
-    background: #fff;
+    color: var(--color-muted);
+    background: var(--color-canvas);
     text-rendering: optimizeLegibility;
   }
 
+  /* Sentence case, bukan uppercase — arah enterprise terang,
+     bukan landing page konsumer. Uppercase disisakan untuk
+     .label-tech (label mono kecil) saja. */
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.02em;
     color: var(--color-ink);
-    text-transform: uppercase;
     text-wrap: balance;
   }
 
@@ -108,15 +109,6 @@
     font-weight: 500;
   }
 
-  /* Grid blueprint untuk section gelap.
-     Murni CSS, 0 KB, mendukung konsep As-Built. */
-  .blueprint {
-    background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
-    background-size: 48px 48px;
-  }
-
   .container-content {
     width: 100%;
     max-width: var(--container-content);
@@ -128,10 +120,10 @@
   }
 }
 
-/* Navbar sticky setinggi h-18 (72px): seksi ber-id tidak boleh
+/* Navbar sticky setinggi h-16 (64px): seksi ber-id tidak boleh
    tertutup navbar saat digulir dari anchor navigasi. */
 [id] {
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 4.5rem;
 }
 
 /* Hormati preferensi pengguna. Diagram hero tetap tampil, hanya diam. */

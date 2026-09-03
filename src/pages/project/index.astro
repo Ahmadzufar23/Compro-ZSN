@@ -50,10 +50,10 @@ const tampilkanPerKategori = semua.length >= AMBANG_KELOMPOK_KATEGORI;
   description="Dokumentasi project instalasi fiber optic, CCTV, jaringan, dan sistem yang sudah dikerjakan ZSN."
   noindex
 >
-  <Section bg="ink" size="sm" aria-label="Hero project">
-    <p class="label-tech text-yellow">Project</p>
-    <h1 class="mt-3 text-h1 text-white">Yang Sudah Kami Kerjakan</h1>
-    <p class="mt-4 max-w-2xl text-white/70">
+  <Section bg="canvas" size="sm" aria-label="Hero project">
+    <p class="label-tech text-muted">Project</p>
+    <h1 class="mt-3 text-h1">Yang sudah kami kerjakan</h1>
+    <p class="mt-4 max-w-2xl text-muted">
       Dokumentasi lapangan dari project fiber optic, CCTV, jaringan, dan
       sistem yang telah diselesaikan ZSN.
     </p>
@@ -61,25 +61,25 @@ const tampilkanPerKategori = semua.length >= AMBANG_KELOMPOK_KATEGORI;
 
   {
     semua.length === 0 && (
-      <Section bg="white" size="md" aria-label="Project belum tersedia">
-        <p class="text-slate">Dokumentasi project sedang disiapkan dan akan segera tayang di sini.</p>
+      <Section bg="surface" size="md" aria-label="Project belum tersedia">
+        <p class="text-muted">Dokumentasi project sedang disiapkan dan akan segera tayang di sini.</p>
       </Section>
     )
   }
 
   {
     semua.length > 0 && !tampilkanPerKategori && (
-      <Section bg="white" size="md" aria-label="Semua project">
-        <p class="label-tech text-amber-text">Daftar</p>
-        <h2 class="mt-3 text-h2">Semua Project</h2>
+      <Section bg="surface" size="md" aria-label="Semua project">
+        <p class="label-tech text-muted">Daftar</p>
+        <h2 class="mt-3 text-h2">Semua project</h2>
 
-        <div class="mt-8 grid gap-6 sm:grid-cols-2">
+        <div class="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2">
           {semua.map((project) => (
             <ProjectCard project={project} kategoriLabel={kategoriInfo[project.data.kategori].label} />
           ))}
         </div>
 
-        <p class="mt-8 text-sm text-slate-muted">
+        <p class="mt-8 text-sm text-muted">
           Dokumentasi project lain sedang kami siapkan.
         </p>
       </Section>
@@ -88,12 +88,12 @@ const tampilkanPerKategori = semua.length >= AMBANG_KELOMPOK_KATEGORI;
 
   {
     tampilkanPerKategori &&
-      kelompokPerKategori.map(({ info, items }) => (
-        <Section bg="white" size="md" aria-label={`Project ${info.label}`}>
-          <p class="label-tech text-amber-text">Kategori</p>
+      kelompokPerKategori.map(({ info, items }, i) => (
+        <Section bg={i % 2 === 0 ? 'canvas' : 'surface'} size="md" aria-label={`Project ${info.label}`}>
+          <p class="label-tech text-muted">Kategori</p>
           <h2 class="mt-3 text-h2">{info.label}</h2>
 
-          <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((project) => (
               <ProjectCard project={project} kategoriLabel={info.label} />
             ))}

@@ -2,9 +2,12 @@
 /**
  * KomitmenTable — tabel perbandingan komitmen layanan (mis. SLA,
  * waktu respons per tingkat layanan). Kolom terakhir dianggap
- * kolom unggulan/direkomendasikan dan disorot kuning -> urutkan
- * `kolom` dan `nilai` di konten dari yang paling dasar ke paling
- * direkomendasikan.
+ * kolom unggulan/direkomendasikan -> urutkan `kolom` dan `nilai` di
+ * konten dari yang paling dasar ke paling direkomendasikan.
+ *
+ * Kolom unggulan ditandai garis atas kuning 2px di header, BUKAN
+ * latar blok kuning penuh kolom — kuning maksimal 3% permukaan,
+ * lihat CLAUDE.md.
  */
 import Section from '@/components/ui/Section.astro';
 
@@ -16,21 +19,21 @@ const { kolom, baris } = Astro.props;
 const unggulanIdx = kolom.length - 1;
 ---
 
-<Section bg="white" size="md" aria-label="Komitmen layanan">
-  <p class="label-tech text-amber-text">Komitmen</p>
-  <h2 class="mt-3 text-h2">Komitmen Layanan</h2>
+<Section bg="canvas" size="md" aria-label="Komitmen layanan">
+  <p class="label-tech text-muted">Komitmen</p>
+  <h2 class="mt-3 text-h2">Komitmen layanan</h2>
 
   <div class="mt-10 overflow-x-auto">
     <table class="w-full min-w-[560px] border-collapse text-sm">
       <thead>
         <tr>
-          <th class="w-1/3 border-b border-ink/15 py-3 text-left font-normal text-slate-muted" />
+          <th class="w-1/3 border-b border-hairline py-3 text-left font-normal text-muted" />
           {
             kolom.map((k, i) => (
               <th
                 class:list={[
-                  'border-b py-3 text-left font-semibold uppercase tracking-tight text-ink',
-                  i === unggulanIdx ? 'border-yellow bg-yellow/10 px-4' : 'border-ink/15',
+                  'border-b py-3 px-4 text-left font-semibold text-ink',
+                  i === unggulanIdx ? 'border-b-2 border-yellow' : 'border-hairline',
                 ]}
               >
                 {k}
@@ -43,12 +46,12 @@ const unggulanIdx = kolom.length - 1;
         {
           baris.map((b) => (
             <tr>
-              <td class="border-b border-mist py-3 pr-4 text-slate">{b.label}</td>
+              <td class="border-b border-hairline py-3 pr-4 text-muted">{b.label}</td>
               {b.nilai.map((v, i) => (
                 <td
                   class:list={[
-                    'border-b py-3 text-ink',
-                    i === unggulanIdx ? 'border-yellow bg-yellow/10 px-4 font-medium' : 'border-mist',
+                    'border-b border-hairline py-3 px-4 text-ink',
+                    i === unggulanIdx && 'font-medium',
                   ]}
                 >
                   {v}

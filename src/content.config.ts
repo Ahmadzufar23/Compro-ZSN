@@ -72,6 +72,13 @@ const layanan = defineCollection({
 
       cocokUntuk: z.array(z.string()).min(3).max(6).optional(),
 
+      /* Blok spesifikasi teknis 3 baris di kartu ServiceGrid (dan
+         SoftwareBanner untuk entri software) — label:nilai singkat. */
+      spesifikasi: z
+        .array(z.object({ label: z.string(), nilai: z.string() }))
+        .length(3)
+        .optional(),
+
       galeri: z
         .array(
           z.object({

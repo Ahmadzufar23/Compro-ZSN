@@ -16,7 +16,7 @@ const prinsip = [
     detail: 'Setiap pekerjaan disertai laporan uji dan dokumentasi as-built sebagai bukti kualitas.',
   },
   {
-    judul: 'Garansi 30 Hari',
+    judul: 'Bergaransi',
     detail: 'Perbaikan akibat kesalahan instalasi kami tangani tanpa biaya tambahan.',
   },
   {
@@ -25,12 +25,23 @@ const prinsip = [
   },
 ];
 
-/* NPWP sengaja tidak ditampilkan di halaman publik mana pun — lihat
-   CLAUDE.md bagian "Klaim yang DILARANG muncul di konten". Nomor itu
-   hanya dipakai untuk dokumen transaksi (penawaran, invoice, kontrak). */
-const legalitas = [
-  { label: 'Nomor Akta Pendirian', nilai: site.legalitas.akta },
-  { label: 'NIB', nilai: site.legalitas.nib },
+/* Data legalitas (akta, NIB, NPWP) tidak ditampilkan di halaman
+   publik mana pun (keputusan pemilik) — lihat CLAUDE.md bagian
+   "Klaim yang DILARANG muncul di konten". Nomornya hanya dipakai
+   untuk dokumen transaksi (penawaran, invoice, kontrak). */
+const kenapaZsn = [
+  {
+    judul: 'Tim Internal',
+    detail: 'Setiap pekerjaan dikerjakan tim ZSN sendiri, bukan subkontraktor lepas.',
+  },
+  {
+    judul: 'Dokumentasi As-Built',
+    detail: 'Setiap pekerjaan disertai laporan uji dan dokumentasi as-built sebagai bukti kualitas.',
+  },
+  {
+    judul: 'Bergaransi',
+    detail: 'Kesalahan instalasi kami perbaiki tanpa biaya tambahan, sesuai lingkup pekerjaan.',
+  },
 ];
 
 const jumlahLayanan = (await getCollection('layanan')).length;
@@ -38,107 +49,98 @@ const jumlahLayanan = (await getCollection('layanan')).length;
 const stats = [
   { angka: 'Sejak 2023', label: 'Tahun Beroperasi' },
   { angka: 'Nasional', label: 'Cakupan Layanan' },
-  { angka: '30 Hari', label: 'Garansi Instalasi' },
+  { angka: 'Bergaransi', label: 'Setiap Pengerjaan' },
   { angka: String(jumlahLayanan), label: 'Layanan Tersedia' },
 ];
 ---
 
 <Base
   title="Tentang"
-  description="PT Zufar Solusi Nawasena (ZSN): vendor infrastruktur jaringan, keamanan, dan pengembangan sistem untuk bisnis di Indonesia."
+  description="PT Zufar Solusi Nawasena (ZSN): infrastruktur jaringan, keamanan, dan pengembangan sistem digital untuk bisnis di Indonesia."
 >
-  <Section bg="ink" size="lg" blueprint aria-label="Hero tentang">
-    <p class="label-tech text-yellow">Tentang Kami</p>
-    <h1 class="mt-3 text-h1 text-white">{site.namaLegal}</h1>
+  <Section bg="canvas" size="lg" aria-label="Hero tentang">
+    <p class="label-tech text-muted">Tentang Kami</p>
+    <h1 class="mt-3 text-h1">{site.namaLegal}</h1>
   </Section>
 
-  <Section bg="white" size="md" aria-label="Cerita perusahaan">
+  <Section bg="canvas" size="md" aria-label="Cerita perusahaan">
     <div class="grid gap-10 lg:grid-cols-[55fr_45fr] lg:items-start">
       <div class="max-w-[65ch]">
-        <p>
-          {site.namaLegal} ({site.nama}) adalah vendor infrastruktur jaringan,
-          keamanan, dan pengembangan sistem untuk bisnis di berbagai kota di
-          Indonesia.
+        <p class="text-muted">
+          {site.namaLegal} ({site.nama}) mengerjakan infrastruktur jaringan,
+          keamanan, dan pengembangan sistem digital untuk bisnis di berbagai
+          kota di Indonesia.
         </p>
-        <p class="mt-4">
+        <p class="mt-4 text-muted">
           Kami menangani pekerjaan dari survei lokasi, instalasi fiber optic dan
           CCTV, konfigurasi jaringan enterprise, sampai pengembangan sistem yang
           menjalankan operasional klien sehari-hari.
         </p>
       </div>
-      <PlaceholderPhoto ratio="4/3" label="Foto Tim ZSN di Lapangan" graphite />
+      <PlaceholderPhoto ratio="4/3" label="Foto Tim ZSN di Lapangan" />
     </div>
 
-    <dl class="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 rounded-md bg-mist p-6 md:grid-cols-4 md:p-8">
+    <dl class="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-hairline pt-8 md:grid-cols-4">
       {
         stats.map(({ angka, label }) => (
-          <div class="min-w-0 border-l-2 border-ink/15 pl-4">
+          <div class="min-w-0 border-l border-hairline pl-4">
             <dt class="font-display break-words text-2xl font-bold text-ink md:text-3xl">
               {angka}
             </dt>
-            <dd class="label-tech mt-1 text-slate">{label}</dd>
+            <dd class="label-tech mt-1 text-muted">{label}</dd>
           </div>
         ))
       }
     </dl>
   </Section>
 
-  <Section bg="white" size="md" aria-label="Legalitas perusahaan">
-    <p class="label-tech text-amber-text">Legalitas</p>
-    <h2 class="mt-3 text-h2">Data Legal Perusahaan</h2>
+  <Section bg="surface" size="md" aria-label="Kenapa ZSN">
+    <p class="label-tech text-muted">Kenapa ZSN</p>
+    <h2 class="mt-3 text-h2">Alasan klien mempercayakan pekerjaan</h2>
 
-    <div class="mt-8 max-w-xl overflow-hidden rounded-md border border-ink/10">
-      <table class="w-full text-left">
-        <tbody>
-          {
-            legalitas.map((row, i) => (
-              <tr class:list={[i !== 0 && 'border-t border-ink/10']}>
-                <th class="label-tech w-1/2 bg-mist px-4 py-3 font-medium text-slate">
-                  {row.label}
-                </th>
-                <td class="px-4 py-3 text-ink">{row.nilai || '-'}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-      <p class="mt-3 text-xs text-slate-muted">
-        NPWP tersedia atas permintaan untuk keperluan kontrak.
-      </p>
-    </div>
-  </Section>
-
-  <Section bg="ink" size="sm" blueprint aria-label="Cakupan layanan">
-    <p class="label-tech text-yellow">Cakupan Layanan</p>
-    <h2 class="mt-3 text-h2 text-white">Nasional, Tidak Dibatasi Wilayah</h2>
-    <p class="mt-4 max-w-2xl text-white/70">
-      Survei dan pengerjaan ZSN tidak dibatasi wilayah tertentu. Kantor kami
-      berada di {site.alamat.kota}, dan tim siap menangani project di kota
-      lain di Indonesia sesuai kebutuhan klien.
-    </p>
-  </Section>
-
-  <Section bg="white" size="md" aria-label="Cara kami bekerja">
-    <p class="label-tech text-amber-text">Prinsip Kerja</p>
-    <h2 class="mt-3 text-h2">Cara Kami Bekerja</h2>
-
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mt-8 grid gap-8 border-t border-hairline pt-8 sm:grid-cols-3">
       {
-        prinsip.map((p) => (
-          <div class="rounded-md border border-ink/10 bg-mist p-6">
-            <h3 class="text-base font-semibold uppercase tracking-tight text-ink">{p.judul}</h3>
-            <p class="mt-2 text-sm text-slate">{p.detail}</p>
+        kenapaZsn.map((k) => (
+          <div class="border-l border-hairline pl-5">
+            <h3 class="text-h3">{k.judul}</h3>
+            <p class="mt-2 text-sm text-muted">{k.detail}</p>
           </div>
         ))
       }
     </div>
   </Section>
 
-  <Section bg="ink" size="lg" blueprint aria-label="Ajakan bertindak">
+  <Section bg="canvas" size="sm" aria-label="Cakupan layanan">
+    <p class="label-tech text-muted">Cakupan Layanan</p>
+    <h2 class="mt-3 text-h2">Nasional, tidak dibatasi wilayah</h2>
+    <p class="mt-4 max-w-2xl text-muted">
+      Survei dan pengerjaan ZSN tidak dibatasi wilayah tertentu. Kantor kami
+      berada di {site.alamat.kota}, dan tim siap menangani project di kota
+      lain di Indonesia sesuai kebutuhan klien.
+    </p>
+  </Section>
+
+  <Section bg="surface" size="md" aria-label="Cara kami bekerja">
+    <p class="label-tech text-muted">Prinsip Kerja</p>
+    <h2 class="mt-3 text-h2">Cara kami bekerja</h2>
+
+    <div class="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        prinsip.map((p) => (
+          <div class="border-t border-hairline pt-5">
+            <h3 class="text-base font-semibold text-ink">{p.judul}</h3>
+            <p class="mt-2 text-sm text-muted">{p.detail}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section bg="deep" size="lg" aria-label="Ajakan bertindak">
     <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div class="max-w-2xl">
-        <h2 class="text-h2 text-white">Siap Bekerja Sama?</h2>
-        <p class="mt-4 text-white/70">
+        <h2 class="text-h2 text-white">Siap bekerja sama?</h2>
+        <p class="mt-4 text-subtle">
           Hubungi tim kami untuk konsultasi kebutuhan infrastruktur jaringan
           Anda.
         </p>
