@@ -10,54 +10,54 @@ import teamPhoto from '@/assets/project/proj-3.jpg';
 
 const prinsip = [
   {
-    judul: 'Tim Profesional',
-    detail: 'Dikerjakan oleh teknisi bersertifikat dengan jam terbang tinggi, memastikan standar keamanan dan performa maksimal.',
+    judul: 'Professional Team',
+    detail: 'Executed by certified technicians with extensive experience, ensuring maximum safety and performance standards.',
   },
   {
-    judul: 'Dokumentasi As-Built',
-    detail: 'Setiap pekerjaan disertai laporan uji dan dokumentasi lengkap sebagai bukti kualitas.',
+    judul: 'As-Built Documentation',
+    detail: 'Every project comes with a test report and complete documentation as proof of quality.',
   },
   {
-    judul: 'Bergaransi',
-    detail: 'Perbaikan akibat kesalahan instalasi kami tangani tanpa biaya tambahan.',
+    judul: 'Warranty Backed',
+    detail: 'Repairs due to installation errors are handled by us at no additional cost.',
   },
   {
-    judul: 'Transparansi',
-    detail: 'Estimasi biaya dijelaskan berdasarkan faktor nyata di lapangan, bukan angka mengambang.',
+    judul: 'Transparency',
+    detail: 'Cost estimates are explained based on real factors in the field, not floating numbers.',
   },
 ];
 
 const jumlahLayanan = (await getCollection('layanan')).length;
 
 const stats = [
-  { angka: 'Sejak 2023', label: 'Tahun Beroperasi' },
-  { angka: 'Nasional', label: 'Cakupan Layanan' },
-  { angka: 'Bergaransi', label: 'Setiap Pengerjaan' },
-  { angka: String(jumlahLayanan), label: 'Layanan Tersedia' },
+  { angka: 'Since 2023', label: 'Years in Operation' },
+  { angka: 'Nationwide', label: 'Service Coverage' },
+  { angka: 'Warrantied', label: 'Every Project' },
+  { angka: String(jumlahLayanan), label: 'Available Services' },
 ];
 ---
 
 <Base
-  title="Tentang"
-  description="PT Zufar Solusi Nawasena (ZSN): infrastruktur jaringan, keamanan, dan pengembangan sistem digital untuk bisnis di Indonesia."
+  title="About"
+  description="PT Zufar Solusi Nawasena (ZSN): network infrastructure, security, and digital system development for businesses across Indonesia."
 >
-  <Section bg="canvas" size="lg" aria-label="Cerita perusahaan">
+  <Section bg="canvas" size="lg" aria-label="Company Story">
     <div class="mb-16 md:mb-20">
-      <p class="label-tech text-muted">Tentang Kami</p>
+      <p class="label-tech text-muted">About Us</p>
       <h1 class="mt-3 text-h1">{site.namaLegal}</h1>
     </div>
 
     <div class="grid gap-12 lg:grid-cols-[55fr_45fr] lg:items-center">
       <div class="max-w-[65ch]">
         <p class="text-xl text-ink font-medium leading-relaxed">
-          {site.namaLegal} ({site.nama}) mengerjakan infrastruktur jaringan,
-          keamanan, dan pengembangan sistem digital untuk bisnis di berbagai
-          kota di Indonesia.
+          {site.namaLegal} ({site.nama}) provides network infrastructure,
+          security, and digital system development for businesses in various
+          cities across Indonesia.
         </p>
         <p class="mt-6 text-muted leading-relaxed text-lg">
-          Kami menangani pekerjaan dari survei lokasi, instalasi fiber optic dan
-          CCTV, konfigurasi jaringan enterprise, sampai pengembangan sistem yang
-          menjalankan operasional klien sehari-hari.
+          We handle everything from site surveys, fiber optic and CCTV installations,
+          enterprise network configurations, to developing systems that
+          run our clients' daily operations.
         </p>
       </div>
       
@@ -66,7 +66,7 @@ const stats = [
           src={teamPhoto}
           formats={['avif', 'webp']}
           fallbackFormat="webp"
-          alt="Foto Tim ZSN di Lapangan"
+          alt="ZSN Team in the field"
           width={800}
           height={600}
           class="w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-700"
@@ -75,7 +75,7 @@ const stats = [
       </div>
     </div>
 
-    <dl class="mt-16 grid grid-cols-2 gap-x-6 gap-y-10 border-t border-hairline pt-10 md:grid-cols-4" aria-label="Statistik">
+    <dl class="mt-16 grid grid-cols-2 gap-x-6 gap-y-10 border-t border-hairline pt-10 md:grid-cols-4" aria-label="Statistics">
       {
         stats.map(({ angka, label }) => (
           <div class="min-w-0 border-l-2 border-yellow-400 pl-6">
@@ -95,23 +95,23 @@ const stats = [
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center text-center">
       <div class="flex items-center justify-center gap-3 mb-6">
         <div class="w-3 h-3 bg-yellow-400"></div>
-        <p class="text-zinc-500 font-mono text-sm tracking-widest uppercase">Cakupan Layanan</p>
+        <p class="text-zinc-500 font-mono text-sm tracking-widest uppercase">Coverage Area</p>
         <div class="w-3 h-3 bg-yellow-400"></div>
       </div>
       <h2 class="text-white text-4xl lg:text-6xl font-display font-bold max-w-4xl mx-auto leading-tight">
-        Nasional, tidak dibatasi wilayah.
+        Nationwide, unbounded by location.
       </h2>
       <p class="mt-8 max-w-2xl text-zinc-400 text-lg lg:text-xl mx-auto leading-relaxed">
-        Kantor pusat kami berada di {site.alamat.kota}, namun tim ZSN siap terbang ke berbagai kota di Indonesia untuk mengeksekusi project sesuai kebutuhan infrastruktur klien.
+        Our headquarters is located in {site.alamat.kota}, but the ZSN team is ready to fly to various cities in Indonesia to execute projects based on your infrastructure needs.
       </p>
     </div>
   </section>
 
   {/* Prinsip Kerja - Premium Cards */}
-  <Section bg="surface" size="lg" aria-label="Cara kami bekerja">
+  <Section bg="surface" size="lg" aria-label="How we work">
     <div class="text-center max-w-2xl mx-auto mb-16">
       <p class="text-yellow-500 font-mono text-sm tracking-widest uppercase mb-4">Core Values</p>
-      <h2 class="text-ink text-4xl font-display font-bold">Kenapa Klien Memilih ZSN</h2>
+      <h2 class="text-ink text-4xl font-display font-bold">Why Clients Choose ZSN</h2>
     </div>
 
     <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -132,16 +132,15 @@ const stats = [
     </div>
   </Section>
 
-  <Section bg="deep" size="lg" aria-label="Ajakan bertindak">
+  <Section bg="deep" size="lg" aria-label="Call to action">
     <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div class="max-w-2xl">
-        <h2 class="text-h2 text-white">Siap bekerja sama?</h2>
+        <h2 class="text-h2 text-white">Ready to work together?</h2>
         <p class="mt-4 text-subtle">
-          Hubungi tim kami untuk konsultasi kebutuhan infrastruktur jaringan
-          Anda.
+          Contact our team to consult your network infrastructure needs.
         </p>
       </div>
-      <Button href="/kontak" size="lg" class="shrink-0">Hubungi Kami</Button>
+      <Button href="/contact" size="lg" class="shrink-0">Contact Us</Button>
     </div>
   </Section>
 </Base>
@@ -150,7 +149,7 @@ const stats = [
   import { inView, animate } from "motion";
 
   const setupStats = () => {
-    const section = document.querySelector('[aria-label="Statistik"]');
+    const section = document.querySelector('[aria-label="Statistics"]');
     const statElements = document.querySelectorAll('.stat-angka');
 
     if (section && statElements.length > 0) {

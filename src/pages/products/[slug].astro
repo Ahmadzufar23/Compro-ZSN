@@ -1,0 +1,91 @@
+---
+/**
+ * Template tunggal untuk semua halaman layanan. Setiap blok dirender
+ * hanya jika datanya ada di frontmatter — TIDAK ADA percabangan
+ * per-slug di sini.
+ */
+import { getCollection, render } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/ui/Section.astro';
+import ServiceHero from '@/components/service/ServiceHero.astro';
+import StatBand from '@/components/service/StatBand.astro';
+import CocokUntuk from '@/components/service/CocokUntuk.astro';
+import ScopeList from '@/components/service/ScopeList.astro';
+import Gallery from '@/components/service/Gallery.astro';
+import Workflow from '@/components/service/Workflow.astro';
+import BrandTiers from '@/components/service/BrandTiers.astro';
+import PriceFactors from '@/components/service/PriceFactors.astro';
+import MasalahCards from '@/components/service/MasalahCards.astro';
+import PaketCards from '@/components/service/PaketCards.astro';
+import KomitmenTable from '@/components/service/KomitmenTable.astro';
+import TidakTermasuk from '@/components/service/TidakTermasuk.astro';
+import Faq from '@/components/service/Faq.astro';
+import ServiceCta from '@/components/service/ServiceCta.astro';
+import PortfolioShowcase from '@/components/service/PortfolioShowcase.astro';
+
+export async function getStaticPaths() {
+  const produk = await getCollection('produk');
+  return produk.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const data = entry.data;
+const { Content } = await render(entry);
+---
+
+<Base title={data.judul} description={data.ringkas}>
+  <ServiceHero
+    mode={data.heroStyle}
+    judul={data.judul}
+    subjudul={data.subjudul}
+    ctaLabel={data.ctaLabel}
+    image={data.heroImage}
+    alt={data.heroAlt}
+    flushBottom={!!data.portofolio}
+    parentLabel="Products"
+    parentUrl="/products"
+  />
+
+  {data.portofolio && <PortfolioShowcase items={data.portofolio} />}
+
+  {entry.body && entry.body.trim().length > 0 && (
+    <Section bg="canvas" size="sm" aria-label="Ringkasan layanan">
+      <div class="prose-service max-w-3xl text-muted">
+        <Content />
+      </div>
+    </Section>
+  )}
+
+  {data.stats && <StatBand stats={data.stats} />}
+  {data.cocokUntuk && <CocokUntuk items={data.cocokUntuk} />}
+
+  <ScopeList items={data.scope} />
+
+  {data.galeri && <Gallery items={data.galeri} />}
+  {data.alurKerja && <Workflow items={data.alurKerja} />}
+
+  {(data.merek || data.tierPerangkat) && (
+    <BrandTiers merek={data.merek} tierPerangkat={data.tierPerangkat} />
+  )}
+
+  {data.faktorHarga && <PriceFactors items={data.faktorHarga} />}
+  {data.masalah && <MasalahCards items={data.masalah} />}
+  {data.paket && <PaketCards items={data.paket} />}
+  {data.komitmen && <KomitmenTable kolom={data.komitmen.kolom} baris={data.komitmen.baris} />}
+  {data.tidakTermasuk && <TidakTermasuk items={data.tidakTermasuk} />}
+
+  <Faq items={data.faq} />
+  <ServiceCta judul={data.judul} ctaLabel={data.ctaLabel} />
+</Base>
+
+<style>
+  .prose-service :global(p) {
+    margin-top: 1em;
+  }
+  .prose-service :global(p:first-child) {
+    margin-top: 0;
+  }
+</style>

@@ -12,9 +12,9 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<Section bg="canvas" size="md" aria-label="Faktor harga">
-  <p class="label-tech text-muted">Estimasi Biaya</p>
-  <h2 class="mt-3 text-h2">Faktor yang memengaruhi harga</h2>
+<Section bg="canvas" size="md" aria-label="Price factors">
+  <p class="label-tech text-muted">Cost Estimation</p>
+  <h2 class="mt-3 text-h2">Factors affecting the price</h2>
 
   <div class="mt-10 grid gap-5 md:grid-cols-4">
     {
@@ -28,6 +28,6 @@ const { items } = Astro.props;
   </div>
 
   <p class="label-tech mt-8 border-t border-hairline pt-4 text-muted">
-    Harga akhir ditentukan setelah survei lokasi, bukan estimasi dari brosur.
+    Final pricing is determined after a site survey, not estimated from a brochure.
   </p>
 </Section>

@@ -21,39 +21,39 @@ semua.sort((a, b) => a.data.urutan - b.data.urutan);
 
 const divisiInfo = {
   manajemen: {
-    label: 'Manajemen',
-    deskripsi: 'Menentukan arah project, hubungan klien, dan standar kerja ZSN.',
+    label: 'Management',
+    deskripsi: 'Setting project direction, client relations, and ZSN work standards.',
     tanggungJawab: [
-      'Menyusun rencana kerja dan estimasi biaya berdasarkan hasil survei lapangan',
-      'Menjadi kontak utama klien selama project berjalan',
-      'Menetapkan standar mutu dan prosedur kerja tim lapangan',
+      'Preparing work plans and cost estimates based on field survey results',
+      'Serving as the primary client contact during the project',
+      'Establishing quality standards and field team work procedures',
     ],
   },
   instalasi: {
-    label: 'Tim Instalasi',
-    deskripsi: 'Penarikan kabel, mounting perangkat, dan pemasangan langsung di lapangan.',
+    label: 'Installation Team',
+    deskripsi: 'Cable pulling, device mounting, and direct field installation.',
     tanggungJawab: [
-      'Penarikan dan penataan kabel fiber optic maupun tembaga sesuai jalur rancangan',
-      'Pemasangan bracket, rack, dan mounting perangkat aktif',
-      'Perapian jalur kabel dan pelabelan titik instalasi',
+      'Pulling and arranging fiber optic and copper cables according to the design route',
+      'Installing brackets, racks, and mounting active devices',
+      'Cable route neatening and installation point labeling',
     ],
   },
   teknis: {
-    label: 'Tim Teknis & Konfigurasi',
-    deskripsi: 'Splicing, terminasi, konfigurasi router dan NVR, serta pengujian OTDR.',
+    label: 'Technical & Configuration Team',
+    deskripsi: 'Splicing, termination, router and NVR configuration, and OTDR testing.',
     tanggungJawab: [
-      'Fusion splicing dan terminasi konektor fiber optic',
-      'Konfigurasi router, switch, access point, dan NVR sesuai kebutuhan klien',
-      'Pengujian OTDR dan pengukuran loss sebelum serah terima',
+      'Fusion splicing and fiber optic connector termination',
+      'Configuring routers, switches, access points, and NVRs according to client needs',
+      'OTDR testing and loss measurement before handover',
     ],
   },
   operasional: {
-    label: 'Tim Operasional & QC',
-    deskripsi: 'Penjadwalan, dokumentasi as-built, quality control, dan serah terima ke klien.',
+    label: 'Operations & QC Team',
+    deskripsi: 'Scheduling, as-built documentation, quality control, and client handover.',
     tanggungJawab: [
-      'Penjadwalan kunjungan lapangan dan koordinasi tim instalasi',
-      'Penyusunan laporan uji dan dokumentasi as-built',
-      'Pemeriksaan akhir kualitas pekerjaan sebelum serah terima ke klien',
+      'Scheduling field visits and coordinating the installation team',
+      'Preparing test reports and as-built documentation',
+      'Final quality check of the work before handing it over to the client',
     ],
   },
 } as const;
@@ -68,47 +68,47 @@ const kelompok = urutanDivisi.map((divisi) => ({
 
 const alurKerja = [
   {
-    judul: 'Survei Bersama',
+    judul: 'Joint Survey',
     detail:
-      'Teknisi senior dan tim instalasi turun bersama ke lokasi, memastikan rencana kerja cocok dengan kondisi lapangan sebelum jadwal eksekusi ditentukan.',
+      'Senior technicians and the installation team go down to the site together, ensuring the work plan matches field conditions before the execution schedule is determined.',
   },
   {
-    judul: 'Eksekusi Berpasangan',
+    judul: 'Paired Execution',
     detail:
-      'Pemasangan selalu dikerjakan minimal dua orang: satu fokus instalasi, satu fokus keselamatan kerja dan pengujian sambungan secara langsung.',
+      'Installation is always carried out by at least two people: one focusing on installation, one focusing on work safety and direct connection testing.',
   },
   {
-    judul: 'Serah Terima Berdokumentasi',
+    judul: 'Documented Handover',
     detail:
-      'Setiap project ditutup dengan laporan uji dan dokumentasi as-built yang diperiksa tim teknis lebih dulu sebelum diserahkan ke klien.',
+      'Every project concludes with a test report and as-built documentation which is verified by the technical team before being handed over to the client.',
   },
 ];
 
 const kategoriSertifikasi = [
-  'Instalasi & Terminasi Fiber Optic',
-  'Pengujian OTDR & Pengukuran Loss',
-  'Konfigurasi Jaringan & Perangkat Aktif',
-  'Keselamatan Kerja (K3) di Lapangan',
+  'Fiber Optic Installation & Termination',
+  'OTDR Testing & Loss Measurement',
+  'Network & Active Device Configuration',
+  'Field Occupational Safety (OSH)',
 ];
 ---
 
 <Base
-  title="Tim"
-  description="Tim internal ZSN yang menangani instalasi, konfigurasi teknis, dan operasional project jaringan."
+  title="Team"
+  description="ZSN's internal team handling installation, technical configuration, and network project operations."
   noindex
 >
-  <Section bg="canvas" size="lg" aria-label="Hero tim">
-    <p class="label-tech text-muted">Tim Kami</p>
-    <h1 class="mt-3 text-h1">Orang di balik setiap pemasangan</h1>
+  <Section bg="canvas" size="lg" aria-label="Team Hero">
+    <p class="label-tech text-muted">Our Team</p>
+    <h1 class="mt-3 text-h1">The people behind every installation</h1>
     <p class="mt-4 max-w-2xl text-muted">
-      Seluruh pekerjaan ZSN dikerjakan oleh tim internal bersertifikat, bukan
-      subkontraktor lepas, yang terbagi menurut peran di setiap tahap project.
+      All ZSN work is carried out by an internal certified team, not
+      freelance subcontractors, divided by roles at each project stage.
     </p>
   </Section>
 
-  <Section bg="surface" size="md" aria-label="Cara tim kami bekerja">
-    <p class="label-tech text-muted">Prinsip Kerja</p>
-    <h2 class="mt-3 text-h2">Cara tim kami bekerja</h2>
+  <Section bg="surface" size="md" aria-label="How our team works">
+    <p class="label-tech text-muted">Work Principles</p>
+    <h2 class="mt-3 text-h2">How our team works</h2>
 
     <div class="mt-8 grid gap-x-8 gap-y-6 border-t border-hairline pt-6 sm:grid-cols-3">
       {
@@ -175,26 +175,26 @@ const kategoriSertifikasi = [
             <div class="mt-8 grid gap-x-8 gap-y-10 border-t border-hairline pt-8 sm:grid-cols-2 lg:w-1/2">
               {[0, 1].map(() => (
                 <div>
-                  <PlaceholderPhoto ratio="1/1" label="Foto Anggota" />
+                  <PlaceholderPhoto ratio="1/1" label="Member Photo" />
                   <div class="mt-4 h-3 w-2/3 bg-hairline" />
                   <div class="mt-2 h-2.5 w-1/3 bg-hairline" />
                 </div>
               ))}
             </div>
-            <p class="label-tech mt-5 text-muted">Profil anggota sedang kami siapkan.</p>
+            <p class="label-tech mt-5 text-muted">Member profiles are currently being prepared.</p>
           </>
         )}
       </Section>
     ))
   }
 
-  <Section bg="canvas" size="md" aria-label="Sertifikasi dan standar kerja">
-    <p class="label-tech text-muted">Sertifikasi</p>
-    <h2 class="mt-3 text-h2">Sertifikasi & standar kerja</h2>
+  <Section bg="canvas" size="md" aria-label="Certification and work standards">
+    <p class="label-tech text-muted">Certification</p>
+    <h2 class="mt-3 text-h2">Certification & work standards</h2>
     <p class="mt-3 max-w-prose text-muted">
-      Tim teknis ZSN dibekali sertifikasi resmi pada kategori kerja berikut.
-      Nama dan nomor sertifikat masing-masing anggota dicantumkan begitu
-      dokumen selesai diverifikasi.
+      ZSN's technical team is equipped with official certifications in the following work categories.
+      The name and certificate number of each member will be listed as soon as
+      the documents are verified.
     </p>
 
     <div class="mt-8 grid gap-x-8 gap-y-6 border-t border-hairline pt-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -202,23 +202,22 @@ const kategoriSertifikasi = [
         kategoriSertifikasi.map((k) => (
           <div>
             <h3 class="text-base font-semibold text-ink">{k}</h3>
-            <p class="label-tech mt-3 text-subtle">Sertifikat segera dicantumkan</p>
+            <p class="label-tech mt-3 text-subtle">Certificates to be listed soon</p>
           </div>
         ))
       }
     </div>
   </Section>
 
-  <Section bg="deep" size="lg" aria-label="Ajakan bertindak">
+  <Section bg="deep" size="lg" aria-label="Call to action">
     <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div class="max-w-2xl">
-        <h2 class="text-h2 text-white">Siap bekerja sama?</h2>
+        <h2 class="text-h2 text-white">Ready to work together?</h2>
         <p class="mt-4 text-subtle">
-          Hubungi tim kami untuk konsultasi kebutuhan infrastruktur jaringan
-          Anda.
+          Contact our team to consult your network infrastructure needs.
         </p>
       </div>
-      <Button href="/kontak" size="lg" class="shrink-0">Hubungi Kami</Button>
+      <Button href="/contact" size="lg" class="shrink-0">Contact Us</Button>
     </div>
   </Section>
 </Base>

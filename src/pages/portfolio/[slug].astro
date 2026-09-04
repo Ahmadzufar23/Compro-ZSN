@@ -25,18 +25,18 @@ const kategoriInfo: Record<string, { label: string; slug: string }> = {
   cctv: { label: 'CCTV & Security', slug: 'cctv' },
   network: { label: 'Network Infrastructure', slug: 'network' },
   maintenance: { label: 'Maintenance & IT Support', slug: 'maintenance' },
-  software: { label: 'Pengembangan Sistem', slug: 'software' },
+  software: { label: 'System Development', slug: 'software' },
 };
 const info = kategoriInfo[data.kategori];
 
 const stats = data.stats.map((s) => ({ angka: s.nilai, label: s.label }));
-const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal project serupa dengan "${data.judul}".`);
+const waHref = waLink(`Hello ZSN, I would like to consult about a project similar to "${data.judul}".`);
 ---
 
 <Base title={data.judul} description={data.ringkas} noindex>
-  <Section bg="canvas" size="lg" aria-label="Hero project">
+  <Section bg="canvas" size="lg" aria-label="Project Hero">
     <p class="label-tech text-muted">
-      <a href="/project" class="hover:text-ink">Project</a>
+      <a href="/portfolio" class="hover:text-ink">Portfolio</a>
       <span class="mx-2 text-subtle">/</span>
       <span class="text-ink">{data.judul}</span>
     </p>
@@ -67,7 +67,7 @@ const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal project serupa denga
 
   <StatBand stats={stats} />
 
-  <Section bg="canvas" size="md" aria-label="Cerita project">
+  <Section bg="canvas" size="md" aria-label="Project story">
     <div class="prose-project mx-auto max-w-[65ch] text-muted">
       <Content />
     </div>
@@ -75,27 +75,27 @@ const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal project serupa denga
 
   {data.galeri && <Gallery items={data.galeri} />}
 
-  <Section bg="surface" size="md" aria-label="Layanan terkait">
-    <p class="label-tech text-muted">Layanan Terkait</p>
-    <h2 class="mt-3 text-h2">Butuh pekerjaan serupa?</h2>
+  <Section bg="surface" size="md" aria-label="Related services">
+    <p class="label-tech text-muted">Related Services</p>
+    <h2 class="mt-3 text-h2">Need similar work done?</h2>
     <p class="mt-3 max-w-prose text-muted">
-      Project ini merupakan bagian dari layanan {info.label}.
+      This project is part of our {info.label} service.
     </p>
-    <Button href={`/layanan/${info.slug}`} variant="outline-dark" class="mt-6">
-      Lihat Layanan {info.label}
+    <Button href={`/services/${info.slug}`} variant="outline-dark" class="mt-6">
+      View {info.label} Services
     </Button>
   </Section>
 
-  <Section bg="deep" size="lg" aria-label="Ajakan bertindak">
+  <Section bg="deep" size="lg" aria-label="Call to action">
     <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div class="max-w-2xl">
-        <h2 class="text-h2 text-white">Ingin project seperti ini?</h2>
+        <h2 class="text-h2 text-white">Want a project like this?</h2>
         <p class="mt-4 text-subtle">
-          Ceritakan kebutuhan lokasi Anda lewat WhatsApp, tim kami akan
-          merespons dengan rencana survei.
+          Tell us about your location and requirements via WhatsApp, and our team will
+          respond with a survey plan.
         </p>
       </div>
-      <Button href={waHref} size="lg" external class="shrink-0">Konsultasi via WhatsApp</Button>
+      <Button href={waHref} size="lg" external class="shrink-0">Consult via WhatsApp</Button>
     </div>
   </Section>
 </Base>

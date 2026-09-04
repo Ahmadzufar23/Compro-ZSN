@@ -27,7 +27,7 @@ const kategoriInfo: Record<string, { label: string; slug: string }> = {
   cctv: { label: 'CCTV & Security', slug: 'cctv' },
   network: { label: 'Network Infrastructure', slug: 'network' },
   maintenance: { label: 'Maintenance & IT Support', slug: 'maintenance' },
-  software: { label: 'Pengembangan Sistem', slug: 'software' },
+  software: { label: 'System Development', slug: 'software' },
 };
 
 const urutanKategori = ['fiber', 'cctv', 'network', 'maintenance', 'software'] as const;
@@ -46,32 +46,32 @@ const tampilkanPerKategori = semua.length >= AMBANG_KELOMPOK_KATEGORI;
 ---
 
 <Base
-  title="Project"
-  description="Dokumentasi project instalasi fiber optic, CCTV, jaringan, dan sistem yang sudah dikerjakan ZSN."
+  title="Portfolio"
+  description="Documentation of fiber optic, CCTV, network, and system installation projects completed by ZSN."
   noindex
 >
-  <Section bg="canvas" size="sm" aria-label="Hero project">
-    <p class="label-tech text-muted">Project</p>
-    <h1 class="mt-3 text-h1">Yang sudah kami kerjakan</h1>
+  <Section bg="canvas" size="sm" aria-label="Portfolio Hero">
+    <p class="label-tech text-muted">Portfolio</p>
+    <h1 class="mt-3 text-h1">What we've built</h1>
     <p class="mt-4 max-w-2xl text-muted">
-      Dokumentasi lapangan dari project fiber optic, CCTV, jaringan, dan
-      sistem yang telah diselesaikan ZSN.
+      Field documentation of fiber optic, CCTV, network, and
+      system projects completed by ZSN.
     </p>
   </Section>
 
   {
     semua.length === 0 && (
-      <Section bg="surface" size="md" aria-label="Project belum tersedia">
-        <p class="text-muted">Dokumentasi project sedang disiapkan dan akan segera tayang di sini.</p>
+      <Section bg="surface" size="md" aria-label="No projects available">
+        <p class="text-muted">Project documentation is being prepared and will be published here soon.</p>
       </Section>
     )
   }
 
   {
     semua.length > 0 && !tampilkanPerKategori && (
-      <Section bg="surface" size="md" aria-label="Semua project">
-        <p class="label-tech text-muted">Daftar</p>
-        <h2 class="mt-3 text-h2">Semua project</h2>
+      <Section bg="surface" size="md" aria-label="All projects">
+        <p class="label-tech text-muted">List</p>
+        <h2 class="mt-3 text-h2">All projects</h2>
 
         <div class="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2">
           {semua.map((project) => (
@@ -80,7 +80,7 @@ const tampilkanPerKategori = semua.length >= AMBANG_KELOMPOK_KATEGORI;
         </div>
 
         <p class="mt-8 text-sm text-muted">
-          Dokumentasi project lain sedang kami siapkan.
+          Documentation for other projects is currently being prepared.
         </p>
       </Section>
     )
@@ -90,7 +90,7 @@ const tampilkanPerKategori = semua.length >= AMBANG_KELOMPOK_KATEGORI;
     tampilkanPerKategori &&
       kelompokPerKategori.map(({ info, items }, i) => (
         <Section bg={i % 2 === 0 ? 'canvas' : 'surface'} size="md" aria-label={`Project ${info.label}`}>
-          <p class="label-tech text-muted">Kategori</p>
+          <p class="label-tech text-muted">Category</p>
           <h2 class="mt-3 text-h2">{info.label}</h2>
 
           <div class="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">

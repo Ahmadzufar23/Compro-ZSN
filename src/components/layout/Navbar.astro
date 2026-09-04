@@ -22,9 +22,10 @@ import Logo from '@/components/ui/Logo.astro';
 import { site } from '@/config/site';
 
 const menu = [
-  { label: 'Tentang ZSN', id: 'tentang', page: '/tentang' },
-  { label: 'Layanan', id: 'layanan', page: '/layanan' },
-  { label: 'Portofolio', id: 'project', page: '/project' },
+  { label: 'About', id: 'about', page: '/about' },
+  { label: 'Services', id: 'services', page: '/services' },
+  { label: 'Products', id: 'products', page: '/products' },
+  { label: 'Portfolio', id: 'portfolio', page: '/portfolio' },
 ];
 
 const path = Astro.url.pathname;
@@ -62,10 +63,10 @@ const isActive = (page: string) => !isHome && path.startsWith(page);
     </ul>
 
     <a
-      href="/kontak"
+      href="/contact"
       class="hidden shrink-0 rounded-xl bg-yellow px-6 py-2.5 text-sm font-bold text-ink shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg lg:inline-block"
     >
-      Konsultasi Gratis
+      Free Consultation
     </a>
 
     {/* Mobile — tanpa JavaScript */}
@@ -116,10 +117,10 @@ const isActive = (page: string) => !isHome && path.startsWith(page);
           ))}
         </ul>
         <a
-          href="/kontak"
+          href="/contact"
           class="mt-5 block rounded-xl bg-yellow py-3.5 text-center text-sm font-bold text-ink shadow-md"
         >
-          Konsultasi Gratis
+          Free Consultation
         </a>
       </div>
     </details>

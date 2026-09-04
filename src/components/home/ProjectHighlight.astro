@@ -11,9 +11,9 @@ const projects = (await getCollection('project'))
   .slice(0, 6);
 ---
 
-<Section bg="canvas" id="project" aria-label="Project">
-  <p class="label-tech text-muted">Project</p>
-  <h2 class="mt-3 text-h2">Yang sudah kami kerjakan</h2>
+<Section bg="canvas" id="portfolio" aria-label="Portfolio">
+  <p class="label-tech text-muted">Portfolio</p>
+  <h2 class="mt-3 text-h2">What we've built</h2>
 
   <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {projects.map((proj) => (
@@ -38,7 +38,7 @@ const projects = (await getCollection('project'))
 
   {site.halamanAktif.project && (
     <div class="mt-12 flex justify-center">
-      <Button href="/project" variant="outline-dark">Lihat Semua Project</Button>
+      <Button href="/portfolio" variant="outline-dark">View All Portfolio</Button>
     </div>
   )}
 </Section>
@@ -47,7 +47,7 @@ const projects = (await getCollection('project'))
   import { animate, inView, stagger } from "motion";
 
   const setupProjectAnimations = () => {
-    const section = document.querySelector('#project');
+    const section = document.querySelector('#portfolio');
     const cards = document.querySelectorAll('.animate-project-card');
 
     if (section && cards.length > 0) {

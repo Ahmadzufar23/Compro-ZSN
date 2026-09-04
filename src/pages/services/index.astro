@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/ui/Section.astro';
+
+const layanan = (await getCollection('layanan')).sort((a, b) => a.data.urutan - b.data.urutan);
+---
+
+<Base
+  title="Services"
+  description="Installation of fiber optic, CCTV, enterprise networks, maintenance, and software development by ZSN."
+>
+  <Section bg="canvas" size="lg" aria-label="Services Hero">
+    <p class="label-tech text-muted">Services</p>
+    <h1 class="mt-5 text-hero">From cables to systems.</h1>
+    <p class="mt-6 max-w-xl text-muted">
+      Five services that cover the entire infrastructure lifecycle: physical
+      installation, security, network, maintenance, to the systems that run them.
+    </p>
+  </Section>
+
+  <Section bg="canvas" size="md" aria-label="Service List">
+    <div class="grid gap-x-8 gap-y-10 md:grid-cols-2">
+      {
+        layanan.map((entry) => (
+          <a href={`/services/${entry.id}`} class="group flex flex-col">
+            {entry.data.heroStyle === 'foto' && entry.data.heroImage ? (
+              <div class="relative overflow-hidden" style="aspect-ratio: 16/9;">
+                <Picture
+                  src={entry.data.heroImage}
+                  formats={['avif', 'webp']}
+                  fallbackFormat="webp"
+                  alt={entry.data.heroAlt ?? ''}
+                  width={800}
+                  height={450}
+                  loading="lazy"
+                  pictureAttributes={{ class: 'block size-full' }}
+                  class="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+            ) : (
+              <div class="flex items-center border border-hairline bg-surface p-6" style="aspect-ratio: 16/9;">
+                <p class="label-tech text-muted">Software</p>
+              </div>
+            )}
+            <div class="flex flex-1 flex-col border-t border-hairline pt-4">
+              <h2 class="text-h3">{entry.data.judul}</h2>
+              <p class="mt-2 flex-1 text-sm text-muted">{entry.data.ringkas}</p>
+              <span class="label-tech mt-5 inline-flex items-center gap-2 text-ink">
+                View Details
+                <svg
+                  class="size-3.5 transition-transform group-hover:translate-x-1"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  aria-hidden="true"
+                >
+                  <path d="M7 17 17 7M9 7h8v8" />
+                </svg>
+              </span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </Section>
+</Base>

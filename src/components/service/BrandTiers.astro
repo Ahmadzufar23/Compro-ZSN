@@ -20,9 +20,9 @@ interface Props {
 const { merek, tierPerangkat } = Astro.props;
 ---
 
-<Section bg="surface" size="md" aria-label="Perangkat yang kami tangani">
-  <p class="label-tech text-muted">Perangkat</p>
-  <h2 class="mt-3 text-h2">Perangkat yang kami tangani</h2>
+<Section bg="surface" size="md" aria-label="Supported devices">
+  <p class="label-tech text-muted">Devices</p>
+  <h2 class="mt-3 text-h2">Hardware we handle</h2>
 
   {
     merek && (
@@ -43,7 +43,7 @@ const { merek, tierPerangkat } = Astro.props;
           <thead>
             <tr class="border-b border-hairline">
               <th class="py-3 pr-4 align-bottom font-normal">
-                <span class="label-tech text-muted">Spesifikasi</span>
+                <span class="label-tech text-muted">Specification</span>
               </th>
               {tierPerangkat.map((t) => (
                 <th class="px-4 py-3 align-bottom font-normal">

@@ -13,7 +13,7 @@ export const site = {
 
   nama: 'ZSN',
   namaLegal: 'PT Zufar Solusi Nawasena',
-  tagline: 'Infrastruktur Jaringan & Pengembangan Sistem', // TODO: konfirmasi tagline final
+  tagline: 'Network Infrastructure & System Development', // TODO: konfirmasi tagline final
 
   /** Format internasional tanpa tanda "+". */
   whatsapp: '6282210323080',
@@ -29,7 +29,7 @@ export const site = {
     kodePos: '12240',
   },
 
-  jamOperasional: 'Senin sampai Sabtu, 08.00 sampai 17.00 WIB',
+  jamOperasional: 'Monday to Saturday, 08:00 to 17:00 WIB',
 
   /** JANGAN tampilkan di halaman publik mana pun (keputusan pemilik).
    *  Field ini hanya dipakai untuk dokumen transaksi: penawaran,

@@ -4,27 +4,26 @@ import { Picture } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import Section from '@/components/ui/Section.astro';
 
-const layanan = (await getCollection('layanan')).sort((a, b) => a.data.urutan - b.data.urutan);
+const produk = (await getCollection('produk')).sort((a, b) => a.data.urutan - b.data.urutan);
 ---
 
 <Base
-  title="Layanan"
-  description="Instalasi fiber optic, CCTV, jaringan enterprise, maintenance, dan pengembangan software oleh ZSN."
+  title="Our Products"
+  description="Catalog of products and digital systems built by PT Zufar Solusi Nawasena."
 >
-  <Section bg="canvas" size="lg" aria-label="Hero layanan">
-    <p class="label-tech text-muted">Layanan</p>
-    <h1 class="mt-5 text-hero">Dari kabel sampai sistem.</h1>
+  <Section bg="canvas" size="lg" aria-label="Products Hero">
+    <p class="label-tech text-muted">Products</p>
+    <h1 class="mt-5 text-hero">Our proprietary digital solutions.</h1>
     <p class="mt-6 max-w-xl text-muted">
-      Lima layanan yang menutup seluruh siklus infrastruktur: pemasangan
-      fisik, keamanan, jaringan, perawatan, sampai sistem yang menjalankannya.
+      Integrated software and products we design and develop to support your business operations.
     </p>
   </Section>
 
-  <Section bg="canvas" size="md" aria-label="Daftar layanan">
+  <Section bg="canvas" size="md" aria-label="Product List">
     <div class="grid gap-x-8 gap-y-10 md:grid-cols-2">
       {
-        layanan.map((entry) => (
-          <a href={`/layanan/${entry.id}`} class="group flex flex-col">
+        produk.map((entry) => (
+          <a href={`/products/${entry.id}`} class="group flex flex-col">
             {entry.data.heroStyle === 'foto' && entry.data.heroImage ? (
               <div class="relative overflow-hidden" style="aspect-ratio: 16/9;">
                 <Picture
@@ -41,14 +40,14 @@ const layanan = (await getCollection('layanan')).sort((a, b) => a.data.urutan - 
               </div>
             ) : (
               <div class="flex items-center border border-hairline bg-surface p-6" style="aspect-ratio: 16/9;">
-                <p class="label-tech text-muted">Software</p>
+                <p class="label-tech text-muted">Systems & Digital Solutions</p>
               </div>
             )}
             <div class="flex flex-1 flex-col border-t border-hairline pt-4">
               <h2 class="text-h3">{entry.data.judul}</h2>
               <p class="mt-2 flex-1 text-sm text-muted">{entry.data.ringkas}</p>
               <span class="label-tech mt-5 inline-flex items-center gap-2 text-ink">
-                Lihat Detail
+                View Catalog
                 <svg
                   class="size-3.5 transition-transform group-hover:translate-x-1"
                   viewBox="0 0 24 24"

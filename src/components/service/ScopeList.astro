@@ -10,11 +10,11 @@ interface Props {
   judul?: string;
   items: { judul: string; detail: string }[];
 }
-const { judul = 'Scope Pekerjaan', items } = Astro.props;
+const { judul = 'Scope of Work', items } = Astro.props;
 ---
 
 <Section bg="canvas" size="md" aria-label={judul}>
-  <p class="label-tech text-muted">Scope Pekerjaan</p>
+  <p class="label-tech text-muted">Scope of Work</p>
   <h2 class="mt-3 text-h2">{judul}</h2>
 
   <div class="mt-12 relative border-l-2 border-zinc-200 ml-4 md:ml-6 space-y-12 pb-8">

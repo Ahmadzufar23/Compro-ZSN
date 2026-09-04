@@ -18,14 +18,16 @@ interface Props {
   image?: ImageMetadata;
   alt?: string;
   flushBottom?: boolean;
+  parentLabel?: string;
+  parentUrl?: string;
 }
 
-const { mode, judul, subjudul, ctaLabel, image, alt, flushBottom = false } = Astro.props;
+const { mode, judul, subjudul, ctaLabel, image, alt, flushBottom = false, parentLabel = 'Services', parentUrl = '/services' } = Astro.props;
 ---
 
-<Section bg="canvas" size="lg" flushBottom={flushBottom} aria-label="Hero layanan">
+<Section bg="canvas" size="lg" flushBottom={flushBottom} aria-label="Service Hero">
   <p class="label-tech text-muted">
-    <a href="/layanan" class="hover:text-ink">Layanan</a>
+    <a href={parentUrl} class="hover:text-ink">{parentLabel}</a>
     <span class="mx-2 text-subtle">/</span>
     <span class="text-ink">{judul}</span>
   </p>
@@ -33,7 +35,7 @@ const { mode, judul, subjudul, ctaLabel, image, alt, flushBottom = false } = Ast
   <div class="mt-6 max-w-2xl">
     <h1 class="text-h1">{judul}</h1>
     <p class="mt-5 text-muted">{subjudul}</p>
-    <Button href="/kontak" size="lg" class="mt-8">{ctaLabel}</Button>
+    <Button href="/contact" size="lg" class="mt-8">{ctaLabel}</Button>
   </div>
 
   {

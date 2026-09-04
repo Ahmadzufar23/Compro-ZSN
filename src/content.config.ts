@@ -29,8 +29,7 @@ const paketSchema = z.object({
   ),
 });
 
-const layanan = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/layanan' }),
+
 const layananSchema = ({ image }: any) =>
     z.object({
       /* ── Wajib: tulang punggung semua halaman ── */

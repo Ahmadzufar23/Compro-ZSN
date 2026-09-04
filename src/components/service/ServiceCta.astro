@@ -13,16 +13,16 @@ interface Props {
 }
 const { judul, ctaLabel } = Astro.props;
 
-const waHref = waLink(`Halo ZSN, saya ingin konsultasi soal ${judul}.`);
+const waHref = waLink(`Hello ZSN, I want to consult about ${judul}.`);
 ---
 
-<Section bg="deep" size="lg" aria-label="Ajakan bertindak">
+<Section bg="deep" size="lg" aria-label="Call to action">
   <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
     <div class="max-w-2xl">
-      <h2 class="text-h2 text-white">Siap memulai {judul}?</h2>
+      <h2 class="text-h2 text-white">Ready to start {judul}?</h2>
       <p class="mt-4 text-subtle">
-        Ceritakan kebutuhan lokasi Anda lewat WhatsApp, tim kami akan
-        merespons dengan rencana survei.
+        Tell us your location requirements via WhatsApp, and our team will
+        respond with a survey plan.
       </p>
     </div>
     <Button href={waHref} size="lg" external class="shrink-0">{ctaLabel}</Button>

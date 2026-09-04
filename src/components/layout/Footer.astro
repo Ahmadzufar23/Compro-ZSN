@@ -11,29 +11,29 @@ import { site } from '@/config/site';
 
 const kolom = [
   {
-    judul: 'Layanan',
+    judul: 'Services',
     tautan: [
-      { label: 'Semua Layanan', href: '/layanan' },
-      { label: 'Fiber Optic & FTTH', href: '/layanan/fiber-optic' },
-      { label: 'CCTV & Security', href: '/layanan/cctv' },
-      { label: 'Network Infrastructure', href: '/layanan/network' },
-      { label: 'Maintenance & IT Support', href: '/layanan/maintenance' },
-      { label: 'Pengembangan Sistem', href: '/layanan/software' },
+      { label: 'All Services', href: '/services' },
+      { label: 'Fiber Optic & FTTH', href: '/services/fiber-optic' },
+      { label: 'CCTV & Security', href: '/services/cctv' },
+      { label: 'Network Infrastructure', href: '/services/network' },
+      { label: 'Maintenance & IT Support', href: '/services/maintenance' },
+      { label: 'System Development', href: '/products/software' },
     ],
   },
   {
-    judul: 'Perusahaan',
+    judul: 'Company',
     tautan: [
-      { label: 'Tentang', href: '/tentang' },
-      ...(site.halamanAktif.project ? [{ label: 'Project', href: '/project' }] : []),
-      ...(site.halamanAktif.tim ? [{ label: 'Tim', href: '/tim' }] : []),
+      { label: 'About', href: '/about' },
+      ...(site.halamanAktif.project ? [{ label: 'Portfolio', href: '/portfolio' }] : []),
+      ...(site.halamanAktif.tim ? [{ label: 'Team', href: '/team' }] : []),
     ],
   },
   {
-    judul: 'Kontak',
+    judul: 'Contact',
     tautan: [
-      { label: 'Hubungi Kami', href: '/kontak' },
-      { label: 'Minta Survei', href: '/kontak#survei' },
+      { label: 'Contact Us', href: '/contact' },
+      { label: 'Request Survey', href: '/contact#survey' },
     ],
   },
 ];
@@ -48,8 +48,8 @@ const tahun = new Date().getFullYear();
         <Logo variant="light" height={40} />
       </a>
       <p class="mt-3 max-w-xs text-sm leading-relaxed text-subtle">
-        PT Zufar Solusi Nawasena, infrastruktur jaringan, keamanan, dan
-        pengembangan sistem untuk bisnis di berbagai kota di Indonesia.
+        PT Zufar Solusi Nawasena, network infrastructure, security, and
+        system development for businesses across Indonesia.
       </p>
       <address class="mt-4 max-w-xs text-sm not-italic leading-relaxed text-subtle">
         {site.alamat.jalan}, {site.alamat.kota}<br />
@@ -59,7 +59,7 @@ const tahun = new Date().getFullYear();
           rel="noopener noreferrer"
           class="inline-flex min-h-11 items-center text-sm text-subtle underline decoration-subtle/40 underline-offset-2 transition-colors hover:text-white"
         >
-          Buka di Google Maps
+          Open in Google Maps
         </a>
       </address>
     </div>
