@@ -17,8 +17,8 @@ const projects = (await getCollection('project'))
 
   <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {projects.map((proj) => (
-      <article class="group flex flex-col">
-        <div class="relative overflow-hidden rounded bg-surface pb-[75%]">
+      <article class="animate-project-card opacity-0 translate-y-8 group flex flex-col">
+        <div class="relative overflow-hidden bg-surface pb-[75%]">
           <Image 
             src={proj.data.cover} 
             alt={proj.data.coverAlt} 
@@ -42,3 +42,24 @@ const projects = (await getCollection('project'))
     </div>
   )}
 </Section>
+
+<script>
+  import { animate, inView, stagger } from "motion";
+
+  const setupProjectAnimations = () => {
+    const section = document.querySelector('#project');
+    const cards = document.querySelectorAll('.animate-project-card');
+
+    if (section && cards.length > 0) {
+      inView(section, () => {
+        animate(
+          cards,
+          { opacity: 1, transform: "none" },
+          { duration: 0.6, delay: stagger(0.15) }
+        );
+      }, { margin: "-100px" });
+    }
+  };
+
+  document.addEventListener('astro:page-load', setupProjectAnimations);
+</script>

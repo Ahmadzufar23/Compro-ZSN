@@ -1,0 +1,168 @@
+---
+import { Image } from 'astro:assets';
+import proj1 from '@/assets/project/proj-1.jpg';
+import proj2 from '@/assets/project/proj-2.jpg';
+import proj3 from '@/assets/project/proj-3.jpg';
+import proj4 from '@/assets/project/proj-4.png';
+
+const slides = [
+  { img: proj1, caption: 'Point of Sale (POS) & Sistem Kasir' },
+  { img: proj2, caption: 'Platform E-Commerce & Katalog' },
+  { img: proj3, caption: 'Company Profile & Web Bisnis' },
+  { img: proj4, caption: 'Sistem Manajemen Event & Operasional' },
+];
+---
+
+<div class="slider-wrapper group relative w-full overflow-hidden rounded-2xl shadow-sm border border-hairline bg-canvas">
+  {/* Slides Container */}
+  <div class="slider-container flex w-full snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-hide" style="scrollbar-width: none; -ms-overflow-style: none;">
+    {slides.map((slide, i) => (
+      <div class="slide min-w-full shrink-0 snap-center relative aspect-video" data-index={i} data-caption={slide.caption}>
+        <Image 
+          src={slide.img} 
+          alt={slide.caption} 
+          class="h-full w-full object-cover"
+        />
+        {/* Gradient Overlay for Caption readability */}
+        <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
+      </div>
+    ))}
+  </div>
+
+  {/* Caption & Dots (Bottom Overlay) */}
+  <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center pb-4 pt-8">
+    <p class="slider-caption mb-3 text-center text-sm font-bold tracking-wide text-white drop-shadow-md sm:text-base px-4">
+      {slides[0].caption}
+    </p>
+    <div class="flex items-center justify-center gap-2">
+      {slides.map((_, i) => (
+        <button 
+          class:list={[
+            "slider-dot transition-all duration-300",
+            i === 0 
+              ? "w-3 h-3 bg-yellow [clip-path:polygon(50%_0%,0%_100%,100%_100%)]" 
+              : "w-2 h-2 rounded-full bg-white/60 hover:bg-white"
+          ]}
+          aria-label={`Go to slide ${i + 1}`}
+          data-index={i}
+        ></button>
+      ))}
+    </div>
+  </div>
+
+  {/* Navigation Arrows */}
+  <button class="slider-prev absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/90 p-2 text-zinc-900 shadow-md opacity-0 transition-all duration-300 hover:bg-white hover:scale-110 group-hover:opacity-100 disabled:opacity-0" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+  </button>
+  <button class="slider-next absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/90 p-2 text-zinc-900 shadow-md opacity-0 transition-all duration-300 hover:bg-white hover:scale-110 group-hover:opacity-100 disabled:opacity-0" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+  </button>
+</div>
+
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<script>
+  function setupSliders() {
+    const wrappers = document.querySelectorAll('.slider-wrapper');
+    
+    wrappers.forEach(wrapper => {
+      const container = wrapper.querySelector('.slider-container') as HTMLElement;
+      const slides = wrapper.querySelectorAll('.slide');
+      const dots = wrapper.querySelectorAll('.slider-dot');
+      const captionEl = wrapper.querySelector('.slider-caption') as HTMLElement;
+      const btnPrev = wrapper.querySelector('.slider-prev') as HTMLButtonElement;
+      const btnNext = wrapper.querySelector('.slider-next') as HTMLButtonElement;
+      
+      if (!container || slides.length === 0) return;
+
+      let currentIndex = 0;
+      const total = slides.length;
+
+      const updateUI = (index: number) => {
+        currentIndex = index;
+        
+        const activeSlide = slides[index] as HTMLElement;
+        if (activeSlide && captionEl) {
+          captionEl.textContent = activeSlide.dataset.caption || '';
+        }
+
+        dots.forEach((dot, i) => {
+          if (i === index) {
+            dot.className = "slider-dot transition-all duration-300 w-3 h-3 bg-yellow [clip-path:polygon(50%_0%,0%_100%,100%_100%)]";
+          } else {
+            dot.className = "slider-dot transition-all duration-300 w-2 h-2 rounded-full bg-white/60 hover:bg-white";
+          }
+        });
+
+        if (btnPrev) btnPrev.disabled = index === 0;
+        if (btnNext) btnNext.disabled = index === total - 1;
+      };
+
+      const goToSlide = (index: number) => {
+        if (index < 0 || index >= total) return;
+        const slideWidth = container.clientWidth;
+        container.scrollTo({
+          left: slideWidth * index,
+          behavior: 'smooth'
+        });
+      };
+
+      if (btnPrev) btnPrev.addEventListener('click', () => goToSlide(currentIndex - 1));
+      if (btnNext) btnNext.addEventListener('click', () => goToSlide(currentIndex + 1));
+
+      dots.forEach((dot) => {
+        dot.addEventListener('click', (e) => {
+          const btn = e.currentTarget as HTMLButtonElement;
+          const idx = parseInt(btn.dataset.index || '0', 10);
+          goToSlide(idx);
+        });
+      });
+
+      let scrollTimeout: number;
+      container.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          const scrollLeft = container.scrollLeft;
+          const slideWidth = container.clientWidth;
+          const newIndex = Math.round(scrollLeft / slideWidth);
+          
+          if (newIndex !== currentIndex && newIndex >= 0 && newIndex < total) {
+            updateUI(newIndex);
+          }
+        }, 50) as unknown as number;
+      });
+
+      // Autoplay functionality
+      let autoplayInterval: number;
+      const startAutoplay = () => {
+        clearInterval(autoplayInterval); // Prevent overlapping intervals
+        autoplayInterval = setInterval(() => {
+          let nextIndex = currentIndex + 1;
+          if (nextIndex >= total) nextIndex = 0; // loop back to first
+          goToSlide(nextIndex);
+        }, 2000) as unknown as number; // 2 seconds
+      };
+
+      const stopAutoplay = () => {
+        clearInterval(autoplayInterval);
+      };
+
+      // Pause on hover
+      wrapper.addEventListener('mouseenter', stopAutoplay);
+      wrapper.addEventListener('mouseleave', startAutoplay);
+      // Pause on touch
+      wrapper.addEventListener('touchstart', stopAutoplay);
+
+      updateUI(0);
+      startAutoplay();
+    });
+  }
+
+  setupSliders();
+  document.addEventListener('astro:page-load', setupSliders);
+</script>

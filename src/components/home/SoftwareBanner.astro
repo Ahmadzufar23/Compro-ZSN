@@ -8,7 +8,7 @@
 import { getCollection } from 'astro:content';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
-import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
+import ImageSlider from '@/components/ui/ImageSlider.astro';
 
 const software = (await getCollection('layanan')).find((entry) => entry.id === 'software');
 ---
@@ -46,7 +46,7 @@ const software = (await getCollection('layanan')).find((entry) => entry.id === '
             Lihat Detail Layanan
           </Button>
         </div>
-        <PlaceholderPhoto ratio="4/3" label="Mockup dashboard" />
+        <ImageSlider />
       </div>
     </Section>
   )

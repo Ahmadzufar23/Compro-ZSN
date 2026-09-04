@@ -15,10 +15,47 @@ const stats = [
     {
       stats.map(({ angka, label }) => (
         <div class="min-w-0 border-l border-hairline pl-4">
-          <dt class="font-display text-3xl font-bold text-ink break-words">{angka}</dt>
+          <dt class="stat-angka font-display text-3xl font-bold text-ink break-words" data-val={angka}>{angka}</dt>
           <dd class="label-tech mt-1 text-subtle">{label}</dd>
         </div>
       ))
     }
   </dl>
 </Section>
+
+<script>
+  import { inView, animate } from "motion";
+
+  const setupStats = () => {
+    const section = document.querySelector('[aria-label="Statistik"]');
+    const statElements = document.querySelectorAll('.stat-angka');
+
+    if (section && statElements.length > 0) {
+      inView(section, () => {
+        statElements.forEach(el => {
+          const val = el.getAttribute('data-val') || '';
+          const numMatch = val.match(/(\d+)/);
+
+          if (numMatch) {
+            const targetNum = parseInt(numMatch[1], 10);
+            const prefix = val.substring(0, numMatch.index);
+            const suffix = val.substring(numMatch.index + numMatch[1].length);
+
+            // Animate from 0, but for years (like 2023) start closer
+            let startNum = targetNum > 2000 ? 2000 : 0;
+
+            animate(startNum, targetNum, {
+              duration: 2,
+              ease: "easeOut",
+              onUpdate: (latest) => {
+                el.textContent = `${prefix}${Math.round(latest)}${suffix}`;
+              }
+            });
+          }
+        });
+      }, { margin: "-50px" });
+    }
+  };
+
+  document.addEventListener('astro:page-load', setupStats);
+</script>
