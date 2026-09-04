@@ -147,6 +147,17 @@ const layanan = defineCollection({
       /* Eksklusi eksplisit. Sumber sengketa nomor satu di kontrak
          maintenance adalah asumsi yang tidak pernah ditulis. */
       tidakTermasuk: z.array(z.string()).optional(),
+
+      /* Portfolio showcase slider untuk halaman software */
+      portofolio: z
+        .array(
+          z.object({
+            nama: z.string(),
+            deskripsi: z.string(),
+            metrik: z.array(z.object({ label: z.string(), nilai: z.string() })).max(4),
+          })
+        )
+        .optional(),
     })
     .refine((d) => d.heroStyle === 'panel' || (!!d.heroImage && !!d.heroAlt), {
       message: 'heroStyle "foto" wajib menyertakan heroImage dan heroAlt',

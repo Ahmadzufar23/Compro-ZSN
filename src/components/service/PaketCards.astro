@@ -33,41 +33,49 @@ const { items } = Astro.props;
   <p class="label-tech text-muted">Paket</p>
   <h2 class="mt-3 text-h2">Pilihan paket</h2>
 
-  <div class="mt-10 grid gap-8 border-t border-hairline pt-8 md:grid-cols-3 md:gap-0 md:divide-x md:divide-hairline">
+  <div class="mt-10 grid gap-6 md:grid-cols-3">
     {
-      items.map((p) => (
-        <div class="flex flex-col md:px-8 md:first:pl-0 md:last:pr-0">
-          <h3 class="text-h3">{p.nama}</h3>
-          <p class="mt-2 text-sm text-muted">{p.ringkas}</p>
+      items.map((p, i) => (
+        <div class={`flex flex-col bg-white border ${i === 1 ? 'border-zinc-300 shadow-md scale-105 z-10' : 'border-hairline shadow-sm'} rounded-2xl overflow-hidden`}>
+          {i === 1 && <div class="bg-zinc-900 text-white text-xs font-bold text-center py-2 tracking-widest uppercase">Paling Populer</div>}
+          
+          <div class="p-8 flex-1 flex flex-col">
+            <h3 class="text-h3">{p.nama}</h3>
+            <p class="mt-2 text-sm text-muted h-10">{p.ringkas}</p>
 
-          <p class="mt-5 font-display text-2xl font-bold text-ink">
-            {p.hargaMulai ? (
-              <>
-                Mulai dari Rp {p.hargaMulai} juta
-                {p.satuan && <span class="text-sm font-normal text-muted">{p.satuan}</span>}
-              </>
-            ) : (
-              'Minta Penawaran'
-            )}
-          </p>
-          {p.durasi && <p class="label-tech mt-1 text-muted">Estimasi durasi: {p.durasi}</p>}
-
-          <ul class="mt-6 flex-1 space-y-2.5 border-t border-hairline pt-5 text-sm">
-            {p.isi.map((row) =>
-              typeof row === 'string' ? (
-                <li class="text-muted">{row}</li>
+            <p class="mt-8 font-display text-2xl font-bold text-ink">
+              {p.hargaMulai ? (
+                <>
+                  <span class="text-sm font-normal text-muted block mb-1">Mulai dari</span>
+                  Rp {p.hargaMulai} juta
+                  {p.satuan && <span class="text-sm font-normal text-muted">{p.satuan}</span>}
+                </>
               ) : (
-                <li class="flex justify-between gap-4">
-                  <span class="text-muted">{row.label}</span>
-                  <span class="font-medium text-ink">{row.nilai}</span>
-                </li>
-              )
-            )}
-          </ul>
+                <span class="text-xl">Minta Penawaran</span>
+              )}
+            </p>
+            {p.durasi && <p class="label-tech mt-2 text-muted">Estimasi durasi: {p.durasi}</p>}
 
-          <Button href="/kontak" variant="outline-dark" class="mt-6">
-            Konsultasi
-          </Button>
+            <ul class="mt-8 flex-1 space-y-3 border-t border-hairline pt-6 text-sm">
+              {p.isi.map((row) =>
+                typeof row === 'string' ? (
+                  <li class="flex gap-3 text-muted">
+                    <svg class="shrink-0 size-5 text-zinc-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    <span>{row}</span>
+                  </li>
+                ) : (
+                  <li class="flex justify-between gap-4">
+                    <span class="text-muted">{row.label}</span>
+                    <span class="font-medium text-ink">{row.nilai}</span>
+                  </li>
+                )
+              )}
+            </ul>
+
+            <Button href="/kontak" variant={i === 1 ? "primary" : "outline-dark"} class="mt-8 w-full justify-center">
+              Konsultasi
+            </Button>
+          </div>
         </div>
       ))
     }

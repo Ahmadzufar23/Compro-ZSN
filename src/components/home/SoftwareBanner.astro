@@ -15,9 +15,13 @@ const software = (await getCollection('layanan')).find((entry) => entry.id === '
 
 {
   software && (
-    <Section bg="surface" size="lg" class="border-y border-hairline" aria-label="Software">
-      <div class="grid gap-10 lg:grid-cols-[55%_45%] lg:items-center">
-        <div>
+    <Section bg="canvas" size="lg" class="border-y border-hairline relative" aria-label="Software">
+      {/* Dekorasi pola halus di latar belakang */}
+      <div class="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
+      
+      <div class="relative z-10 grid gap-10 lg:grid-cols-[50%_50%] xl:grid-cols-[55%_45%] lg:items-center">
+        {/* Kolom Kiri: Kartu Teks */}
+        <div class="bg-surface border border-hairline p-8 md:p-12 shadow-sm ring-1 ring-black/5">
           <p class="label-tech text-muted">Sistem Digital & Solusi Bisnis</p>
           <h2 class="mt-3 text-h2">{software.data.judul}</h2>
           <p class="mt-4 text-muted">{software.data.subjudul}</p>
@@ -46,7 +50,11 @@ const software = (await getCollection('layanan')).find((entry) => entry.id === '
             Lihat Detail Layanan
           </Button>
         </div>
-        <ImageSlider />
+        
+        {/* Kolom Kanan: Slider */}
+        <div class="w-full">
+          <ImageSlider />
+        </div>
       </div>
     </Section>
   )

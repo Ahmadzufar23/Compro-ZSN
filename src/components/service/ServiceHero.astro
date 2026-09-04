@@ -17,12 +17,13 @@ interface Props {
   ctaLabel: string;
   image?: ImageMetadata;
   alt?: string;
+  flushBottom?: boolean;
 }
 
-const { mode, judul, subjudul, ctaLabel, image, alt } = Astro.props;
+const { mode, judul, subjudul, ctaLabel, image, alt, flushBottom = false } = Astro.props;
 ---
 
-<Section bg="canvas" size="lg" aria-label="Hero layanan">
+<Section bg="canvas" size="lg" flushBottom={flushBottom} aria-label="Hero layanan">
   <p class="label-tech text-muted">
     <a href="/layanan" class="hover:text-ink">Layanan</a>
     <span class="mx-2 text-subtle">/</span>

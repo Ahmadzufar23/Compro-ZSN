@@ -21,6 +21,7 @@ import KomitmenTable from '@/components/service/KomitmenTable.astro';
 import TidakTermasuk from '@/components/service/TidakTermasuk.astro';
 import Faq from '@/components/service/Faq.astro';
 import ServiceCta from '@/components/service/ServiceCta.astro';
+import PortfolioShowcase from '@/components/service/PortfolioShowcase.astro';
 
 export async function getStaticPaths() {
   const layanan = await getCollection('layanan');
@@ -43,13 +44,18 @@ const { Content } = await render(entry);
     ctaLabel={data.ctaLabel}
     image={data.heroImage}
     alt={data.heroAlt}
+    flushBottom={!!data.portofolio}
   />
 
-  <Section bg="canvas" size="sm" aria-label="Ringkasan layanan">
-    <div class="prose-service max-w-3xl text-muted">
-      <Content />
-    </div>
-  </Section>
+  {data.portofolio && <PortfolioShowcase items={data.portofolio} />}
+
+  {entry.body && entry.body.trim().length > 0 && (
+    <Section bg="canvas" size="sm" aria-label="Ringkasan layanan">
+      <div class="prose-service max-w-3xl text-muted">
+        <Content />
+      </div>
+    </Section>
+  )}
 
   {data.stats && <StatBand stats={data.stats} />}
   {data.cocokUntuk && <CocokUntuk items={data.cocokUntuk} />}

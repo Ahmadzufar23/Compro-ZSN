@@ -6,42 +6,43 @@ import proj3 from '@/assets/project/proj-3.jpg';
 import proj4 from '@/assets/project/proj-4.png';
 
 const slides = [
-  { img: proj1, caption: 'Point of Sale (POS) & Sistem Kasir' },
-  { img: proj2, caption: 'Platform E-Commerce & Katalog' },
-  { img: proj3, caption: 'Company Profile & Web Bisnis' },
-  { img: proj4, caption: 'Sistem Manajemen Event & Operasional' },
+  { img: proj1, caption: 'Smart F&B Ordering' },
+  { img: proj2, caption: 'HRIS & Payroll Automation' },
+  { img: proj4, caption: 'Sistem Manajemen Event' },
 ];
 ---
 
-<div class="slider-wrapper group relative w-full overflow-hidden rounded-2xl shadow-sm border border-hairline bg-canvas">
+<div class="slider-wrapper group relative w-full h-[350px] lg:h-[500px] overflow-hidden bg-zinc-950">
   {/* Slides Container */}
-  <div class="slider-container flex w-full snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-hide" style="scrollbar-width: none; -ms-overflow-style: none;">
+  <div class="slider-container flex w-full h-full snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-hide" style="scrollbar-width: none; -ms-overflow-style: none;">
     {slides.map((slide, i) => (
-      <div class="slide min-w-full shrink-0 snap-center relative aspect-video" data-index={i} data-caption={slide.caption}>
-        <Image 
-          src={slide.img} 
-          alt={slide.caption} 
-          class="h-full w-full object-cover"
-        />
-        {/* Gradient Overlay for Caption readability */}
-        <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
+      <div class="slide min-w-full h-full shrink-0 snap-center relative" data-index={i} data-caption={slide.caption}>
+        {/* Coming Soon Placeholder menggantikan Image */}
+        <div class="h-full w-full bg-zinc-900/80 flex flex-col items-center justify-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-16 text-zinc-700 mb-4 opacity-50">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+          </svg>
+          <span class="text-zinc-500 font-display font-bold tracking-widest text-lg uppercase">UI Mockup Coming Soon</span>
+        </div>
+        {/* Gradient Overlay for extra contrast at the bottom */}
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
       </div>
     ))}
   </div>
 
-  {/* Caption & Dots (Bottom Overlay) */}
-  <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center pb-4 pt-8">
-    <p class="slider-caption mb-3 text-center text-sm font-bold tracking-wide text-white drop-shadow-md sm:text-base px-4">
+  {/* Caption Box (Bottom Left Overlay) */}
+  <div class="absolute bottom-0 left-0 z-10 max-w-[75%] bg-zinc-900 border-t border-r border-zinc-800 p-6 lg:p-8">
+    <p class="slider-caption text-lg lg:text-2xl font-display font-bold text-white leading-tight drop-shadow-md">
       {slides[0].caption}
     </p>
-    <div class="flex items-center justify-center gap-2">
+    <div class="mt-4 flex items-center gap-2">
       {slides.map((_, i) => (
         <button 
           class:list={[
             "slider-dot transition-all duration-300",
             i === 0 
               ? "w-3 h-3 bg-yellow [clip-path:polygon(50%_0%,0%_100%,100%_100%)]" 
-              : "w-2 h-2 rounded-full bg-white/60 hover:bg-white"
+              : "w-2 h-2 rounded-full bg-zinc-600 hover:bg-zinc-400"
           ]}
           aria-label={`Go to slide ${i + 1}`}
           data-index={i}
@@ -50,13 +51,15 @@ const slides = [
     </div>
   </div>
 
-  {/* Navigation Arrows */}
-  <button class="slider-prev absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/90 p-2 text-zinc-900 shadow-md opacity-0 transition-all duration-300 hover:bg-white hover:scale-110 group-hover:opacity-100 disabled:opacity-0" aria-label="Previous slide">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
-  </button>
-  <button class="slider-next absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/90 p-2 text-zinc-900 shadow-md opacity-0 transition-all duration-300 hover:bg-white hover:scale-110 group-hover:opacity-100 disabled:opacity-0" aria-label="Next slide">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
-  </button>
+  {/* Navigation Arrows (Bottom Right) */}
+  <div class="absolute bottom-0 right-0 z-10 flex bg-zinc-900 border-t border-l border-zinc-800">
+    <button class="slider-prev p-4 lg:p-6 text-white hover:bg-zinc-800 transition-colors disabled:opacity-30" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+    </button>
+    <button class="slider-next p-4 lg:p-6 border-l border-zinc-800 text-white hover:bg-zinc-800 transition-colors disabled:opacity-30" aria-label="Next slide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+    </button>
+  </div>
 </div>
 
 <style>
@@ -95,7 +98,7 @@ const slides = [
           if (i === index) {
             dot.className = "slider-dot transition-all duration-300 w-3 h-3 bg-yellow [clip-path:polygon(50%_0%,0%_100%,100%_100%)]";
           } else {
-            dot.className = "slider-dot transition-all duration-300 w-2 h-2 rounded-full bg-white/60 hover:bg-white";
+            dot.className = "slider-dot transition-all duration-300 w-2 h-2 rounded-full bg-zinc-600 hover:bg-zinc-400";
           }
         });
 

@@ -1,0 +1,82 @@
+---
+interface PortofolioItem {
+  nama: string;
+  deskripsi: string;
+  metrik: { label: string; nilai: string }[];
+}
+
+interface Props {
+  items: PortofolioItem[];
+}
+const { items } = Astro.props;
+---
+
+<section class="bg-canvas w-full pt-12 pb-24" aria-label="Recent Works">
+  {/* Header Section */}
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 flex flex-col items-center text-center">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-3 h-3 bg-yellow-400"></div>
+      <p class="text-zinc-500 font-mono text-sm tracking-widest uppercase">Projects</p>
+    </div>
+    <h2 class="text-ink text-4xl lg:text-5xl font-display font-bold">Recent Works</h2>
+  </div>
+
+  {/* Vertical Stack Container */}
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 lg:space-y-24">
+    {items.map((item, i) => (
+      <div class="relative w-full h-[500px] lg:h-[650px] bg-zinc-900 flex flex-col items-center justify-center group overflow-hidden border border-hairline">
+        
+        {/* Top-Left Pixel Decoration */}
+        <div class="absolute top-0 left-0 z-20 flex flex-col">
+          <div class="flex">
+            <div class="w-8 h-8 lg:w-12 lg:h-12 bg-canvas"></div>
+            <div class="w-8 h-8 lg:w-12 lg:h-12 bg-transparent"></div>
+          </div>
+          <div class="flex">
+            <div class="w-8 h-8 lg:w-12 lg:h-12 bg-transparent"></div>
+            <div class="w-8 h-8 lg:w-12 lg:h-12 bg-canvas"></div>
+          </div>
+        </div>
+
+        {/* Top-Right Pixel Decoration */}
+        <div class="absolute top-0 right-0 z-20 flex flex-col">
+          <div class="flex">
+            <div class="w-8 h-8 lg:w-12 lg:h-12 bg-transparent"></div>
+            <div class="w-8 h-8 lg:w-12 lg:h-12 bg-canvas"></div>
+          </div>
+          <div class="flex">
+            <div class="w-8 h-8 lg:w-12 lg:h-12 bg-canvas"></div>
+            <div class="w-8 h-8 lg:w-12 lg:h-12 bg-transparent"></div>
+          </div>
+        </div>
+
+        {/* Placeholder UI Mockup */}
+        <div class="absolute inset-0 flex flex-col items-center justify-center opacity-30 transition-transform duration-700 group-hover:scale-105">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-24 lg:size-32 text-zinc-600 mb-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+          </svg>
+          <span class="text-zinc-500 font-display font-bold tracking-widest text-2xl lg:text-3xl uppercase text-center px-4">UI Mockup Coming Soon</span>
+        </div>
+        
+        {/* Gradient Overlay */}
+        <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-900/20 to-transparent pointer-events-none"></div>
+
+        {/* Black Box Overlay (Kiri Bawah) */}
+        <div class="absolute bottom-0 left-0 z-10 w-full lg:w-[480px] bg-zinc-900 border-t border-r border-zinc-800 shadow-2xl">
+          <div class="p-6 lg:p-8">
+            <h3 class="text-2xl lg:text-3xl font-display font-bold text-white mb-2">{item.nama}</h3>
+            <p class="text-zinc-400 text-sm leading-relaxed">{item.deskripsi}</p>
+          </div>
+          <div class="flex border-t border-zinc-800">
+            {item.metrik.map((m, idx) => (
+              <div class={`flex-1 p-5 lg:p-6 ${idx > 0 ? 'border-l border-zinc-800' : ''}`}>
+                <p class="text-2xl lg:text-3xl font-display font-bold text-white">{m.nilai}</p>
+                <p class="text-[10px] lg:text-xs text-zinc-500 mt-2 uppercase tracking-wider">{m.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
