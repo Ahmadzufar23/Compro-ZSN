@@ -31,7 +31,7 @@ const paketSchema = z.object({
 
 const layanan = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/layanan' }),
-  schema: ({ image }) =>
+const layananSchema = ({ image }: any) =>
     z.object({
       /* ── Wajib: tulang punggung semua halaman ── */
       judul: z.string(),
@@ -161,7 +161,19 @@ const layanan = defineCollection({
     })
     .refine((d) => d.heroStyle === 'panel' || (!!d.heroImage && !!d.heroAlt), {
       message: 'heroStyle "foto" wajib menyertakan heroImage dan heroAlt',
-    }),
+    });
+
+const layanan = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/layanan' }),
+  schema: layananSchema,
+});
+
+/* ────────────────────────────────────────────────────────────
+   PRODUK
+   ──────────────────────────────────────────────────────────── */
+const produk = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/produk' }),
+  schema: layananSchema,
 });
 
 /* ────────────────────────────────────────────────────────────
@@ -244,4 +256,4 @@ const tim = defineCollection({
     }),
 });
 
-export const collections = { layanan, project, tim }; 
+export const collections = { layanan, project, tim, produk }; 
