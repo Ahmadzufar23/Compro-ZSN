@@ -26,33 +26,40 @@ const { mode, judul, subjudul, ctaLabel, image, alt, flushBottom = false, parent
 ---
 
 <Section bg="canvas" size="lg" flushBottom={flushBottom} aria-label="Service Hero">
-  <p class="label-tech text-muted">
-    <a href={parentUrl} class="hover:text-ink">{parentLabel}</a>
-    <span class="mx-2 text-subtle">/</span>
-    <span class="text-ink">{judul}</span>
-  </p>
+  <div class="relative z-10 flex flex-col items-start md:items-center md:text-center max-w-4xl mx-auto">
+    <p class="label-tech text-muted inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-hairline shadow-sm mb-6">
+      <a href={parentUrl} class="hover:text-ink">{parentLabel}</a>
+      <span class="w-1 h-1 bg-yellow-400 rounded-full"></span>
+      <span class="text-ink font-semibold">{judul}</span>
+    </p>
 
-  <div class="mt-6 max-w-2xl">
-    <h1 class="text-h1">{judul}</h1>
-    <p class="mt-5 text-muted">{subjudul}</p>
-    <Button href="/contact" size="lg" class="mt-8">{ctaLabel}</Button>
+    <h1 class="text-h1 lg:text-6xl text-ink leading-tight">{judul}</h1>
+    <p class="mt-6 text-xl text-muted leading-relaxed max-w-2xl">{subjudul}</p>
+    <Button href="/contact" size="lg" class="mt-10">{ctaLabel}</Button>
   </div>
 
   {
     mode === 'foto' && image && (
-      <div class="relative mt-10 overflow-hidden" style="aspect-ratio: 21/9;">
-        <Picture
-          src={image}
-          formats={['avif', 'webp']}
-          fallbackFormat="webp"
-          alt={alt ?? ''}
-          width={1600}
-          height={686}
-          loading="eager"
-          fetchpriority="high"
-          pictureAttributes={{ class: 'block size-full' }}
-          class="size-full object-cover"
-        />
+      <div class="relative mt-16 rounded-3xl overflow-hidden shadow-2xl group" style="aspect-ratio: 21/9;">
+        {/* Parallax and scale effect on hover */}
+        <div class="absolute inset-0 transition-transform duration-1000 group-hover:scale-105">
+          <Picture
+            src={image}
+            formats={['avif', 'webp']}
+            fallbackFormat="webp"
+            alt={alt ?? ''}
+            width={1600}
+            height={686}
+            loading="eager"
+            fetchpriority="high"
+            pictureAttributes={{ class: 'block size-full' }}
+            class="size-full object-cover"
+          />
+        </div>
+        
+        {/* Subtle premium gradient overlay */}
+        <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/60 via-zinc-900/10 to-transparent opacity-80 mix-blend-multiply"></div>
+        <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-3xl pointer-events-none"></div>
       </div>
     )
   }

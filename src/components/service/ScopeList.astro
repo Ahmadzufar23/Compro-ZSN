@@ -17,18 +17,23 @@ const { judul = 'Scope of Work', items } = Astro.props;
   <p class="label-tech text-muted">Scope of Work</p>
   <h2 class="mt-3 text-h2">{judul}</h2>
 
-  <div class="mt-12 relative border-l-2 border-zinc-200 ml-4 md:ml-6 space-y-12 pb-8">
+  <div class="mt-12 relative ml-4 md:ml-6 space-y-12 pb-8">
+    {/* Gradient line */}
+    <div class="absolute top-0 bottom-0 left-0 w-[2px] bg-gradient-to-b from-yellow-400 via-zinc-200 to-zinc-100 -translate-x-1/2"></div>
     {
       items.map((item, i) => (
         <div class="relative pl-10 md:pl-12 group">
           {/* Timeline Dot with Number */}
-          <span class="absolute -left-[21px] top-0 w-10 h-10 rounded-full bg-white border-2 border-zinc-200 flex items-center justify-center font-display text-sm font-bold text-zinc-500 group-hover:border-zinc-900 group-hover:text-zinc-900 group-hover:shadow-md transition-all duration-300">
+          <span class="absolute -left-5 top-0 w-10 h-10 rounded-full bg-white border-2 border-zinc-200 flex items-center justify-center font-display text-sm font-bold text-zinc-400 group-hover:border-yellow-400 group-hover:bg-yellow-50 group-hover:text-yellow-600 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.4)] transition-all duration-300 z-10">
             {String(i + 1).padStart(2, '0')}
           </span>
           
-          <div class="bg-white border border-hairline p-6 md:p-8 shadow-sm rounded-xl hover:shadow-md transition-shadow duration-300">
-            <h3 class="text-lg font-bold text-ink">{item.judul}</h3>
-            <p class="mt-2 text-muted leading-relaxed">{item.detail}</p>
+          <div class="bg-white border border-hairline p-6 md:p-8 shadow-sm rounded-2xl group-hover:shadow-xl group-hover:border-yellow-400/30 transition-all duration-500 relative overflow-hidden">
+            {/* Subtle glow effect */}
+            <div class="absolute -inset-2 bg-gradient-to-r from-yellow-400/0 via-yellow-400/5 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+            
+            <h3 class="text-xl font-bold text-ink relative z-10">{item.judul}</h3>
+            <p class="mt-3 text-muted leading-relaxed relative z-10">{item.detail}</p>
           </div>
         </div>
       ))

@@ -29,9 +29,9 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<Section bg="surface" size="md" aria-label="Packages">
-  <p class="label-tech text-muted">Packages</p>
-  <h2 class="mt-3 text-h2">Available packages</h2>
+<Section bg="surface" size="md" aria-label="Service Tiers">
+  <p class="label-tech text-muted">Service Tiers</p>
+  <h2 class="mt-3 text-h2">Solutions & Specifications</h2>
 
   <div class="mt-10 grid gap-6 md:grid-cols-3">
     {
@@ -43,18 +43,7 @@ const { items } = Astro.props;
             <h3 class="text-h3">{p.nama}</h3>
             <p class="mt-2 text-sm text-muted h-10">{p.ringkas}</p>
 
-            <p class="mt-8 font-display text-2xl font-bold text-ink">
-              {p.hargaMulai ? (
-                <>
-                  <span class="text-sm font-normal text-muted block mb-1">Starting from</span>
-                  Rp {p.hargaMulai} juta
-                  {p.satuan && <span class="text-sm font-normal text-muted">{p.satuan}</span>}
-                </>
-              ) : (
-                <span class="text-xl">Request Quote</span>
-              )}
-            </p>
-            {p.durasi && <p class="label-tech mt-2 text-muted">Estimated duration: {p.durasi}</p>}
+            {p.durasi && <p class="label-tech mt-8 text-muted">Estimated duration: {p.durasi}</p>}
 
             <ul class="mt-8 flex-1 space-y-3 border-t border-hairline pt-6 text-sm">
               {p.isi.map((row) =>
