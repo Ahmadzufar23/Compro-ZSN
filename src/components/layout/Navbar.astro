@@ -20,18 +20,35 @@
  */
 import Logo from '@/components/ui/Logo.astro';
 import { site } from '@/config/site';
+import { getLangFromUrl, useTranslations, getLocalizedPathname, defaultLang } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const menu = [
-  { label: 'About', id: 'about', page: '/about' },
-  { label: 'Services', id: 'services', page: '/services' },
-  { label: 'Products', id: 'products', page: '/products' },
-  { label: 'Portfolio', id: 'portfolio', page: '/portfolio' },
+  { label: t('nav.about'), id: 'about', page: '/about' },
+  { label: t('nav.services'), id: 'services', page: '/services' },
+  { label: t('nav.products'), id: 'products', page: '/products' },
+  { label: t('nav.portfolio'), id: 'portfolio', page: '/portfolio' },
 ];
 
 const path = Astro.url.pathname;
-const isHome = path === '/';
-const hrefFor = (id: string) => (isHome ? `#${id}` : `/#${id}`);
-const isActive = (page: string) => !isHome && path.startsWith(page);
+const isHome = path === '/' || path === `/${lang}` || path === `/${lang}/`;
+
+// Adjusted hrefFor to support language prefixing for anchor links
+const hrefFor = (id: string) => {
+  const prefix = lang === defaultLang ? '' : `/${lang}`;
+  return isHome ? `#${id}` : `${prefix}/#${id}`;
+};
+
+const isActive = (page: string) => {
+  const localizedPage = lang === defaultLang ? page : `/${lang}${page}`;
+  return !isHome && path.startsWith(localizedPage);
+};
+
+const engUrl = getLocalizedPathname(Astro.url, 'en');
+const indUrl = getLocalizedPathname(Astro.url, 'id');
+
 ---
 
 <header class="sticky top-0 z-50 border-b border-hairline bg-white/80 backdrop-blur-md">
@@ -45,29 +62,67 @@ const isActive = (page: string) => !isHome && path.startsWith(page);
 
     {/* Desktop */}
     <ul class="hidden items-center gap-5 lg:flex">
-      {menu.map(({ label, id, page }) => (
-        <li>
-          <a
-            href={hrefFor(id)}
-            aria-current={isActive(page) ? 'page' : undefined}
-            class:list={[
-              'relative flex min-h-11 items-center px-2.5 text-sm font-medium text-muted transition-colors hover:text-ink',
-              isActive(page) &&
-                'text-ink after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-yellow',
-            ]}
-          >
-            {label}
-          </a>
-        </li>
-      ))}
+      {menu.map(({ label, id, page }) => {
+        const localizedPage = lang === defaultLang ? page : `/${lang}${page}`;
+        return (
+          <li>
+            <a
+              href={hrefFor(id)}
+              aria-current={isActive(page) ? 'page' : undefined}
+              class:list={[
+                'relative flex min-h-11 items-center px-2.5 text-sm font-medium text-muted transition-colors hover:text-ink',
+                isActive(page) &&
+                  'text-ink after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-yellow',
+              ]}
+            >
+              {label}
+            </a>
+          </li>
+        );
+      })}
     </ul>
 
-    <a
-      href="/contact"
-      class="hidden shrink-0 rounded-xl bg-yellow px-6 py-2.5 text-sm font-bold text-ink shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg lg:inline-block"
-    >
-      Free Consultation
-    </a>
+    <div class="hidden lg:flex items-center gap-4">
+      <details class="relative group cursor-pointer list-none [&_summary::-webkit-details-marker]:hidden">
+        <summary class="flex items-center gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-ink hover:border-zinc-300 transition-colors bg-white">
+          <svg class="w-5 h-3.5 rounded-sm overflow-hidden" viewBox="0 0 60 30" preserveAspectRatio="none">
+            <rect width="60" height="30" fill="#012169"/>
+            <path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/>
+            <path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="4"/>
+            <path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/>
+            <path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/>
+          </svg>
+          <span>ENG</span>
+          <svg class="h-4 w-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </summary>
+        <div class="absolute right-0 top-full mt-2 w-32 rounded-xl border border-hairline bg-white shadow-lg z-[100] group-open:block hidden">
+          <a href={engUrl} class="w-full flex items-center gap-3 px-4 py-3 text-sm text-ink hover:bg-zinc-50 rounded-t-xl transition-colors">
+            <svg class="w-5 h-3.5 rounded-sm overflow-hidden border border-black/10" viewBox="0 0 60 30" preserveAspectRatio="none">
+              <rect width="60" height="30" fill="#012169"/>
+              <path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/>
+              <path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="4"/>
+              <path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/>
+              <path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/>
+            </svg>
+            ENG
+          </a>
+          <a href={indUrl} class="w-full flex items-center gap-3 px-4 py-3 text-sm text-ink hover:bg-zinc-50 rounded-b-xl border-t border-hairline transition-colors">
+            <svg class="w-5 h-3.5 rounded-sm overflow-hidden border border-black/10" viewBox="0 0 60 30" preserveAspectRatio="none">
+              <rect width="60" height="15" fill="#CE1126"/>
+              <rect y="15" width="60" height="15" fill="#FFFFFF"/>
+            </svg>
+            IND
+          </a>
+        </div>
+      </details>
+
+      <a
+        href={lang === defaultLang ? '/contact' : `/${lang}/contact`}
+        class="shrink-0 rounded-xl bg-yellow px-6 py-2.5 text-sm font-bold text-ink shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
+      >
+        {t('nav.consultation')}
+      </a>
+    </div>
 
     {/* Mobile — tanpa JavaScript */}
     <details class="group lg:hidden [&_summary::-webkit-details-marker]:hidden">
@@ -116,11 +171,33 @@ const isActive = (page: string) => !isHome && path.startsWith(page);
             </li>
           ))}
         </ul>
+        <div class="mt-5 border-t border-hairline pt-5">
+          <div class="mt-4 flex gap-3">
+            <a href={engUrl} class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-yellow-400 bg-yellow-50 text-yellow-600 font-bold text-sm transition-colors">
+              <svg class="w-5 h-3.5 rounded-sm overflow-hidden border border-black/10" viewBox="0 0 60 30" preserveAspectRatio="none">
+                <rect width="60" height="30" fill="#012169"/>
+                <path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/>
+                <path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="4"/>
+                <path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/>
+                <path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/>
+              </svg>
+              ENG
+            </a>
+            <a href={indUrl} class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-zinc-200 bg-white text-ink hover:bg-zinc-50 font-medium text-sm transition-colors">
+              <svg class="w-5 h-3.5 rounded-sm overflow-hidden border border-black/10" viewBox="0 0 60 30" preserveAspectRatio="none">
+                <rect width="60" height="15" fill="#CE1126"/>
+                <rect y="15" width="60" height="15" fill="#FFFFFF"/>
+              </svg>
+              IND
+            </a>
+          </div>
+        </div>
+
         <a
-          href="/contact"
-          class="mt-5 block rounded-xl bg-yellow py-3.5 text-center text-sm font-bold text-ink shadow-md"
+          href={lang === defaultLang ? '/contact' : `/${lang}/contact`}
+          class="mt-4 block rounded-xl bg-yellow py-3.5 text-center text-sm font-bold text-ink shadow-md"
         >
-          Free Consultation
+          {t('nav.consultation')}
         </a>
       </div>
     </details>

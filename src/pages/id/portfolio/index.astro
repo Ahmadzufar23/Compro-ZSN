@@ -32,7 +32,7 @@ const kategoriInfo: Record<string, { label: string; slug: string }> = {
 
 const urutanKategori = ['fiber', 'cctv', 'network', 'maintenance', 'software'] as const;
 
-const semua = await getCollection('project', (entry) => entry.id.startsWith('en/'));
+const semua = await getCollection('project', (entry) => entry.id.startsWith('id/'));
 semua.sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf());
 
 const kelompokPerKategori = urutanKategori

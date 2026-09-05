@@ -1,0 +1,223 @@
+---
+/**
+ * Tim — collection tim digerbang oleh izinTampil (lihat content.config.ts).
+ * Saat kosong, halaman tetap tampil rapi lewat struktur divisi + deskripsi
+ * peran, bukan grid kosong atau kartu placeholder abu-abu.
+ *
+ * JUMLAH anggota tim tidak pernah ditampilkan di halaman ini (lihat
+ * CLAUDE.md bagian "Klaim yang DILARANG muncul di konten": headcount
+ * tidak boleh tayang). Yang tampil adalah orangnya (foto, nama, peran),
+ * bukan angkanya.
+ */
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import PlaceholderPhoto from '@/components/ui/PlaceholderPhoto.astro';
+
+const semua = await getCollection('tim');
+semua.sort((a, b) => a.data.urutan - b.data.urutan);
+
+const divisiInfo = {
+  manajemen: {
+    label: 'Management',
+    deskripsi: 'Setting project direction, client relations, and ZSN work standards.',
+    tanggungJawab: [
+      'Preparing work plans and cost estimates based on field survey results',
+      'Serving as the primary client contact during the project',
+      'Establishing quality standards and field team work procedures',
+    ],
+  },
+  instalasi: {
+    label: 'Installation Team',
+    deskripsi: 'Cable pulling, device mounting, and direct field installation.',
+    tanggungJawab: [
+      'Pulling and arranging fiber optic and copper cables according to the design route',
+      'Installing brackets, racks, and mounting active devices',
+      'Cable route neatening and installation point labeling',
+    ],
+  },
+  teknis: {
+    label: 'Technical & Configuration Team',
+    deskripsi: 'Splicing, termination, router and NVR configuration, and OTDR testing.',
+    tanggungJawab: [
+      'Fusion splicing and fiber optic connector termination',
+      'Configuring routers, switches, access points, and NVRs according to client needs',
+      'OTDR testing and loss measurement before handover',
+    ],
+  },
+  operasional: {
+    label: 'Operations & QC Team',
+    deskripsi: 'Scheduling, as-built documentation, quality control, and client handover.',
+    tanggungJawab: [
+      'Scheduling field visits and coordinating the installation team',
+      'Preparing test reports and as-built documentation',
+      'Final quality check of the work before handing it over to the client',
+    ],
+  },
+} as const;
+
+const urutanDivisi = ['manajemen', 'instalasi', 'teknis', 'operasional'] as const;
+
+const kelompok = urutanDivisi.map((divisi) => ({
+  divisi,
+  info: divisiInfo[divisi],
+  anggota: semua.filter((a) => a.data.divisi === divisi),
+}));
+
+const alurKerja = [
+  {
+    judul: 'Joint Survey',
+    detail:
+      'Senior technicians and the installation team go down to the site together, ensuring the work plan matches field conditions before the execution schedule is determined.',
+  },
+  {
+    judul: 'Paired Execution',
+    detail:
+      'Installation is always carried out by at least two people: one focusing on installation, one focusing on work safety and direct connection testing.',
+  },
+  {
+    judul: 'Documented Handover',
+    detail:
+      'Every project concludes with a test report and as-built documentation which is verified by the technical team before being handed over to the client.',
+  },
+];
+
+const kategoriSertifikasi = [
+  'Fiber Optic Installation & Termination',
+  'OTDR Testing & Loss Measurement',
+  'Network & Active Device Configuration',
+  'Field Occupational Safety (OSH)',
+];
+---
+
+<Base
+  title="Team"
+  description="ZSN's internal team handling installation, technical configuration, and network project operations."
+  noindex
+>
+  <Section bg="canvas" size="lg" aria-label="Team Hero">
+    <p class="label-tech text-muted">Our Team</p>
+    <h1 class="mt-3 text-h1">The people behind every installation</h1>
+    <p class="mt-4 max-w-2xl text-muted">
+      All ZSN work is carried out by an internal certified team, not
+      freelance subcontractors, divided by roles at each project stage.
+    </p>
+  </Section>
+
+  <Section bg="surface" size="md" aria-label="How our team works">
+    <p class="label-tech text-muted">Work Principles</p>
+    <h2 class="mt-3 text-h2">How our team works</h2>
+
+    <div class="mt-8 grid gap-x-8 gap-y-6 border-t border-hairline pt-6 sm:grid-cols-3">
+      {
+        alurKerja.map((a) => (
+          <div>
+            <h3 class="text-h3">{a.judul}</h3>
+            <p class="mt-2 text-sm text-muted">{a.detail}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  {
+    kelompok.map(({ divisi, info, anggota }) => (
+      <Section bg={divisi === 'instalasi' || divisi === 'operasional' ? 'surface' : 'canvas'} size="md" aria-label={info.label}>
+        <h2 class="text-h2">{info.label}</h2>
+        <p class="mt-3 max-w-prose text-muted">{info.deskripsi}</p>
+
+        <ul class="mt-5 flex max-w-prose flex-col gap-2.5">
+          {info.tanggungJawab.map((t) => (
+            <li class="flex items-start gap-3 text-sm text-muted">
+              <span class="mt-2 size-1.5 shrink-0 bg-ink" />
+              <span>{t}</span>
+            </li>
+          ))}
+        </ul>
+
+        {anggota.length > 0 ? (
+          <div class="mt-8 grid gap-x-8 gap-y-10 border-t border-hairline pt-8 sm:grid-cols-2 lg:grid-cols-4">
+            {anggota.map((a) => (
+              <article class="group">
+                <div class="overflow-hidden" style="aspect-ratio: 1/1;">
+                  <Picture
+                    src={a.data.foto}
+                    formats={['avif', 'webp']}
+                    fallbackFormat="webp"
+                    alt={`${a.data.nama}, ${a.data.jabatan}`}
+                    width={400}
+                    height={400}
+                    loading="lazy"
+                    pictureAttributes={{ class: 'block size-full' }}
+                    class="size-full object-cover"
+                  />
+                </div>
+                <h3 class="mt-4 text-base font-semibold text-ink">
+                  {a.data.nama}
+                </h3>
+                <p class="label-tech mt-1 text-muted">{a.data.jabatan}</p>
+                {a.data.sertifikasi && (
+                  <div class="mt-3 flex flex-wrap gap-2">
+                    {a.data.sertifikasi.map((s) => (
+                      <span class="label-tech border border-hairline px-2 py-1 text-muted">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+        ) : (
+          <>
+            <div class="mt-8 grid gap-x-8 gap-y-10 border-t border-hairline pt-8 sm:grid-cols-2 lg:w-1/2">
+              {[0, 1].map(() => (
+                <div>
+                  <PlaceholderPhoto ratio="1/1" label="Member Photo" />
+                  <div class="mt-4 h-3 w-2/3 bg-hairline" />
+                  <div class="mt-2 h-2.5 w-1/3 bg-hairline" />
+                </div>
+              ))}
+            </div>
+            <p class="label-tech mt-5 text-muted">Member profiles are currently being prepared.</p>
+          </>
+        )}
+      </Section>
+    ))
+  }
+
+  <Section bg="canvas" size="md" aria-label="Certification and work standards">
+    <p class="label-tech text-muted">Certification</p>
+    <h2 class="mt-3 text-h2">Certification & work standards</h2>
+    <p class="mt-3 max-w-prose text-muted">
+      ZSN's technical team is equipped with official certifications in the following work categories.
+      The name and certificate number of each member will be listed as soon as
+      the documents are verified.
+    </p>
+
+    <div class="mt-8 grid gap-x-8 gap-y-6 border-t border-hairline pt-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        kategoriSertifikasi.map((k) => (
+          <div>
+            <h3 class="text-base font-semibold text-ink">{k}</h3>
+            <p class="label-tech mt-3 text-subtle">Certificates to be listed soon</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section bg="deep" size="lg" aria-label="Call to action">
+    <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="text-h2 text-white">Ready to work together?</h2>
+        <p class="mt-4 text-subtle">
+          Contact our team to consult your network infrastructure needs.
+        </p>
+      </div>
+      <Button href="/id/contact" size="lg" class="shrink-0">Contact Us</Button>
+    </div>
+  </Section>
+</Base>

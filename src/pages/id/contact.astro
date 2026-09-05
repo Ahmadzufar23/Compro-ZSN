@@ -1,0 +1,208 @@
+---
+/**
+ * Kontak — situs static tanpa backend. Form hanya menyusun pesan
+ * WhatsApp di sisi klien. Progressive enhancement: tanpa JS, tombol
+ * kirim tetap berfungsi sebagai link WhatsApp dengan pesan generik.
+ */
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import { site, waLink } from '@/config/site';
+
+const pekerjaanOptions = [
+  'Fiber Optic & FTTH',
+  'CCTV & Security',
+  'Network Infrastructure',
+  'Maintenance & IT Support',
+  'System Development',
+  'Not sure yet',
+];
+
+const bangunanOptions = [
+  'Office Building',
+  'Shophouse',
+  'Factory or Warehouse',
+  'Residential',
+  'Office',
+  'Other',
+];
+
+const skalaOptions = [
+  '1 floor or 1 unit',
+  '2 to 5 floors',
+  '6 floors and above',
+  'Industrial Area / Estate',
+];
+
+const waktuOptions = [
+  'This week',
+  'This month',
+  '1 to 3 months',
+  'Still comparing options',
+];
+
+const waFallback = waLink('Hello ZSN, I would like to request a service needs survey.');
+const waLangsung = waLink('Hello ZSN, I have a question regarding your services.');
+const fieldClass =
+  'mt-2 min-h-11 w-full border border-hairline px-4 py-3 text-ink outline-none focus-visible:border-ink';
+---
+
+<Base
+  title="Contact"
+  description="Contact ZSN for consultation on fiber optic, CCTV, network, and system installation needs."
+>
+  <Section bg="deep" size="md" aria-label="Contact Hero">
+    <p class="label-tech text-muted">Contact</p>
+    <h1 class="mt-3 text-h1 text-white">Get in touch</h1>
+    <p class="mt-4 max-w-2xl text-subtle">
+      Tell us about your location and requirements, and our team will respond via
+      WhatsApp to arrange a survey plan.
+    </p>
+  </Section>
+
+  <Section bg="canvas" size="lg" id="survey" aria-label="Contact Form and Info">
+    <div class="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+      <form id="form-kontak" class="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label for="nama" class="label-tech block text-muted">Name</label>
+          <input
+            id="nama" name="nama" type="text" required
+            class={fieldClass}
+            placeholder="Your Name"
+          />
+        </div>
+
+        <div>
+          <label for="perusahaan" class="label-tech block text-muted">Company</label>
+          <input
+            id="perusahaan" name="perusahaan" type="text"
+            class={fieldClass}
+            placeholder="Company Name (optional)"
+          />
+        </div>
+
+        <div>
+          <label for="pekerjaan" class="label-tech block text-muted">Type of Work</label>
+          <select id="pekerjaan" name="pekerjaan" class={fieldClass}>
+            {pekerjaanOptions.map((o) => <option value={o}>{o}</option>)}
+          </select>
+        </div>
+
+        <div>
+          <label for="lokasi" class="label-tech block text-muted">Location</label>
+          <input
+            id="lokasi" name="lokasi" type="text" required
+            class={fieldClass}
+            placeholder="City or Address"
+          />
+        </div>
+
+        <div>
+          <label for="bangunan" class="label-tech block text-muted">Building Type</label>
+          <select id="bangunan" name="bangunan" class={fieldClass}>
+            {bangunanOptions.map((o) => <option value={o}>{o}</option>)}
+          </select>
+        </div>
+
+        <div>
+          <label for="skala" class="label-tech block text-muted">Estimated Scale</label>
+          <select id="skala" name="skala" class={fieldClass}>
+            {skalaOptions.map((o) => <option value={o}>{o}</option>)}
+          </select>
+        </div>
+
+        <div class="sm:col-span-2">
+          <label for="waktu" class="label-tech block text-muted">Project Timeline</label>
+          <select id="waktu" name="waktu" class={fieldClass}>
+            {waktuOptions.map((o) => <option value={o}>{o}</option>)}
+          </select>
+        </div>
+
+        <div class="sm:col-span-2">
+          <label for="catatan" class="label-tech block text-muted">Notes</label>
+          <textarea
+            id="catatan" name="catatan" rows="4"
+            class={fieldClass}
+            placeholder="Additional details (optional)"
+          ></textarea>
+        </div>
+
+        <Button
+          id="tombol-kirim"
+          href={waFallback}
+          data-wa={site.whatsapp}
+          size="lg"
+          external
+          class="mt-2 self-start sm:col-span-2"
+        >
+          Send via WhatsApp
+        </Button>
+      </form>
+
+      <div class="flex flex-col gap-8">
+        <div>
+          <p class="label-tech text-muted">Address</p>
+          <p class="mt-2 text-ink">
+            {site.alamat.jalan}<br />
+            {site.alamat.kelurahan}, {site.alamat.kecamatan}<br />
+            {site.alamat.kota}, {site.alamat.provinsi} {site.alamat.kodePos}
+          </p>
+        </div>
+
+        <div>
+          <p class="label-tech text-muted">Operating Hours</p>
+          <p class="mt-2 text-ink">{site.jamOperasional}</p>
+        </div>
+
+        <div>
+          <p class="label-tech text-muted">Email</p>
+          <p class="mt-2 text-ink">
+            <a href={`mailto:${site.email}`} class="hover:text-muted">{site.email}</a>
+          </p>
+        </div>
+
+        <Button href={waLangsung} variant="outline-dark" external class="self-start">
+          Chat via WhatsApp
+        </Button>
+
+        <div>
+          <p class="label-tech text-muted">Location Map</p>
+          <Button href={site.maps.url} variant="outline-dark" external class="mt-2 self-start">
+            Open in Google Maps
+          </Button>
+        </div>
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<script>
+  const form = document.getElementById('form-kontak') as HTMLFormElement | null;
+  const tombol = document.getElementById('tombol-kirim') as HTMLAnchorElement | null;
+  if (form && tombol) {
+    const nomor = tombol.dataset.wa;
+    const baris: [string, string][] = [
+      ['Name', 'nama'],
+      ['Company', 'perusahaan'],
+      ['Type of work', 'pekerjaan'],
+      ['Location', 'lokasi'],
+      ['Building type', 'bangunan'],
+      ['Estimated scale', 'skala'],
+      ['Timeline', 'waktu'],
+      ['Notes', 'catatan'],
+    ];
+    const update = () => {
+      const data = new FormData(form);
+      const isi = baris
+        .map(([label, nama]) => {
+          const nilai = String(data.get(nama) || '').trim();
+          return nilai ? `${label}: ${nilai}` : '';
+        })
+        .filter(Boolean);
+      const teks = ['Hello ZSN, I would like to request a survey.', '', ...isi].join('\n');
+      tombol.href = `https://wa.me/${nomor}?text=${encodeURIComponent(teks)}`;
+    };
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+  }
+</script>

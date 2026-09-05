@@ -9,6 +9,13 @@ export default defineConfig({
   // dan set site.isProduction: true di src/config/site.ts saat rilis.
   // TODO: cek ulang URL Vercel sebenarnya (belum dikonfirmasi).
   site: 'https://compro-zsn.vercel.app',
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'id'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   integrations: [
     mdx(),
     sitemap({

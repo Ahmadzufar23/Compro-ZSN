@@ -8,32 +8,37 @@
  */
 import Logo from '@/components/ui/Logo.astro';
 import { site } from '@/config/site';
+import { getLangFromUrl, useTranslations, defaultLang } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const prefix = lang === defaultLang ? '' : `/${lang}`;
 
 const kolom = [
   {
-    judul: 'Services',
+    judul: t('nav.services'),
     tautan: [
-      { label: 'All Services', href: '/services' },
-      { label: 'Fiber Optic & FTTH', href: '/services/fiber-optic' },
-      { label: 'CCTV & Security', href: '/services/cctv' },
-      { label: 'Network Infrastructure', href: '/services/network' },
-      { label: 'Maintenance & IT Support', href: '/services/maintenance' },
-      { label: 'System Development', href: '/products/software' },
+      { label: 'All Services', href: `${prefix}/services` },
+      { label: 'Fiber Optic & FTTH', href: `${prefix}/services/fiber-optic` },
+      { label: 'CCTV & Security', href: `${prefix}/services/cctv` },
+      { label: 'Network Infrastructure', href: `${prefix}/services/network` },
+      { label: 'Maintenance & IT Support', href: `${prefix}/services/maintenance` },
+      { label: 'System Development', href: `${prefix}/products/software` },
     ],
   },
   {
     judul: 'Company',
     tautan: [
-      { label: 'About', href: '/about' },
-      ...(site.halamanAktif.project ? [{ label: 'Portfolio', href: '/portfolio' }] : []),
-      ...(site.halamanAktif.tim ? [{ label: 'Team', href: '/team' }] : []),
+      { label: t('nav.about'), href: `${prefix}/about` },
+      ...(site.halamanAktif.project ? [{ label: t('nav.portfolio'), href: `${prefix}/portfolio` }] : []),
+      ...(site.halamanAktif.tim ? [{ label: 'Team', href: `${prefix}/team` }] : []),
     ],
   },
   {
-    judul: 'Contact',
+    judul: t('footer.contact'),
     tautan: [
-      { label: 'Contact Us', href: '/contact' },
-      { label: 'Request Survey', href: '/contact#survey' },
+      { label: 'Contact Us', href: `${prefix}/contact` },
+      { label: 'Request Survey', href: `${prefix}/contact#survey` },
     ],
   },
 ];
@@ -44,12 +49,11 @@ const tahun = new Date().getFullYear();
 <footer class="on-dark border-t border-hairline bg-deep">
   <div class="container-content grid gap-12 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)] md:py-20">
     <div>
-      <a href="/" aria-label="ZSN, Beranda" class="flex min-h-11 w-fit items-center">
+      <a href={prefix || '/'} aria-label="ZSN, Beranda" class="flex min-h-11 w-fit items-center">
         <Logo variant="light" height={40} />
       </a>
       <p class="mt-3 max-w-xs text-sm leading-relaxed text-subtle">
-        PT Zufar Solusi Nawasena, network infrastructure, security, and
-        system development for businesses across Indonesia.
+        {lang === 'id' ? 'PT Zufar Solusi Nawasena, infrastruktur jaringan, keamanan, dan pengembangan sistem untuk bisnis di seluruh Indonesia.' : 'PT Zufar Solusi Nawasena, network infrastructure, security, and system development for businesses across Indonesia.'}
       </p>
       <address class="mt-4 max-w-xs text-sm not-italic leading-relaxed text-subtle">
         {site.alamat.jalan}, {site.alamat.kota}<br />

@@ -4,7 +4,7 @@ import { Picture } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import Section from '@/components/ui/Section.astro';
 
-const layanan = (await getCollection('layanan', (entry) => entry.id.startsWith('en/'))).sort((a, b) => a.data.urutan - b.data.urutan);
+const layanan = (await getCollection('layanan', (entry) => entry.id.startsWith('id/'))).sort((a, b) => a.data.urutan - b.data.urutan);
 ---
 
 <Base

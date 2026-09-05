@@ -9,9 +9,9 @@ import Gallery from '@/components/service/Gallery.astro';
 import { waLink } from '@/config/site';
 
 export async function getStaticPaths() {
-  const project = await getCollection('project', (entry) => entry.id.startsWith('en/'));
+  const project = await getCollection('project', (entry) => entry.id.startsWith('id/'));
   return project.map((entry) => ({
-    params: { slug: entry.id.replace('en/', '') },
+    params: { slug: entry.id.replace('id/', '') },
     props: { entry },
   }));
 }

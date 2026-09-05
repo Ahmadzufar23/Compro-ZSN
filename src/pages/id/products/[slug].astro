@@ -14,7 +14,7 @@ import ScopeList from '@/components/service/ScopeList.astro';
 import Gallery from '@/components/service/Gallery.astro';
 import Workflow from '@/components/service/Workflow.astro';
 import BrandTiers from '@/components/service/BrandTiers.astro';
-
+import PriceFactors from '@/components/service/PriceFactors.astro';
 import MasalahCards from '@/components/service/MasalahCards.astro';
 import PaketCards from '@/components/service/PaketCards.astro';
 import KomitmenTable from '@/components/service/KomitmenTable.astro';
@@ -24,9 +24,9 @@ import ServiceCta from '@/components/service/ServiceCta.astro';
 import PortfolioShowcase from '@/components/service/PortfolioShowcase.astro';
 
 export async function getStaticPaths() {
-  const layanan = await getCollection('layanan', (entry) => entry.id.startsWith('en/'));
-  return layanan.map((entry) => ({
-    params: { slug: entry.id.replace('en/', '') },
+  const produk = await getCollection('produk', (entry) => entry.id.startsWith('id/'));
+  return produk.map((entry) => ({
+    params: { slug: entry.id.replace('id/', '') },
     props: { entry },
   }));
 }
@@ -45,6 +45,8 @@ const { Content } = await render(entry);
     image={data.heroImage}
     alt={data.heroAlt}
     flushBottom={!!data.portofolio}
+    parentLabel="Products"
+    parentUrl="/products"
   />
 
   {data.portofolio && <PortfolioShowcase items={data.portofolio} />}
@@ -69,7 +71,7 @@ const { Content } = await render(entry);
     <BrandTiers merek={data.merek} tierPerangkat={data.tierPerangkat} />
   )}
 
-
+  {data.faktorHarga && <PriceFactors items={data.faktorHarga} />}
   {data.masalah && <MasalahCards items={data.masalah} />}
   {data.paket && <PaketCards items={data.paket} />}
   {data.komitmen && <KomitmenTable kolom={data.komitmen.kolom} baris={data.komitmen.baris} />}
@@ -87,22 +89,3 @@ const { Content } = await render(entry);
     margin-top: 0;
   }
 </style>
-
-<script>
-  import { inView, animate } from "motion";
-
-  const setupAnimations = () => {
-    const sections = document.querySelectorAll('section');
-    sections.forEach((section) => {
-      inView(section, () => {
-        animate(
-          section,
-          { opacity: [0, 1], y: [30, 0] },
-          { duration: 0.8, easing: "easeOut" }
-        );
-      }, { margin: "-10% 0px" });
-    });
-  };
-
-  document.addEventListener('astro:page-load', setupAnimations);
-</script>

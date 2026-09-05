@@ -24,9 +24,9 @@ import ServiceCta from '@/components/service/ServiceCta.astro';
 import PortfolioShowcase from '@/components/service/PortfolioShowcase.astro';
 
 export async function getStaticPaths() {
-  const produk = await getCollection('produk');
+  const produk = await getCollection('produk', (entry) => entry.id.startsWith('en/'));
   return produk.map((entry) => ({
-    params: { slug: entry.id },
+    params: { slug: entry.id.replace('en/', '') },
     props: { entry },
   }));
 }
