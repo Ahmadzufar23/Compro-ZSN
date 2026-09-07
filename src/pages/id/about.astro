@@ -27,7 +27,7 @@ const prinsip = [
   },
 ];
 
-const jumlahLayanan = (await getCollection('layanan')).length;
+const jumlahLayanan = (await getCollection('layanan', (entry) => entry.id.startsWith('id/'))).length;
 
 const stats = [
   { angka: 'Since 2023', label: 'Years in Operation' },

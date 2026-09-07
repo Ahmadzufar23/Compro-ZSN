@@ -9,8 +9,11 @@ import { getCollection } from 'astro:content';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import ImageSlider from '@/components/ui/ImageSlider.astro';
+import { getLangFromUrl, defaultLang } from '@/i18n/utils';
 
-const software = (await getCollection('produk')).find((entry) => entry.id === 'software');
+const lang = getLangFromUrl(Astro.url);
+const software = (await getCollection('produk')).find((entry) => entry.id === `${lang}/software`);
+const productHref = lang === defaultLang ? `/products/software` : `/${lang}/products/software`;
 ---
 
 {
@@ -46,7 +49,7 @@ const software = (await getCollection('produk')).find((entry) => entry.id === 's
               ))}
             </div>
           )}
-          <Button href={`/products/${software.id}`} size="lg" class="mt-8">
+          <Button href={productHref} size="lg" class="mt-8">
             View Product Catalog
           </Button>
         </div>

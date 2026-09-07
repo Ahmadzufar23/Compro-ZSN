@@ -4,11 +4,16 @@ import { Image } from 'astro:assets';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import { site } from '@/config/site';
+import { getLangFromUrl, defaultLang } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
 
 // Mengambil koleksi project, diurutkan berdasarkan tanggal (terbaru), batasi 6
-const projects = (await getCollection('project'))
+const projects = (await getCollection('project', (entry) => entry.id.startsWith(`${lang}/`)))
   .sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf())
   .slice(0, 6);
+  
+const portfolioHref = lang === defaultLang ? `/portfolio` : `/${lang}/portfolio`;
 ---
 
 <Section bg="canvas" id="portfolio" aria-label="Portfolio">
@@ -38,7 +43,7 @@ const projects = (await getCollection('project'))
 
   {site.halamanAktif.project && (
     <div class="mt-12 flex justify-center">
-      <Button href="/portfolio" variant="outline-dark">View All Portfolio</Button>
+      <Button href={portfolioHref} variant="outline-dark">View All Portfolio</Button>
     </div>
   )}
 </Section>

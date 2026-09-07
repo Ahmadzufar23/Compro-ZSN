@@ -1,113 +1,151 @@
 ---
 /**
- * ServiceGrid — dibaca langsung dari getCollection('layanan'), diurutkan
- * pakai field `urutan`. Judul dan href tidak pernah hardcode di sini,
- * supaya baris tidak bisa melenceng dari konten layanan yang sebenarnya
- * ada (pernah terjadi: kartu "Pengujian & Sertifikasi Kabel" tanpa file
- * layanan, dan link ke slug yang tidak pernah dibuat).
- *
- * Hanya menampilkan layanan infrastruktur fisik — difilter lewat field
- * schema `tampilDiGrid`, BUKAN dicocokkan ke slug 'software' secara
- * hardcode (itu masalah yang sama yang baru diperbaiki di tempat lain).
- * Software punya SoftwareBanner sendiri di bawah daftar ini.
- *
- * icon murni presentasi, dipetakan per slug di sini. Layanan baru
- * tanpa entri di `tampilan` otomatis dapat ikon 'default' — tidak akan
- * gagal build, tapi sebaiknya ditambahkan ikon teknis yang sesuai.
- *
- * Daftar bergaris rambut, bukan grid kartu — arah "enterprise terang"
- * (lihat CLAUDE.md). Baris duduk langsung di atas canvas, dipisah
- * `border-hairline`, hover mengubah latar jadi surface.
- *
- * `urutan` cuma dipakai untuk sorting, tidak pernah dirender — layanan
- * bukan sekuens (lihat CLAUDE.md).
+ * ServiceGrid — Konsep B (Enterprise Cards + Premium Visual)
+ * Menampilkan 3 layanan unggulan dengan foto asli ZSN
+ * untuk meningkatkan kredibilitas dan kontras B2B.
  */
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import ServiceIcon from './ServiceIcon.astro';
+import { getLangFromUrl, defaultLang } from '@/i18n/utils';
+
+// Import foto nyata untuk visual di sebelah kiri
+import showcaseImage from '@/assets/layanan/network-hero.jpg';
 
 type IconType = 'konektor' | 'kamera' | 'patch-panel' | 'wrench' | 'terminal' | 'default';
 
 const tampilan: Record<string, { icon: IconType }> = {
   'fiber-optic': { icon: 'konektor' },
   cctv: { icon: 'kamera' },
-  network: { icon: 'patch-panel' },
+  software: { icon: 'terminal' },
   maintenance: { icon: 'wrench' },
 };
 
-const layanan = (await getCollection('layanan', ({ data }) => data.tampilDiGrid)).sort(
-  (a, b) => a.data.urutan - b.data.urutan
-);
+const lang = getLangFromUrl(Astro.url);
+
+// Filter: Tampil di grid, sesuai bahasa, dan KECUALIKAN 'maintenance'
+const layanan = (await getCollection('layanan', ({ id, data }) => 
+  data.tampilDiGrid && 
+  id.startsWith(`${lang}/`) &&
+  !id.includes('maintenance')
+)).sort((a, b) => a.data.urutan - b.data.urutan);
+
+const servicesHref = lang === defaultLang ? `/services` : `/${lang}/services`;
 ---
 
-<Section bg="canvas" size="md" id="services" aria-label="Services">
-  <p class="label-tech text-muted">Services</p>
-  <h2 class="mt-3 text-h2">End-to-End Services</h2>
+<Section bg="surface" size="md" id="services" aria-label="Services" class="relative overflow-hidden">
+  
+  <div class="relative z-10 lg:grid lg:grid-cols-12 lg:gap-10 lg:items-start">
+    
+    <!-- Bagian Kiri (Teks & Visual Foto) -->
+    <div class="lg:col-span-4 xl:col-span-4 mb-10 lg:mb-0 flex flex-col items-start">
+      <p class="label-tech text-muted mb-2 uppercase tracking-widest text-xs w-full">Services</p>
+      <h2 class="text-h3 md:text-3xl font-semibold leading-tight mb-4 text-ink w-full">
+        {lang === 'id' ? 'Solusi infrastruktur andalan kami' : 'Core infrastructure solutions'}
+      </h2>
+      <p class="text-sm text-muted leading-relaxed mb-8 w-full">
+        {lang === 'id' 
+          ? 'Membangun tulang punggung jaringan dan sistem pengawasan kelas enterprise untuk operasional bisnis yang tanpa kompromi.' 
+          : 'Building enterprise-grade network backbones and surveillance systems for uncompromising business operations.'}
+      </p>
+      
+      <!-- Premium Tech Visual (Foto Nyata ZSN) -->
+      <div class="hidden lg:block w-full mb-8 relative group overflow-hidden border border-hairline shadow-sm bg-canvas">
+        <div class="aspect-video relative overflow-hidden">
+          <Image 
+            src={showcaseImage} 
+            alt="ZSN Enterprise Infrastructure" 
+            class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
+            width={600}
+          />
+          <!-- Overlay halus -->
+          <div class="absolute inset-0 bg-ink/5 transition-colors group-hover:bg-transparent"></div>
+        </div>
+        <!-- Garis aksen bawah foto -->
+        <div class="h-1 w-full bg-yellow origin-left transform scale-x-0 transition-transform duration-500 group-hover:scale-x-100"></div>
+      </div>
+      
+      <Button href={servicesHref} variant="outline-dark" class="w-full text-sm py-2 group">
+        {lang === 'id' ? 'Lihat Semua Solusi' : 'View All Solutions'}
+      </Button>
+    </div>
 
-  <div class="mt-10 border-t border-hairline">
-    {
-      layanan.map((entry) => {
-        const { icon } = tampilan[entry.id] ?? { icon: 'default' as IconType };
-        return (
-          <a
-            href={`/services/${entry.id}`}
-            class="animate-service-row opacity-0 translate-y-6 group -mx-4 flex flex-col gap-4 border-b border-hairline px-4 py-6 transition-colors hover:bg-surface sm:flex-row sm:items-center sm:gap-8"
-          >
-            <ServiceIcon type={icon} class="size-5 shrink-0 text-ink sm:size-6" />
-
-            <div class="flex-1">
-              <h3 class="text-h3">{entry.data.judul}</h3>
-              <p class="mt-1 max-w-md text-sm text-muted">{entry.data.ringkas}</p>
-            </div>
-
-            {
-              entry.data.spesifikasi && (
-                <dl class="flex shrink-0 flex-col gap-1 sm:w-56">
-                  {entry.data.spesifikasi.map((s) => (
-                    <div class="flex justify-between gap-4 font-mono text-xs">
-                      <dt class="text-subtle">{s.label}</dt>
-                      <dd class="text-right text-ink">{s.nilai}</dd>
-                    </div>
-                  ))}
-                </dl>
-              )
-            }
-
-            <svg
-              class="size-4 shrink-0 text-muted transition-colors group-hover:text-ink"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              aria-hidden="true"
+    <!-- Bagian Kanan (3 Kartu Enterprise) -->
+    <div class="lg:col-span-8 xl:col-span-8">
+      <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 items-stretch">
+        {layanan.map((entry, i) => {
+          const baseId = entry.id.replace(`${lang}/`, '');
+          const { icon } = tampilan[baseId] ?? { icon: 'default' as IconType };
+          const itemHref = lang === defaultLang ? `/services/${baseId}` : `/${lang}/services/${baseId}`;
+          
+          return (
+            <a
+              href={itemHref}
+              class="animate-service-card group flex flex-col bg-canvas border border-hairline p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:border-zinc-300 opacity-0 translate-y-6 h-full"
+              style={`animation-delay: ${i * 100}ms;`}
             >
-              <path d="M7 17 17 7M9 7h8v8" />
-            </svg>
-          </a>
-        );
-      })
-    }
-  </div>
-
-  <div class="mt-10 flex justify-center">
-    <Button href="/services" variant="outline-dark">View All Services</Button>
+              <!-- Icon Box (Kontras Tinggi) -->
+              <div class="mb-6 flex size-12 items-center justify-center bg-ink text-canvas transition-transform duration-300 group-hover:scale-110">
+                <ServiceIcon type={icon} class="size-6" />
+              </div>
+              
+              <!-- Content dengan Aksen Kotak Kuning 8x8px -->
+              <div class="flex items-center gap-3 mb-3">
+                <div class="size-2 bg-yellow shrink-0" aria-hidden="true"></div>
+                <h3 class="text-lg font-semibold leading-tight text-ink">{entry.data.judul}</h3>
+              </div>
+              
+              <p class="text-sm text-muted leading-relaxed flex-grow pb-6">
+                {entry.data.ringkas}
+              </p>
+              
+              <!-- Action Arrow -->
+              <div class="mt-auto flex justify-end pt-4 border-t border-hairline">
+                <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted transition-colors group-hover:text-ink">
+                  <span>Explore</span>
+                  <svg
+                    class="size-4 transition-transform duration-300 group-hover:translate-x-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <path stroke-linecap="square" stroke-linejoin="miter" d="M4 12h16M13 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+    
   </div>
 </Section>
+
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+</style>
 
 <script>
   import { animate, inView, stagger } from "motion";
 
   const setupServiceAnimations = () => {
     const section = document.querySelector('#services');
-    const rows = document.querySelectorAll('.animate-service-row');
+    const cards = document.querySelectorAll('.animate-service-card');
 
-    if (section && rows.length > 0) {
+    if (section && cards.length > 0) {
       inView(section, () => {
         animate(
-          rows,
+          cards,
           { opacity: 1, transform: "none" },
-          { duration: 0.5, delay: stagger(0.1) }
+          { duration: 0.6, delay: stagger(0.15) }
         );
       }, { margin: "-50px" });
     }
