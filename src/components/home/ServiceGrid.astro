@@ -9,7 +9,6 @@ import { Image } from 'astro:assets';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import ServiceIcon from './ServiceIcon.astro';
-import { getLangFromUrl, defaultLang } from '@/i18n/utils';
 
 // Import foto nyata untuk visual di sebelah kiri
 import showcaseImage from '@/assets/layanan/network-hero.jpg';
@@ -23,16 +22,14 @@ const tampilan: Record<string, { icon: IconType }> = {
   maintenance: { icon: 'wrench' },
 };
 
-const lang = getLangFromUrl(Astro.url);
-
 // Filter: Tampil di grid, sesuai bahasa, dan KECUALIKAN 'maintenance'
 const layanan = (await getCollection('layanan', ({ id, data }) => 
   data.tampilDiGrid && 
-  id.startsWith(`${lang}/`) &&
+  id.startsWith('en/') &&
   !id.includes('maintenance')
 )).sort((a, b) => a.data.urutan - b.data.urutan);
 
-const servicesHref = lang === defaultLang ? `/services` : `/${lang}/services`;
+const servicesHref = `/services`;
 ---
 
 <Section bg="surface" size="md" id="services" aria-label="Services" class="relative overflow-hidden">
@@ -43,12 +40,10 @@ const servicesHref = lang === defaultLang ? `/services` : `/${lang}/services`;
     <div class="lg:col-span-4 xl:col-span-4 mb-10 lg:mb-0 flex flex-col items-start">
       <p class="label-tech text-muted mb-2 uppercase tracking-widest text-xs w-full">Services</p>
       <h2 class="text-h3 md:text-3xl font-semibold leading-tight mb-4 text-ink w-full">
-        {lang === 'id' ? 'Solusi infrastruktur andalan kami' : 'Core infrastructure solutions'}
+        Core infrastructure solutions
       </h2>
       <p class="text-sm text-muted leading-relaxed mb-8 w-full">
-        {lang === 'id' 
-          ? 'Membangun tulang punggung jaringan dan sistem pengawasan kelas enterprise untuk operasional bisnis yang tanpa kompromi.' 
-          : 'Building enterprise-grade network backbones and surveillance systems for uncompromising business operations.'}
+        Building enterprise-grade network backbones and surveillance systems for uncompromising business operations.
       </p>
       
       <!-- Premium Tech Visual (Foto Nyata ZSN) -->
@@ -68,7 +63,7 @@ const servicesHref = lang === defaultLang ? `/services` : `/${lang}/services`;
       </div>
       
       <Button href={servicesHref} variant="outline-dark" class="w-full text-sm py-2 group">
-        {lang === 'id' ? 'Lihat Semua Solusi' : 'View All Solutions'}
+        View All Solutions
       </Button>
     </div>
 
@@ -76,9 +71,9 @@ const servicesHref = lang === defaultLang ? `/services` : `/${lang}/services`;
     <div class="lg:col-span-8 xl:col-span-8">
       <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 items-stretch">
         {layanan.map((entry, i) => {
-          const baseId = entry.id.replace(`${lang}/`, '');
+          const baseId = entry.id.replace('en/', '');
           const { icon } = tampilan[baseId] ?? { icon: 'default' as IconType };
-          const itemHref = lang === defaultLang ? `/services/${baseId}` : `/${lang}/services/${baseId}`;
+          const itemHref = `/services/${baseId}`;
           
           return (
             <a

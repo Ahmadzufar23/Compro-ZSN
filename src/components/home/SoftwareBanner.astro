@@ -9,11 +9,9 @@ import { getCollection } from 'astro:content';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import ImageSlider from '@/components/ui/ImageSlider.astro';
-import { getLangFromUrl, defaultLang } from '@/i18n/utils';
 
-const lang = getLangFromUrl(Astro.url);
-const software = (await getCollection('produk')).find((entry) => entry.id === `${lang}/software`);
-const productHref = lang === defaultLang ? `/products/software` : `/${lang}/products/software`;
+const software = (await getCollection('produk')).find((entry) => entry.id === 'en/software');
+const productHref = `/products/software`;
 ---
 
 {
@@ -49,9 +47,9 @@ const productHref = lang === defaultLang ? `/products/software` : `/${lang}/prod
               ))}
             </div>
           )}
-          <Button href={productHref} size="lg" class="mt-8">
-            View Product Catalog
-          </Button>
+          <div class="mt-8 label-tech inline-flex items-center justify-center gap-2 px-7 py-4 min-h-11 border border-hairline bg-zinc-100 text-subtle cursor-not-allowed" aria-disabled="true">
+            Coming Soon
+          </div>
         </div>
         
         {/* Kolom Kanan: Slider */}
