@@ -27,7 +27,6 @@ const t = useTranslations(lang);
 const menu = [
   { label: t('nav.about'), id: 'about', page: '/about' },
   { label: t('nav.services'), id: 'services', page: '/services' },
-  { label: t('nav.products'), id: 'products', page: '/products' },
   { label: t('nav.portfolio'), id: 'portfolio', page: '/portfolio' },
 ];
 
@@ -48,9 +47,9 @@ const isActive = (page: string) => {
 <header class="sticky top-0 z-50 border-b border-hairline bg-white/80 backdrop-blur-md">
   <nav
     class="container-content flex h-16 items-center justify-between gap-6"
-    aria-label="Navigasi utama"
+    aria-label="Main navigation"
   >
-    <a href="/" aria-label="ZSN, Beranda" class="flex min-h-11 items-center">
+    <a href="/" aria-label="ZSN, Home" class="flex min-h-11 items-center">
       <Logo variant="dark" />
     </a>
 
@@ -88,7 +87,7 @@ const isActive = (page: string) => {
     <details class="group lg:hidden [&_summary::-webkit-details-marker]:hidden">
       <summary
         class="flex size-11 cursor-pointer list-none items-center justify-center text-ink"
-        aria-label="Buka menu"
+        aria-label="Open menu"
       >
         <svg
           class="size-6 group-open:hidden"

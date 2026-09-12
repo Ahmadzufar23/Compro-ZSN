@@ -8,6 +8,7 @@
  */
 import Logo from '@/components/ui/Logo.astro';
 import { site } from '@/config/site';
+import { services } from '@/config/services';
 import { useTranslations, defaultLang } from '@/i18n/utils';
 
 const lang = defaultLang;
@@ -18,11 +19,7 @@ const kolom = [
     judul: t('nav.services'),
     tautan: [
       { label: 'All Services', href: `/services` },
-      { label: 'Fiber Optic & FTTH', href: `/services/fiber-optic` },
-      { label: 'CCTV & Security', href: `/services/cctv` },
-      { label: 'Network Infrastructure', href: `/services/network` },
-      { label: 'Maintenance & IT Support', href: `/services/maintenance` },
-      { label: 'System Development', href: `/products/software` },
+      ...services.map(({ label, href }) => ({ label, href })),
     ],
   },
   {
@@ -48,7 +45,7 @@ const tahun = new Date().getFullYear();
 <footer class="on-dark border-t border-hairline bg-deep">
   <div class="container-content grid gap-12 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)] md:py-20">
     <div>
-      <a href="/" aria-label="ZSN, Beranda" class="flex min-h-11 w-fit items-center">
+      <a href="/" aria-label="ZSN, Home" class="flex min-h-11 w-fit items-center">
         <Logo variant="light" height={40} />
       </a>
       <p class="mt-3 max-w-xs text-sm leading-relaxed text-subtle">

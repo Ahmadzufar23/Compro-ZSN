@@ -6,15 +6,14 @@ const stats = [
   { angka: '1000+', label: 'Completed Projects' },
   { angka: 'Since 2023', label: 'Years in Operation' },
   { angka: '30+', label: 'Cities Covered' },
-  { angka: '100%', label: 'Installation Warranty' },
 ];
 ---
 
-<Section bg="canvas" size="sm" aria-label="Statistik">
-  <dl class="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4">
+<Section bg="canvas" size="sm" aria-label="Statistics">
+  <dl class="mx-auto grid max-w-2xl grid-cols-1 gap-y-8 text-center sm:grid-cols-3 sm:divide-x sm:divide-hairline">
     {
       stats.map(({ angka, label }) => (
-        <div class="min-w-0 border-l border-hairline pl-4">
+        <div class="min-w-0 px-6">
           <dt class="stat-angka font-display text-3xl font-bold text-ink break-words" data-val={angka}>{angka}</dt>
           <dd class="label-tech mt-1 text-subtle">{label}</dd>
         </div>
@@ -27,7 +26,7 @@ const stats = [
   import { inView, animate } from "motion";
 
   const setupStats = () => {
-    const section = document.querySelector('[aria-label="Statistik"]');
+    const section = document.querySelector('[aria-label="Statistics"]');
     const statElements = document.querySelectorAll('.stat-angka');
 
     if (section && statElements.length > 0) {

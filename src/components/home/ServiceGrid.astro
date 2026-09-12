@@ -9,25 +9,31 @@ import { Image } from 'astro:assets';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import ServiceIcon from './ServiceIcon.astro';
+import { services } from '@/config/services';
 
 // Import foto nyata untuk visual di sebelah kiri
 import showcaseImage from '@/assets/layanan/network-hero.jpg';
 
 type IconType = 'konektor' | 'kamera' | 'patch-panel' | 'wrench' | 'terminal' | 'default';
 
-const tampilan: Record<string, { icon: IconType }> = {
-  'fiber-optic': { icon: 'konektor' },
-  cctv: { icon: 'kamera' },
-  software: { icon: 'terminal' },
-  maintenance: { icon: 'wrench' },
-};
+// Ambil deskripsi (ringkas) dari content collection masing-masing, urutan
+// dan penamaan tetap mengikuti SATU sumber di config/services.ts.
+const layanan = await getCollection('layanan', ({ id }) => id.startsWith('en/'));
+const layananById = Object.fromEntries(layanan.map((entry) => [entry.id.replace('en/', ''), entry.data]));
 
-// Filter: Tampil di grid, sesuai bahasa, dan KECUALIKAN 'maintenance'
-const layanan = (await getCollection('layanan', ({ id, data }) => 
-  data.tampilDiGrid && 
-  id.startsWith('en/') &&
-  !id.includes('maintenance')
-)).sort((a, b) => a.data.urutan - b.data.urutan);
+const produk = await getCollection('produk', ({ id }) => id.startsWith('en/'));
+const produkById = Object.fromEntries(produk.map((entry) => [entry.id.replace('en/', ''), entry.data]));
+
+// Homepage hanya menampilkan 3 layanan utama (featured). Daftar lengkap
+// (5 layanan) ada di /services dan Footer — lihat config/services.ts.
+const kartuLayanan = services
+  .filter((s) => s.featured)
+  .map((s) => ({
+    href: s.href,
+    icon: s.icon as IconType,
+    judul: s.label,
+    ringkas: (layananById[s.slug] ?? produkById[s.slug]).ringkas,
+  }));
 
 const servicesHref = `/services`;
 ---
@@ -70,51 +76,45 @@ const servicesHref = `/services`;
     <!-- Bagian Kanan (3 Kartu Enterprise) -->
     <div class="lg:col-span-8 xl:col-span-8">
       <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 items-stretch">
-        {layanan.map((entry, i) => {
-          const baseId = entry.id.replace('en/', '');
-          const { icon } = tampilan[baseId] ?? { icon: 'default' as IconType };
-          const itemHref = `/services/${baseId}`;
-          
-          return (
-            <a
-              href={itemHref}
-              class="animate-service-card group flex flex-col bg-canvas border border-hairline p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:border-zinc-300 opacity-0 translate-y-6 h-full"
-              style={`animation-delay: ${i * 100}ms;`}
-            >
-              <!-- Icon Box (Kontras Tinggi) -->
-              <div class="mb-6 flex size-12 items-center justify-center bg-ink text-canvas transition-transform duration-300 group-hover:scale-110">
-                <ServiceIcon type={icon} class="size-6" />
+        {kartuLayanan.map((kartu, i) => (
+          <a
+            href={kartu.href}
+            class="animate-service-card group flex flex-col bg-canvas border border-hairline p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:border-zinc-300 opacity-0 translate-y-6 h-full"
+            style={`animation-delay: ${i * 100}ms;`}
+          >
+            <!-- Icon Box (Kontras Tinggi) -->
+            <div class="mb-6 flex size-12 items-center justify-center bg-ink text-canvas transition-transform duration-300 group-hover:scale-110">
+              <ServiceIcon type={kartu.icon} class="size-6" />
+            </div>
+
+            <!-- Content dengan Aksen Kotak Kuning 8x8px -->
+            <div class="flex items-center gap-3 mb-3">
+              <div class="size-2 bg-yellow shrink-0" aria-hidden="true"></div>
+              <h3 class="text-lg font-semibold leading-tight text-ink">{kartu.judul}</h3>
+            </div>
+
+            <p class="text-sm text-muted leading-relaxed flex-grow pb-6">
+              {kartu.ringkas}
+            </p>
+
+            <!-- Action Arrow -->
+            <div class="mt-auto flex justify-end pt-4 border-t border-hairline">
+              <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted transition-colors group-hover:text-ink">
+                <span>Explore</span>
+                <svg
+                  class="size-4 transition-transform duration-300 group-hover:translate-x-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  aria-hidden="true"
+                >
+                  <path stroke-linecap="square" stroke-linejoin="miter" d="M4 12h16M13 5l7 7-7 7" />
+                </svg>
               </div>
-              
-              <!-- Content dengan Aksen Kotak Kuning 8x8px -->
-              <div class="flex items-center gap-3 mb-3">
-                <div class="size-2 bg-yellow shrink-0" aria-hidden="true"></div>
-                <h3 class="text-lg font-semibold leading-tight text-ink">{entry.data.judul}</h3>
-              </div>
-              
-              <p class="text-sm text-muted leading-relaxed flex-grow pb-6">
-                {entry.data.ringkas}
-              </p>
-              
-              <!-- Action Arrow -->
-              <div class="mt-auto flex justify-end pt-4 border-t border-hairline">
-                <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted transition-colors group-hover:text-ink">
-                  <span>Explore</span>
-                  <svg
-                    class="size-4 transition-transform duration-300 group-hover:translate-x-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    aria-hidden="true"
-                  >
-                    <path stroke-linecap="square" stroke-linejoin="miter" d="M4 12h16M13 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </div>
-            </a>
-          );
-        })}
+            </div>
+          </a>
+        ))}
       </div>
     </div>
     
