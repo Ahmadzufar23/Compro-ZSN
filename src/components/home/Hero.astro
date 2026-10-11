@@ -2,32 +2,28 @@
 import Button from '@/components/ui/Button.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
 import GlobeMark from './GlobeMark.astro';
-import { waLink } from '@/config/site';
+import { site, waLink } from '@/config/site';
 
 const survei = waLink('Halo ZSN, saya ingin meminta survei lokasi untuk proyek jaringan.');
 
-/* Jalur ala trace PCB / rute kabel: lurus lalu tikungan 45 derajat */
+/* Jalur ala rute kabel: lurus lalu tikungan 45 derajat */
 const traces = [
   { d: 'M-20 180 H360 L440 260 H760', speed: '7s', delay: '0s' },
   { d: 'M-20 520 H200 L300 420 H620 L700 500 H900', speed: '9s', delay: '-3s' },
   { d: 'M1460 120 H1180 L1100 200 H900', speed: '8s', delay: '-1s' },
   { d: 'M1460 760 H1240 L1160 680 H980 L900 760 H700', speed: '10s', delay: '-5s' },
-  { d: 'M-20 820 H480 L560 740 H760', speed: '11s', delay: '-2s' },
 ];
-const nodes = [
-  [360, 180], [440, 260], [300, 420], [620, 420], [1180, 120], [1100, 200], [1240, 760], [1160, 680], [560, 740],
-];
+const nodes = [[360, 180], [440, 260], [300, 420], [620, 420], [1180, 120], [1100, 200], [1240, 760], [1160, 680]];
 
 const fakta = [
-  { angka: '2015', label: 'Mulai bekerja di lapangan fiber optik Jakarta' },
-  { angka: '5 lini', label: 'Layanan dari kabel fisik sampai kode aplikasi' },
-  { angka: 'Jabodetabek', label: 'Wilayah kerja utama, luar kota bisa didiskusikan' },
-  { angka: 'Berdokumen', label: 'Laporan uji dan berita acara di setiap serah terima' },
+  { angka: '2015', label: 'Mulai bekerja di instalasi fiber optik, Jakarta' },
+  { angka: '2023', label: `Berbadan hukum sebagai ${site.namaLegal}` },
+  { angka: 'Jabodetabek', label: 'Wilayah kerja utama, luar kota sesuai kesepakatan' },
+  { angka: 'Serah terima', label: 'Disertai laporan uji, dokumentasi, dan berita acara' },
 ];
 ---
 
-<section class="relative isolate overflow-hidden bg-ink pt-28 lg:pt-32" aria-labelledby="hero-title">
-  <!-- Latar: grid blueprint + jalur arus -->
+<section class="theme-dark relative isolate overflow-hidden bg-canvas pt-28 lg:pt-32" aria-labelledby="hero-title">
   <div class="bg-grid mask-fade pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
   <div
     class="pointer-events-none absolute -right-40 top-10 -z-10 size-[60rem] rounded-full opacity-60"
@@ -35,12 +31,7 @@ const fakta = [
     aria-hidden="true"
   >
   </div>
-  <svg
-    class="pointer-events-none absolute inset-0 -z-10 size-full"
-    viewBox="0 0 1440 900"
-    preserveAspectRatio="xMidYMid slice"
-    aria-hidden="true"
-  >
+  <svg class="pointer-events-none absolute inset-0 -z-10 size-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     {traces.map((t) => <path d={t.d} fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1.2" />)}
     {
       traces.map((t) => (
@@ -49,7 +40,6 @@ const fakta = [
           fill="none"
           stroke="#FFCE00"
           stroke-width="2"
-          stroke-linecap="square"
           class="flow-line"
           style={`--flow-speed:${t.speed};animation-delay:${t.delay};filter:drop-shadow(0 0 6px rgba(255,206,0,.8))`}
         />
@@ -61,7 +51,7 @@ const fakta = [
   <div class="container-content">
     <div class="grid items-center gap-y-10 lg:grid-cols-12 lg:gap-x-8">
       <div class="lg:col-span-7">
-        <Eyebrow index="ZSN">PT Zufar Solusi Nawasena · Sejak 2015</Eyebrow>
+        <Eyebrow>{site.namaLegal} · Jakarta Selatan</Eyebrow>
 
         <h1 id="hero-title" class="mt-7 text-hero">
           <span class="block">Infrastruktur</span>
@@ -69,27 +59,27 @@ const fakta = [
           <span class="mt-1 flex items-center gap-3 sm:gap-5">
             <span class="volt-mark">menyala.</span>
             <svg viewBox="0 0 40 56" class="h-[0.8em] w-auto shrink-0" aria-hidden="true">
-              <path d="M26 0 0 32h16l-4 24L40 22H23z" fill="#FFCE00" style="filter:drop-shadow(0 0 14px rgba(255,206,0,.6))"></path>
+              <path d="M26 0 0 32h16l-4 24L40 22H23z" fill="#FFCE00"></path>
             </svg>
           </span>
         </h1>
 
-        <p class="mt-8 max-w-xl text-lg leading-relaxed text-mist">
-          ZSN adalah kontraktor jaringan dan pengembang sistem dari Jakarta. Kami menarik
-          <strong class="font-semibold text-snow">fiber optik</strong>, memasang
-          <strong class="font-semibold text-snow">CCTV dan jaringan kantor</strong>, menguji setiap
-          jalurnya, lalu membangun <strong class="font-semibold text-snow">software</strong> yang
-          berjalan di atasnya. Satu tim, satu penanggung jawab.
+        <p class="mt-8 max-w-xl text-lg leading-relaxed text-body">
+          Kami memasang <strong class="font-semibold text-strong">fiber optik</strong>,
+          <strong class="font-semibold text-strong">jaringan kantor</strong>, dan
+          <strong class="font-semibold text-strong">CCTV</strong>, lalu membangun
+          <strong class="font-semibold text-strong">software</strong> yang berjalan di atasnya.
+          Dikerjakan dari survei lokasi sampai serah terima, untuk gedung, kawasan, dan ISP di
+          Jabodetabek.
         </p>
 
         <div class="mt-10 flex flex-wrap gap-3">
-          <Button href={survei} external size="lg" icon="lucide:zap">Minta Survei Gratis</Button>
+          <Button href={survei} external size="lg" icon="lucide:message-circle">Minta Survei Gratis</Button>
           <Button href="/services" variant="ghost" size="lg" icon="lucide:arrow-right">Lihat Layanan</Button>
         </div>
       </div>
 
       <div class="relative lg:col-span-5">
-        <!-- Petir besar yang sesekali menyambar di belakang globe -->
         <svg
           viewBox="0 0 200 280"
           class="strike pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[115%] -translate-x-1/2 -translate-y-1/2"
@@ -98,37 +88,33 @@ const fakta = [
           <path d="M130 0 0 160h80l-20 120L200 110h-85z" fill="none" stroke="#FFCE00" stroke-width="1.5" opacity=".9"></path>
         </svg>
 
-        <div class="relative mx-auto max-w-[560px]">
+        <figure class="relative mx-auto max-w-[540px]">
           <GlobeMark />
-          <span class="chip label-tech absolute left-0 top-[14%]">
-            <span class="dot"></span> Fusion splice
-          </span>
-          <span class="chip label-tech absolute right-0 top-[38%]">
-            <span class="dot"></span> OTDR tested
-          </span>
-          <span class="chip label-tech absolute bottom-[12%] left-[6%]">
-            <span class="dot"></span> As-built drawing
-          </span>
-          <p class="label-tech absolute -bottom-2 right-2 text-[0.6rem] text-fog/70">Seret untuk memutar</p>
-        </div>
+          <!-- title block ala gambar teknik: hanya data faktual -->
+          <figcaption class="title-block label-tech mx-auto mt-2 grid max-w-[360px] grid-cols-[auto_1fr] text-[0.6rem]">
+            <span>Mark</span><span>ZSN, logo bundar</span>
+            <span>Est.</span><span>2015 · Jakarta Selatan</span>
+            <span>Interaksi</span><span>Seret untuk memutar</span>
+          </figcaption>
+        </figure>
       </div>
     </div>
 
-    <dl class="mt-16 grid grid-cols-2 border-t border-line lg:mt-20 lg:grid-cols-4">
+    <dl class="mt-16 grid grid-cols-2 border-t border-rule lg:mt-20 lg:grid-cols-4">
       {
         fakta.map((f, i) => (
           <div
             class:list={[
-              'border-line py-7 pr-4',
+              'min-w-0 border-rule py-7 pr-4',
               i % 2 === 1 && 'border-l pl-5 lg:pl-7',
               i >= 2 && 'border-t lg:border-t-0',
               i === 2 && 'lg:border-l lg:pl-7',
             ]}
           >
-            <dt class="font-display text-xl font-extrabold break-words text-snow sm:text-3xl" style="font-stretch:110%">
+            <dt class="font-display text-xl font-extrabold break-words text-strong sm:text-3xl" style="font-stretch:110%">
               {f.angka}
             </dt>
-            <dd class="mt-2 max-w-[22ch] text-sm leading-snug text-fog">{f.label}</dd>
+            <dd class="mt-2 max-w-[24ch] text-sm leading-snug text-soft">{f.label}</dd>
           </div>
         ))
       }
@@ -137,29 +123,23 @@ const fakta = [
 </section>
 
 <style>
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.55rem 0.8rem;
-    color: var(--color-snow);
-    background: rgb(16 19 24 / 0.78);
-    border: 1px solid var(--color-line-strong);
-    backdrop-filter: blur(8px);
-    font-size: 0.62rem;
-    pointer-events: none;
+  .title-block {
+    border: 1px solid var(--color-rule);
+    color: var(--color-soft);
   }
-  .chip .dot {
-    width: 6px;
-    height: 6px;
-    background: var(--color-volt);
-    box-shadow: 0 0 10px var(--color-volt);
+  .title-block > span {
+    padding: 0.45rem 0.7rem;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .title-block > span:nth-child(odd) {
+    border-right: 1px solid var(--color-rule);
+    color: var(--color-volt);
+  }
+  .title-block > span:nth-last-child(-n + 2) {
+    border-bottom: 0;
   }
   .strike {
     animation: strike 7s linear infinite;
     filter: drop-shadow(0 0 12px rgba(255, 206, 0, 0.8));
-  }
-  @media (max-width: 480px) {
-    .chip { display: none; }
   }
 </style>

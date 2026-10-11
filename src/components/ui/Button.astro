@@ -3,7 +3,13 @@ import { Icon } from 'astro-icon/components';
 
 interface Props {
   href: string;
-  variant?: 'volt' | 'ghost' | 'ink' | 'paper-ghost';
+  /**
+   * volt   : isian kuning, teks tinta. Aksi utama, aman di dua tema.
+   * solid  : isian kontras penuh (tinta di terang, putih di gelap).
+   * ghost  : garis tipis, mengikuti tema.
+   * on-volt: tombol sekunder di atas latar kuning.
+   */
+  variant?: 'volt' | 'solid' | 'ghost' | 'on-volt';
   size?: 'md' | 'lg';
   external?: boolean;
   icon?: string | false;
@@ -21,9 +27,9 @@ const {
 
 const variants = {
   volt: 'bg-volt text-ink hover:bg-volt-hot',
-  ink: 'bg-ink text-snow hover:bg-carbon',
-  ghost: 'text-snow ring-1 ring-inset ring-line-strong hover:ring-volt hover:text-volt',
-  'paper-ghost': 'text-ink ring-1 ring-inset ring-ink/25 hover:ring-ink',
+  solid: 'bg-strong text-canvas hover:opacity-90',
+  ghost: 'text-strong ring-1 ring-inset ring-rule-strong hover:ring-strong',
+  'on-volt': 'text-ink ring-1 ring-inset ring-ink/40 hover:ring-ink',
 };
 const sizes = {
   md: 'min-h-12 px-5 text-sm gap-3',
@@ -34,8 +40,9 @@ const sizes = {
 <a
   href={href}
   class:list={[
-    'group/btn cut-z relative inline-flex items-center justify-center font-semibold tracking-tight transition-colors duration-200',
+    'group/btn relative inline-flex items-center justify-center font-semibold tracking-tight transition-[background-color,box-shadow,opacity] duration-200',
     variants[variant],
+    (variant === 'volt' || variant === 'solid') && 'cut-z',
     sizes[size],
     extra,
   ]}

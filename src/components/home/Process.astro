@@ -1,74 +1,63 @@
 ---
+/**
+ * Process: lima tahap kerja. Isi tiap tahap diambil dari frontmatter
+ * layanan (scope & alurKerja), bukan janji baru.
+ */
 import Eyebrow from '@/components/ui/Eyebrow.astro';
-
-interface Props {
-  index?: string;
-}
-const { index = '04' } = Astro.props;
 
 const steps = [
   {
     judul: 'Survei lokasi',
-    detail: 'Tim datang mengukur rute kabel, titik perangkat, dan kondisi gedung. Tanpa biaya.',
-    output: 'Catatan & foto survei',
+    detail: 'Tim datang mengukur rute kabel, titik perangkat, dan kondisi bangunan. Survei tidak dikenakan biaya.',
+    output: 'Catatan survei',
   },
   {
     judul: 'Desain & penawaran',
-    detail: 'Rute, denah titik, dan topologi disusun. Biaya dirinci per item sebelum pekerjaan dimulai.',
-    output: 'Denah + penawaran tertulis',
+    detail: 'Rute kabel, denah titik kamera, atau topologi jaringan disusun. Rencana kerja dan perkiraan durasi disepakati.',
+    output: 'Desain & penawaran',
   },
   {
     judul: 'Instalasi',
-    detail: 'Dikerjakan tim lapangan kami sendiri. Rapi, berlabel, dan mengikuti desain yang disetujui.',
-    output: 'Jalur & perangkat terpasang',
+    detail: 'Penarikan kabel, pemasangan perangkat, dan konfigurasi sesuai desain yang sudah disetujui.',
+    output: 'Sistem terpasang',
   },
   {
     judul: 'Pengujian',
-    detail: 'Setiap jalur diukur: OTDR untuk fiber, uji konektivitas untuk jaringan, uji rekam untuk CCTV.',
+    detail: 'Fiber diukur redamannya dengan OTDR, jaringan diuji per titik, CCTV diuji perekaman dan akses jarak jauhnya.',
     output: 'Laporan hasil uji',
   },
   {
     judul: 'Serah terima',
-    detail: 'Dokumentasi as-built dan berita acara diserahkan. Pekerjaan bergaransi.',
-    output: 'As-built + berita acara',
+    detail: 'Laporan uji dan dokumentasi diserahkan bersama berita acara. Pekerjaan bergaransi sesuai lingkup kerja.',
+    output: 'Berita acara',
   },
 ];
 ---
 
-<section class="on-paper relative overflow-hidden bg-paper py-24 text-graphite lg:py-32" aria-labelledby="proses-title">
-  <div class="bg-grid-paper mask-fade pointer-events-none absolute inset-0" aria-hidden="true"></div>
-
+<section class="relative overflow-hidden bg-raised py-24 lg:py-32" aria-labelledby="proses-title">
   <div class="container-content relative">
     <div class="grid gap-8 lg:grid-cols-12 lg:items-end">
       <div class="lg:col-span-7">
-        <Eyebrow index={index} tone="paper" data-reveal>Alur kerja</Eyebrow>
-        <h2 id="proses-title" class="mt-6 text-h1 !text-ink" data-reveal>
-          Lima langkah. Setiap langkah meninggalkan bukti tertulis.
-        </h2>
+        <Eyebrow data-reveal>Alur kerja</Eyebrow>
+        <h2 id="proses-title" class="mt-6 text-h1" data-reveal>Lima tahap, dari survei sampai serah terima.</h2>
       </div>
       <p class="max-w-md text-lg lg:col-span-5 lg:justify-self-end" data-reveal>
-        Anda tidak perlu menebak progres. Di setiap tahap ada dokumen yang bisa Anda pegang dan
-        periksa.
+        Tahapannya sama untuk fiber, jaringan, maupun CCTV. Yang berbeda hanya alat ukur dan
+        dokumen hasilnya.
       </p>
     </div>
 
-    <ol class="relative mt-16 grid gap-px bg-ink/10 lg:mt-24 lg:grid-cols-5">
+    <ol class="relative mt-16 grid border-t-2 border-strong lg:mt-20 lg:grid-cols-5">
       {
         steps.map((s, i) => (
-          <li class="step group relative flex flex-col bg-paper p-7 transition-colors duration-300 hover:bg-ink lg:p-8 lg:pt-12" data-reveal style={`--d:${i * 90}ms`}>
-            <div class="flex items-center justify-between">
-              <span
-                class="font-display text-6xl font-extrabold leading-none text-transparent transition-colors group-hover:text-volt"
-                style="font-stretch:125%;-webkit-text-stroke:1.5px #0A0C0F"
-              >
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span class="size-3 bg-volt ring-4 ring-volt/25" aria-hidden="true" />
-            </div>
-            <h3 class="mt-10 text-h3 !text-ink transition-colors group-hover:!text-snow">{s.judul}</h3>
-            <p class="mb-8 mt-3 text-sm leading-relaxed transition-colors group-hover:text-fog">{s.detail}</p>
-            <p class="label-tech mt-auto border-t border-ink/15 pt-4 text-[0.6rem] text-ink transition-colors group-hover:border-line group-hover:text-volt">
-              Output → {s.output}
+          <li class="group relative flex flex-col border-b border-rule py-8 lg:border-b-0 lg:border-r lg:px-6 lg:py-10 lg:first:pl-0 lg:last:border-r-0" data-reveal style={`--d:${i * 90}ms`}>
+            <span class:list={['absolute -top-[7px] size-3 bg-volt ring-2 ring-strong', i === 0 ? 'left-0' : 'left-0 lg:left-6']} aria-hidden="true" />
+            <span class="label-tech text-soft">Tahap {i + 1}</span>
+            <h3 class="mt-3 text-h3">{s.judul}</h3>
+            <p class="mb-8 mt-3 text-sm leading-relaxed text-soft">{s.detail}</p>
+            <p class="label-tech mt-auto inline-flex items-center gap-2 text-[0.6rem] text-strong">
+              <span class="h-px w-4 bg-strong" aria-hidden="true" />
+              {s.output}
             </p>
           </li>
         ))
@@ -76,9 +65,3 @@ const steps = [
     </ol>
   </div>
 </section>
-
-<style>
-  .step:hover span[style*='text-stroke'] {
-    -webkit-text-stroke-color: var(--color-volt);
-  }
-</style>

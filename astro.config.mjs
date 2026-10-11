@@ -15,7 +15,7 @@ export default defineConfig({
       // /team belum siap tayang (menunggu foto & persetujuan tertulis).
       filter: (page) => {
         const url = new URL(page);
-        return !/^\/team(\/|$)/.test(url.pathname);
+        return !/^\/(team|og-card)(\/|$)/.test(url.pathname);
       },
     }),
     icon(),

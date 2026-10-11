@@ -14,67 +14,46 @@ import CtaFinal from '@/components/home/CtaFinal.astro';
 const anggota = (await getCollection('tim')).sort((a, b) => a.data.urutan - b.data.urutan);
 
 const divisi = [
-  {
-    key: 'manajemen',
-    icon: 'lucide:compass',
-    label: 'Manajemen',
-    tugas: ['Rencana kerja dan estimasi biaya dari hasil survei', 'Penghubung utama klien selama proyek', 'Standar kualitas dan prosedur kerja'],
-  },
-  {
-    key: 'instalasi',
-    icon: 'lucide:hard-hat',
-    label: 'Tim instalasi',
-    tugas: ['Penarikan kabel fiber dan tembaga sesuai rute', 'Pemasangan bracket, rack, dan perangkat', 'Merapikan jalur dan melabeli titik'],
-  },
-  {
-    key: 'teknis',
-    icon: 'lucide:cpu',
-    label: 'Teknis & konfigurasi',
-    tugas: ['Fusion splicing dan terminasi konektor', 'Konfigurasi router, switch, AP, dan NVR', 'Uji OTDR dan pengukuran redaman'],
-  },
-  {
-    key: 'operasional',
-    icon: 'lucide:clipboard-list',
-    label: 'Operasional & QC',
-    tugas: ['Penjadwalan kunjungan dan koordinasi tim', 'Laporan uji dan dokumentasi as-built', 'Pemeriksaan kualitas sebelum serah terima'],
-  },
+  { key: 'manajemen', icon: 'lucide:compass', label: 'Manajemen', tugas: ['Rencana kerja dan estimasi biaya dari hasil survei', 'Penghubung utama klien selama proyek', 'Standar kualitas dan prosedur kerja'] },
+  { key: 'instalasi', icon: 'lucide:hard-hat', label: 'Tim instalasi', tugas: ['Penarikan kabel fiber dan tembaga sesuai rute', 'Pemasangan bracket, rack, dan perangkat', 'Merapikan jalur dan melabeli titik'] },
+  { key: 'teknis', icon: 'lucide:cpu', label: 'Teknis & konfigurasi', tugas: ['Fusion splicing dan terminasi konektor', 'Konfigurasi router, switch, AP, dan NVR', 'Uji OTDR dan pengukuran redaman'] },
+  { key: 'operasional', icon: 'lucide:clipboard-list', label: 'Operasional & QC', tugas: ['Penjadwalan kunjungan dan koordinasi tim', 'Laporan uji dan dokumentasi as-built', 'Pemeriksaan kualitas sebelum serah terima'] },
 ];
 ---
 
 <Base title="Tim" description="Struktur tim ZSN: manajemen, instalasi, teknis & konfigurasi, serta operasional & QC." noindex>
   <PageHero
     eyebrow="Tim"
-    index="ZSN"
-    judul='Orang-orang di balik <span class="text-fog">setiap jalur yang menyala.</span>'
-    sub="Empat divisi yang bekerja berpasangan di lapangan: satu fokus memasang, satu fokus menguji dan menjaga keselamatan kerja."
+    judul="Empat divisi yang menangani setiap proyek."
+    sub="Instalasi dikerjakan minimal dua orang: satu fokus memasang, satu fokus pada keselamatan kerja dan pengujian."
     crumbs={[{ label: 'Beranda', href: '/' }, { label: 'Tim' }]}
   />
 
-  <section class="bg-ink pb-24">
-    <div class="container-content grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
+  <section class="bg-raised py-16 lg:py-24">
+    <div class="container-content grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
       {
         divisi.map((d, i) => {
           const orang = anggota.filter((a) => a.data.divisi === d.key);
           return (
-            <article class="bg-ink p-8" data-reveal style={`--d:${i * 80}ms`}>
-              <Icon name={d.icon} class="size-8 text-volt" />
+            <article class="bg-canvas p-8" data-reveal style={`--d:${i * 80}ms`}>
+              <span class="icon-tile"><Icon name={d.icon} class="size-6" /></span>
               <h2 class="mt-8 text-h3">{d.label}</h2>
               <ul class="mt-6 space-y-3">
                 {d.tugas.map((t) => (
-                  <li class="flex gap-3 text-sm text-fog">
-                    <Icon name="lucide:zap" class="mt-0.5 size-4 shrink-0 text-volt" />
+                  <li class="flex gap-3 text-sm text-soft">
+                    <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-strong" />
                     {t}
                   </li>
                 ))}
               </ul>
               {orang.length > 0 && (
-                <ul class="mt-8 space-y-4 border-t border-line pt-6">
+                <ul class="mt-8 space-y-4 border-t border-rule pt-6">
                   {orang.map((o) => (
                     <li class="flex items-center gap-4">
                       <Image src={o.data.foto} alt={`Foto ${o.data.nama}`} width={96} height={96} class="size-12 rounded-full object-cover" />
                       <span>
-                        <span class="block font-semibold text-snow">{o.data.nama}</span>
-                        <span class="text-sm text-fog">{o.data.jabatan}</span>
+                        <span class="block font-semibold text-strong">{o.data.nama}</span>
+                        <span class="text-sm text-soft">{o.data.jabatan}</span>
                       </span>
                     </li>
                   ))}
@@ -87,5 +66,5 @@ const divisi = [
     </div>
   </section>
 
-  <CtaFinal judul="Ingin bertemu timnya langsung?" sub="Jadwalkan survei. Tim yang datang ke lokasi adalah tim yang nantinya mengerjakan proyek Anda." />
+  <CtaFinal judul="Ingin bertemu timnya langsung?" sub="Jadwalkan survei lokasi bersama tim kami." />
 </Base>

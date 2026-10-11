@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* Font self-hosted. Archivo Variable dipakai dengan sumbu lebar (wdth)
-   untuk heading "expanded" bergaya papan industri. */
+   untuk heading lebar bergaya papan industri. */
 @import "@fontsource-variable/archivo/wdth.css";
 @import "@fontsource/ibm-plex-sans/400.css";
 @import "@fontsource/ibm-plex-sans/500.css";
@@ -10,43 +10,52 @@
 @import "@fontsource/ibm-plex-mono/500.css";
 
 /* ───────────────────────────────────────────────────────────
-   ZSN // POWER GRID
-   Gelap seperti ruang panel, kuning volt seperti arus yang
-   berjalan di jalur. Motif utama: petir Z dari logo.
+   ZSN // POWER GRID, versi hibrida
+
+   Badan halaman terang (kertas gambar teknik). Gelap hanya di
+   hero dan footer lewat kelas .theme-dark. Komponen memakai token
+   SEMANTIK (base, raised, strong, body, soft, rule) yang nilainya
+   ditukar di dalam .theme-dark, jadi satu komponen bisa tampil di
+   dua tema tanpa ditulis dua kali.
+
+   Warna ABSOLUT (ink, snow, volt) tidak pernah berubah. Pakai untuk
+   hal yang memang selalu gelap/terang, mis. teks di atas tombol
+   kuning atau overlay di atas foto.
+
+   Kuning di atas putih = 1.49:1. Jangan pernah jadi teks atau ikon
+   di latar terang. Di latar terang, kuning hanya isian: tombol,
+   blok sorotan, penanda kotak, garis tebal.
    ─────────────────────────────────────────────────────────── */
 @theme {
-  /* Gelap berlapis, dari paling dalam ke paling terangkat */
+  /* Absolut */
   --color-void: #050608;
   --color-ink: #0a0c0f;
-  --color-carbon: #101318;
-  --color-steel: #171b21;
-  --color-line: #252a32;
-  --color-line-strong: #343a44;
-
-  /* Teks di atas gelap */
   --color-snow: #f4f4f2;
-  --color-mist: #c4c9d1;
-  --color-fog: #8a929e;
-
-  /* Bagian terang (kertas teknik) */
-  --color-paper: #f2f0e9;
-  --color-bone: #e4e1d6;
-  --color-graphite: #3d4148;
-
-  /* Volt: kuning logo ZSN */
   --color-volt: #ffce00;
   --color-volt-hot: #ffe14d;
   --color-volt-deep: #d9a900;
+
+  /* Semantik, default = terang */
+  --color-canvas: #ffffff;
+  --color-raised: #f6f5f1;
+  --color-sunken: #eeece6;
+  --color-rule: #e3e1da;
+  --color-rule-strong: #8a877d;
+  --color-strong: #0a0c0f;
+  --color-body: #3d4148;
+  --color-soft: #5e646e;
+  /* Warna sinyal: kuning di gelap, tinta di terang (aman kontras) */
+  --color-signal: #0a0c0f;
 
   --font-display: "Archivo Variable", "Archivo", system-ui, sans-serif;
   --font-body: "IBM Plex Sans", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --text-mega: clamp(2.75rem, 1.2rem + 6.4vw, 7.25rem);
-  --text-hero: clamp(2.5rem, 1.4rem + 4.6vw, 5.5rem);
-  --text-h1: clamp(2.125rem, 1.4rem + 3vw, 4rem);
-  --text-h2: clamp(1.75rem, 1.25rem + 2vw, 3rem);
-  --text-h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  --text-mega: clamp(2.75rem, 1.2rem + 6.4vw, 7rem);
+  --text-hero: clamp(2.5rem, 1.4rem + 4.4vw, 5.25rem);
+  --text-h1: clamp(2.125rem, 1.4rem + 2.8vw, 3.75rem);
+  --text-h2: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem);
+  --text-h3: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
   --text-label: 0.6875rem;
 
   --container-content: 1320px;
@@ -54,20 +63,38 @@
   --ease-snap: cubic-bezier(0.2, 0.9, 0.1, 1);
 }
 
+/* Tukar token semantik di section gelap */
+.theme-dark {
+  --color-canvas: #0a0c0f;
+  --color-raised: #101318;
+  --color-sunken: #171b21;
+  --color-rule: #252a32;
+  --color-rule-strong: #4a515c;
+  --color-strong: #f4f4f2;
+  --color-body: #c4c9d1;
+  --color-soft: #8f97a3;
+  --color-signal: #ffce00;
+  --grid-line: rgb(255 255 255 / 0.045);
+  color-scheme: dark;
+  color: var(--color-body);
+}
+:root {
+  --grid-line: rgb(10 12 15 / 0.055);
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    background: var(--color-ink);
-    color-scheme: dark;
+    background: var(--color-canvas);
   }
 
   body {
     font-family: var(--font-body);
     font-size: 1rem;
     line-height: 1.65;
-    color: var(--color-mist);
-    background: var(--color-ink);
+    color: var(--color-body);
+    background: var(--color-canvas);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     overflow-x: clip;
@@ -77,9 +104,9 @@
     font-family: var(--font-display);
     font-weight: 800;
     font-stretch: 112%;
-    line-height: 0.98;
+    line-height: 1;
     letter-spacing: -0.025em;
-    color: var(--color-snow);
+    color: var(--color-strong);
     text-wrap: balance;
   }
   h3, h4 {
@@ -91,10 +118,10 @@
   p { text-wrap: pretty; }
 
   :focus-visible {
-    outline: 2px solid var(--color-volt);
+    outline: 2px solid var(--color-strong);
     outline-offset: 3px;
   }
-  .on-paper :focus-visible { outline-color: var(--color-ink); }
+  .theme-dark :focus-visible { outline-color: var(--color-volt); }
 
   ::selection {
     background: var(--color-volt);
@@ -118,14 +145,13 @@
     font-family: var(--font-mono);
     font-size: var(--text-label);
     text-transform: uppercase;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
     font-weight: 500;
     line-height: 1.4;
   }
 
-  .display-wide { font-stretch: 125%; }
-
-  /* Sorotan volt: blok kuning miring di belakang kata */
+  /* Sorotan: blok kuning miring di belakang kata. Aman di dua tema
+     karena teksnya selalu tinta. */
   .volt-mark {
     position: relative;
     display: inline-block;
@@ -137,37 +163,35 @@
   .volt-mark::before {
     content: "";
     position: absolute;
-    inset: 0.08em -0.02em 0.02em;
+    inset: 0.1em -0.02em 0.02em;
     background: var(--color-volt);
     transform: skewX(-12deg);
     z-index: -1;
   }
 
-  .text-volt-glow {
-    color: var(--color-volt);
-    text-shadow: 0 0 32px rgb(255 206 0 / 0.35);
+  /* Garis bawah kuning tebal: penekanan di latar terang */
+  .volt-under {
+    background-image: linear-gradient(var(--color-volt), var(--color-volt));
+    background-size: 100% 0.28em;
+    background-position: 0 88%;
+    background-repeat: no-repeat;
+    padding-inline: 0.04em;
   }
 
   /* Potongan sudut diagonal: bentuk petir Z */
   .cut-z {
-    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
   }
   .cut-corner {
-    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
   }
 
-  /* Grid blueprint halus */
+  /* Grid gambar teknik, menyesuaikan tema */
   .bg-grid {
     background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
-    background-size: 64px 64px;
-  }
-  .bg-grid-paper {
-    background-image:
-      linear-gradient(to right, rgb(10 12 15 / 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(10 12 15 / 0.06) 1px, transparent 1px);
-    background-size: 48px 48px;
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
   }
   .mask-fade {
     mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
@@ -176,37 +200,38 @@
     mask-image: linear-gradient(to bottom, #000 40%, transparent);
   }
 
-  /* Garis tanda potong ala gambar teknik di sudut foto */
+  /* Tanda potong ala gambar teknik di sudut foto */
   .crop-marks { position: relative; }
   .crop-marks::before,
   .crop-marks::after {
     content: "";
     position: absolute;
-    width: 18px;
-    height: 18px;
-    border-color: var(--color-volt);
+    width: 16px;
+    height: 16px;
+    border-color: var(--color-volt-deep);
     border-style: solid;
     z-index: 2;
     pointer-events: none;
   }
+  .theme-dark .crop-marks::before,
+  .theme-dark .crop-marks::after { border-color: var(--color-volt); }
   .crop-marks::before { top: -6px; left: -6px; border-width: 2px 0 0 2px; }
   .crop-marks::after { bottom: -6px; right: -6px; border-width: 0 2px 2px 0; }
 
-  /* Pola garis diagonal: pita peringatan halus */
+  /* Pita peringatan */
   .hazard {
-    background-image: repeating-linear-gradient(
-      -45deg,
-      var(--color-volt) 0 10px,
-      var(--color-ink) 10px 20px
-    );
+    background-image: repeating-linear-gradient(-45deg, var(--color-volt) 0 10px, var(--color-ink) 10px 20px);
   }
 
-  .hairline-x { border-color: var(--color-line); }
-
-  /* Kartu gelap terangkat */
-  .panel {
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.03), rgb(255 255 255 / 0.01));
-    border: 1px solid var(--color-line);
+  /* Penanda kotak kuning untuk ikon di latar terang */
+  .icon-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    background: var(--color-volt);
+    color: var(--color-ink);
   }
 }
 
@@ -222,7 +247,7 @@
 }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 
-/* ── Arus di jalur fiber ─────────────────────────────────── */
+/* ── Arus di jalur ───────────────────────────────────────── */
 @keyframes flow {
   to { stroke-dashoffset: -1000; }
 }
@@ -253,13 +278,13 @@
   90% { opacity: 0.3; }
 }
 
-/* ── Scroll reveal (hanya aktif bila JS menyala) ─────────── */
+/* ── Scroll reveal (hanya bila JS menyala) ───────────────── */
 html.js [data-reveal] {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(24px);
   transition:
-    opacity 0.9s var(--ease-snap),
-    transform 0.9s var(--ease-snap);
+    opacity 0.8s var(--ease-snap),
+    transform 0.8s var(--ease-snap);
   transition-delay: var(--d, 0ms);
 }
 html.js [data-reveal].is-in {
@@ -269,7 +294,6 @@ html.js [data-reveal].is-in {
 
 [id] { scroll-margin-top: 5.5rem; }
 
-/* Detail/summary FAQ */
 details > summary { list-style: none; cursor: pointer; }
 details > summary::-webkit-details-marker { display: none; }
 details[open] .faq-icon { transform: rotate(45deg); }

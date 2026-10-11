@@ -16,3 +16,7 @@ export const kategoriLayanan: Record<string, { label: string; href: string }> = 
 
 /** id koleksi berbentuk "en/proj-1-ftth" → slug "proj-1-ftth" */
 export const projectSlug = (id: string) => id.replace(/^en\//, '');
+
+/** "JAKARTA" → "Jakarta" */
+export const lokasiLabel = (l: string) =>
+  l.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());

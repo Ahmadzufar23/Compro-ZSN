@@ -1,4 +1,9 @@
 ---
+/**
+ * Navbar: transparan dengan teks terang di atas hero gelap. Begitu
+ * halaman digulir, berubah jadi bar putih dengan teks tinta (token
+ * semantik ditukar lewat html.nav-scrolled, lihat <style>).
+ */
 import { Icon } from 'astro-icon/components';
 import ZMark from '@/components/ui/ZMark.astro';
 import Button from '@/components/ui/Button.astro';
@@ -10,18 +15,15 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
 const survei = waLink('Halo ZSN, saya ingin meminta survei lokasi.');
 ---
 
-<header
-  class="nav-shell fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300"
-  data-nav
->
+<header class="nav-shell theme-dark fixed inset-x-0 top-0 z-50" data-nav>
   <div class="container-content flex h-18 items-center justify-between gap-6">
     <a href="/" class="group flex items-center gap-3" aria-label="ZSN, kembali ke beranda">
-      <span class="transition-transform duration-700 group-hover:rotate-[360deg]">
-        <ZMark size={36} ring />
+      <span class="nav-mark transition-transform duration-700 group-hover:rotate-[360deg]">
+        <ZMark size={36} />
       </span>
       <span class="flex flex-col leading-none">
-        <span class="font-display text-[1.35rem] font-extrabold tracking-tight text-snow" style="font-stretch:125%">ZSN</span>
-        <span class="label-tech mt-1 hidden text-[0.55rem] text-fog sm:block">Technology Solution</span>
+        <span class="font-display text-[1.35rem] font-extrabold tracking-tight text-strong" style="font-stretch:125%">ZSN</span>
+        <span class="label-tech mt-1 hidden text-[0.55rem] text-soft sm:block">Technology Solution</span>
       </span>
     </a>
 
@@ -34,14 +36,12 @@ const survei = waLink('Halo ZSN, saya ingin meminta survei lokasi.');
                 href={l.href}
                 class:list={[
                   'relative inline-flex min-h-11 items-center px-4 text-sm font-medium transition-colors',
-                  isActive(l.href) ? 'text-snow' : 'text-mist hover:text-snow',
+                  isActive(l.href) ? 'text-strong' : 'text-body hover:text-strong',
                 ]}
                 aria-current={isActive(l.href) ? 'page' : undefined}
               >
                 {l.label}
-                {isActive(l.href) && (
-                  <span class="absolute inset-x-4 bottom-1.5 h-0.5 bg-volt" aria-hidden="true" />
-                )}
+                {isActive(l.href) && <span class="absolute inset-x-4 bottom-1.5 h-0.5 bg-volt" aria-hidden="true" />}
               </a>
             </li>
           ))
@@ -50,38 +50,38 @@ const survei = waLink('Halo ZSN, saya ingin meminta survei lokasi.');
     </nav>
 
     <div class="flex items-center gap-3">
-      <span class="hidden min-[380px]:block"><Button href={survei} external icon="lucide:zap">Minta Survei</Button></span>
+      <span class="hidden min-[380px]:block">
+        <Button href={survei} external icon="lucide:message-circle">Minta Survei</Button>
+      </span>
 
       <details class="nav-mobile lg:hidden">
-        <summary
-          class="flex size-12 items-center justify-center text-snow ring-1 ring-inset ring-line-strong"
-          aria-label="Buka menu"
-        >
+        <summary class="flex size-12 items-center justify-center text-strong ring-1 ring-inset ring-rule-strong" aria-label="Buka menu">
           <Icon name="lucide:menu" class="icon-open size-5" />
           <Icon name="lucide:x" class="icon-close size-5" />
         </summary>
-        <div class="fixed inset-x-0 top-18 bottom-0 overflow-y-auto border-t border-line bg-ink/98 backdrop-blur-xl">
+        <div class="theme-dark fixed inset-x-0 top-18 bottom-0 overflow-y-auto border-t border-rule bg-canvas">
           <nav aria-label="Navigasi mobile" class="container-content py-8">
-            <ul class="divide-y divide-line border-y border-line">
+            <ul class="divide-y divide-rule border-y border-rule">
               {
-                navLinks.map((l, i) => (
+                navLinks.map((l) => (
                   <li>
                     <a
                       href={l.href}
-                      class="flex min-h-16 items-center justify-between gap-4 py-4 font-display text-2xl font-extrabold text-snow"
+                      class="flex min-h-16 items-center justify-between gap-4 py-4 font-display text-2xl font-extrabold text-strong"
                       style="font-stretch:115%"
+                      aria-current={isActive(l.href) ? 'page' : undefined}
                     >
-                      <span class="flex items-baseline gap-4">
-                        <span class="label-tech text-volt">0{i + 1}</span>
+                      <span class="flex items-center gap-4">
+                        <span class:list={['size-2 shrink-0', isActive(l.href) ? 'bg-volt' : 'bg-rule-strong']} aria-hidden="true" />
                         {l.label}
                       </span>
-                      <Icon name="lucide:arrow-up-right" class="size-5 text-fog" />
+                      <Icon name="lucide:arrow-up-right" class="size-5 text-soft" />
                     </a>
                   </li>
                 ))
               }
             </ul>
-            <Button href={survei} external size="lg" class="mt-8 w-full" icon="lucide:zap">
+            <Button href={survei} external size="lg" class="mt-8 w-full" icon="lucide:message-circle">
               Minta Survei Gratis
             </Button>
           </nav>
@@ -94,16 +94,36 @@ const survei = waLink('Halo ZSN, saya ingin meminta survei lokasi.');
 <style>
   .nav-shell {
     border-bottom: 1px solid transparent;
+    transition: background-color 0.3s, border-color 0.3s;
   }
-  :global(.nav-scrolled) .nav-shell,
-  .nav-shell:has(details[open]) {
-    background: rgb(10 12 15 / 0.82);
+  /* Setelah digulir: bar putih, token semantik kembali ke nilai terang */
+  :global(html.nav-scrolled) .nav-shell {
+    --color-canvas: #ffffff;
+    --color-rule: #e3e1da;
+    --color-rule-strong: #8a877d;
+    --color-strong: #0a0c0f;
+    --color-body: #3d4148;
+    --color-soft: #5e646e;
+    background: rgb(255 255 255 / 0.92);
     backdrop-filter: blur(14px) saturate(140%);
-    border-bottom-color: var(--color-line);
+    border-bottom-color: var(--color-rule);
+    color-scheme: light;
+  }
+  .nav-shell:has(details[open]) {
+    background: var(--color-canvas);
   }
   .nav-mobile .icon-close { display: none; }
   .nav-mobile[open] .icon-close { display: block; }
   .nav-mobile[open] .icon-open { display: none; }
+  /* Mark ZSN: bidang gelap logo butuh tepi tipis di atas hero gelap */
+  .nav-mark :global(svg) {
+    border-radius: 9999px;
+    box-shadow: 0 0 0 1.5px rgb(255 255 255 / 0.25);
+    transition: box-shadow 0.3s;
+  }
+  :global(html.nav-scrolled) .nav-mark :global(svg) {
+    box-shadow: none;
+  }
 </style>
 
 <script>

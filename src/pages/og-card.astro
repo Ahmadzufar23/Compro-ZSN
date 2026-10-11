@@ -1,0 +1,60 @@
+---
+/**
+ * Sumber gambar OG (public/og-default.jpg), ukuran pas 1200x630.
+ * Bukan halaman untuk pengunjung. Regenerasi:
+ *   npm run dev, lalu
+ *   chrome --headless --screenshot=og.png --window-size=1200,630 http://localhost:4321/og-card
+ *   lalu konversi ke public/og-default.jpg.
+ */
+import '@/styles/global.css';
+import ZMark from '@/components/ui/ZMark.astro';
+import { site } from '@/config/site';
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>OG ZSN</title>
+    <style>
+      html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+    </style>
+  </head>
+  <body class="theme-dark">
+    <div class="relative h-[630px] w-[1200px] overflow-hidden bg-canvas">
+      <div class="bg-grid absolute inset-0"></div>
+      <div class="absolute -right-24 -top-24 size-[700px] rounded-full" style="background:radial-gradient(circle, rgb(255 206 0 / .16), transparent 62%)"></div>
+      <svg class="absolute inset-0" width="1200" height="630" viewBox="0 0 1200 630">
+        <path d="M-10 500 H380 L450 440 H700" fill="none" stroke="#FFCE00" stroke-width="3" />
+        <path d="M-10 540 H250 L300 590 H560" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2" />
+        <rect x="377" y="497" width="6" height="6" fill="#FFCE00" />
+        <rect x="447" y="437" width="6" height="6" fill="#FFCE00" />
+      </svg>
+
+      <div class="absolute right-[90px] top-1/2 -translate-y-1/2">
+        <div style="filter:drop-shadow(0 30px 60px rgba(0,0,0,.6))">
+          <ZMark size={380} ring />
+        </div>
+      </div>
+
+      <div class="absolute left-[72px] top-[64px] w-[640px]">
+        <p class="label-tech flex items-center gap-3 text-[15px] text-soft">
+          <span class="size-3 bg-volt"></span>{site.namaLegal}
+        </p>
+        <h1 class="mt-8 text-[76px] leading-[0.95]" style="font-stretch:118%">
+          Infrastruktur yang tetap <span class="volt-mark">menyala.</span>
+        </h1>
+        <p class="mt-8 text-[24px] leading-snug text-body">
+          Fiber optik · Jaringan · CCTV · Pemeliharaan · Software
+        </p>
+      </div>
+
+      <div class="absolute bottom-0 left-0 right-0 flex h-[64px] items-center justify-between border-t border-rule px-[72px]">
+        <span class="font-display text-[26px] font-extrabold text-strong" style="font-stretch:125%">ZSN</span>
+        <span class="label-tech text-[14px] text-soft">Jakarta Selatan · Jabodetabek</span>
+      </div>
+      <div class="hazard absolute bottom-0 left-0 right-0 h-[6px]"></div>
+    </div>
+  </body>
+</html>

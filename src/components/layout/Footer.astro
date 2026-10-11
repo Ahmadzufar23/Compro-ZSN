@@ -1,17 +1,16 @@
 ---
 import { Icon } from 'astro-icon/components';
 import ZMark from '@/components/ui/ZMark.astro';
-import { site, waLink } from '@/config/site';
+import { site, waLink, nomorTampil } from '@/config/site';
 import { services } from '@/config/services';
 import { navLinks } from '@/config/nav';
 
 const tahun = new Date().getFullYear();
 const a = site.alamat;
-const nomorTampil = `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)}-${site.whatsapp.slice(5, 9)}-${site.whatsapp.slice(9)}`;
 ---
 
-<footer class="relative overflow-hidden border-t border-line bg-void text-mist">
-  <div class="bg-grid mask-fade-b pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
+<footer class="theme-dark relative overflow-hidden bg-void">
+  <div class="bg-grid mask-fade-b pointer-events-none absolute inset-0 opacity-70" aria-hidden="true"></div>
 
   <div class="container-content relative pt-20 pb-10">
     <div class="grid gap-14 lg:grid-cols-12">
@@ -19,27 +18,23 @@ const nomorTampil = `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)}-
         <div class="flex items-center gap-4">
           <ZMark size={56} ring />
           <div>
-            <p class="font-display text-2xl font-extrabold text-snow" style="font-stretch:125%">ZSN</p>
-            <p class="label-tech text-fog">{site.namaLegal}</p>
+            <p class="font-display text-2xl font-extrabold text-strong" style="font-stretch:125%">ZSN</p>
+            <p class="label-tech text-soft">{site.namaLegal}</p>
           </div>
         </div>
-        <p class="mt-6 max-w-sm text-sm leading-relaxed text-fog">
-          Kontraktor infrastruktur jaringan dan pengembang sistem digital. Kami menarik kabel,
-          memasang perangkat, menguji jalurnya, lalu membangun software yang berjalan di atasnya.
-        </p>
-        <p class="label-tech mt-8 inline-flex items-center gap-2 text-volt">
-          <span class="blink inline-block size-1.5 bg-volt" aria-hidden="true"></span>
-          Siap menerima jadwal survei
+        <p class="mt-6 max-w-sm text-sm leading-relaxed text-soft">
+          Instalasi fiber optik, jaringan perusahaan, CCTV, pemeliharaan, dan pengembangan
+          software. Berkantor di Jakarta Selatan sejak 2015.
         </p>
       </div>
 
       <nav aria-label="Layanan" class="lg:col-span-3">
-        <p class="label-tech text-fog">Layanan</p>
+        <p class="label-tech text-soft">Layanan</p>
         <ul class="mt-5 space-y-1">
           {
             services.map((s) => (
               <li>
-                <a href={s.href} class="inline-flex min-h-10 items-center text-sm text-mist transition-colors hover:text-volt">
+                <a href={s.href} class="inline-flex min-h-10 items-center text-sm text-body transition-colors hover:text-volt">
                   {s.label}
                 </a>
               </li>
@@ -49,12 +44,12 @@ const nomorTampil = `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)}-
       </nav>
 
       <nav aria-label="Perusahaan" class="lg:col-span-2">
-        <p class="label-tech text-fog">Perusahaan</p>
+        <p class="label-tech text-soft">Perusahaan</p>
         <ul class="mt-5 space-y-1">
           {
             navLinks.map((l) => (
               <li>
-                <a href={l.href} class="inline-flex min-h-10 items-center text-sm text-mist transition-colors hover:text-volt">
+                <a href={l.href} class="inline-flex min-h-10 items-center text-sm text-body transition-colors hover:text-volt">
                   {l.label}
                 </a>
               </li>
@@ -64,25 +59,29 @@ const nomorTampil = `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)}-
       </nav>
 
       <div class="lg:col-span-3">
-        <p class="label-tech text-fog">Kontak</p>
-        <ul class="mt-5 space-y-4 text-sm">
+        <p class="label-tech text-soft">Kontak</p>
+        <ul class="mt-5 space-y-4 text-sm text-body">
           <li>
-            <a href={waLink('Halo ZSN, saya ingin berkonsultasi.')} target="_blank" rel="noopener noreferrer" class="group inline-flex items-start gap-2 hover:text-volt">
+            <a href={waLink('Halo ZSN, saya ingin berkonsultasi.')} target="_blank" rel="noopener noreferrer" class="inline-flex items-start gap-3 hover:text-volt">
               <Icon name="lucide:message-circle" class="mt-0.5 size-4 shrink-0 text-volt" />
-              <span>{nomorTampil}</span>
+              <span>{nomorTampil} <span class="text-soft">(WhatsApp)</span></span>
             </a>
           </li>
           <li>
-            <a href={`mailto:${site.email}`} class="inline-flex items-start gap-2 break-all hover:text-volt">
+            <a href={`mailto:${site.email}`} class="inline-flex items-start gap-3 break-all hover:text-volt">
               <Icon name="lucide:mail" class="mt-0.5 size-4 shrink-0 text-volt" />
               <span>{site.email}</span>
             </a>
           </li>
           <li>
-            <a href={site.maps.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-start gap-2 hover:text-volt">
+            <a href={site.maps.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-start gap-3 hover:text-volt">
               <Icon name="lucide:map-pin" class="mt-0.5 size-4 shrink-0 text-volt" />
               <span>{a.jalan}, {a.kelurahan}, {a.kota} {a.kodePos}</span>
             </a>
+          </li>
+          <li class="inline-flex items-start gap-3">
+            <Icon name="lucide:clock" class="mt-0.5 size-4 shrink-0 text-volt" />
+            <span>{site.jamOperasional}</span>
           </li>
         </ul>
       </div>
@@ -96,8 +95,8 @@ const nomorTampil = `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)}-
       ZSN
     </p>
 
-    <div class="mt-4 flex flex-col gap-3 border-t border-line pt-6 text-xs text-fog sm:flex-row sm:items-center sm:justify-between">
-      <p>&copy; {tahun} {site.namaLegal}. Hak cipta dilindungi.</p>
+    <div class="mt-4 flex flex-col gap-3 border-t border-rule pt-6 text-xs text-soft sm:flex-row sm:items-center sm:justify-between">
+      <p>&copy; {tahun} {site.namaLegal}</p>
       <p class="label-tech">Jakarta Selatan · Indonesia</p>
     </div>
   </div>

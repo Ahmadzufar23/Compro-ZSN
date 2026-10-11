@@ -9,16 +9,19 @@ const semua = (await getCollection('project')).sort(
 );
 const [utama, ...lain] = semua;
 const sisi = lain.slice(0, 4);
+const spans = ['lg:col-span-5', 'lg:col-span-5', 'lg:col-span-5', 'lg:col-span-7'];
 ---
 
-<section class="relative overflow-hidden bg-carbon py-24 lg:py-32" aria-labelledby="proyek-title">
+<section class="relative overflow-hidden bg-raised py-24 lg:py-32" aria-labelledby="proyek-title">
   <div class="container-content">
     <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div>
-        <Eyebrow index="06" data-reveal>Dari lapangan</Eyebrow>
-        <h2 id="proyek-title" class="mt-6 max-w-3xl text-h1" data-reveal>
-          Pekerjaan nyata, <span class="text-fog">dengan kode proyeknya.</span>
-        </h2>
+        <Eyebrow data-reveal>Proyek</Eyebrow>
+        <h2 id="proyek-title" class="mt-6 max-w-3xl text-h1" data-reveal>Pekerjaan terbaru di lapangan.</h2>
+        <p class="mt-5 max-w-xl text-lg" data-reveal>
+          Apartemen, gedung, dan kawasan industri di Jakarta, Depok, dan Bekasi. Setiap proyek
+          tercatat dengan kode proyeknya.
+        </p>
       </div>
       <div data-reveal>
         <Button href="/portfolio" variant="ghost" icon="lucide:arrow-right">Semua proyek</Button>
@@ -27,21 +30,7 @@ const sisi = lain.slice(0, 4);
 
     <div class="mt-14 grid auto-rows-[18rem] gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-12 lg:auto-rows-[15rem]">
       {utama && <ProjectCard entry={utama} size="lg" class="sm:col-span-2 lg:col-span-7 lg:row-span-2" data-reveal />}
-      {
-        sisi.map((p, i) => (
-          <ProjectCard
-            entry={p}
-            class:list={[
-              i === 0 && 'lg:col-span-5',
-              i === 1 && 'lg:col-span-5',
-              i === 2 && 'lg:col-span-5',
-              i === 3 && 'lg:col-span-7',
-            ]}
-            data-reveal
-            style={`--d:${(i + 1) * 80}ms`}
-          />
-        ))
-      }
+      {sisi.map((p, i) => <ProjectCard entry={p} class={spans[i]} data-reveal style={`--d:${(i + 1) * 80}ms`} />)}
     </div>
   </div>
 </section>

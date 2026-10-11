@@ -4,16 +4,15 @@ import Button from '@/components/ui/Button.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
 ---
 
-<Base title="Sinyal terputus" description="Halaman tidak ditemukan." noindex>
-  <section class="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-ink pt-24">
+<Base title="Halaman tidak ditemukan" description="Halaman tidak ditemukan." noindex>
+  <section class="theme-dark relative isolate flex min-h-[100svh] items-center overflow-hidden bg-canvas pt-24">
     <div class="bg-grid mask-fade pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
     <div class="container-content grid items-center gap-12 lg:grid-cols-2">
       <div>
-        <Eyebrow index="404">Loss of signal</Eyebrow>
-        <h1 class="mt-6 text-hero">Sinyal <span class="text-fog">terputus.</span></h1>
-        <p class="mt-6 max-w-md text-lg text-mist">
-          Halaman yang Anda cari tidak ada di jalur ini. Mungkin sudah dipindah, atau tautannya
-          salah sambung.
+        <Eyebrow>Error 404</Eyebrow>
+        <h1 class="mt-6 text-hero">Sinyal terputus.</h1>
+        <p class="mt-6 max-w-md text-lg text-body">
+          Halaman yang Anda cari tidak ditemukan. Mungkin sudah dipindah atau alamatnya salah ketik.
         </p>
         <div class="mt-10 flex flex-wrap gap-3">
           <Button href="/" size="lg" icon="lucide:house">Kembali ke beranda</Button>
@@ -30,7 +29,6 @@ import Eyebrow from '@/components/ui/Eyebrow.astro';
         </g>
         <circle cx="190" cy="130" r="6" fill="#FFCE00" />
         <circle cx="310" cy="170" r="6" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2" />
-        <text x="250" y="260" text-anchor="middle" fill="#8A929E" style="font:500 12px var(--font-mono);letter-spacing:.2em">LOS · −∞ dBm</text>
       </svg>
     </div>
   </section>

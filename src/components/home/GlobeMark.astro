@@ -6,27 +6,32 @@
  * di dalam piringan dipetakan ke titik di permukaan bola (proyeksi
  * ortografis), diputar pada sumbu Y, lalu mengambil warna dari tekstur
  * logo. Sisi belakang memakai logo yang dicerminkan, jadi logo terbaca
- * benar dari depan maupun belakang. Garis jahitan antara keduanya
- * dijadikan cincin volt (meridian kuning).
+ * benar dari depan maupun belakang. Jahitan di antara keduanya dijadikan
+ * cincin kuning (meridian).
  *
- * Di sekelilingnya ada orbit data dengan paket cahaya yang berjalan.
- * Bisa diputar dengan diseret. Berhenti saat keluar layar, dan diam
- * bila pengguna memilih prefers-reduced-motion.
+ * Kualitas adaptif: bila satu frame rata-rata butuh > 14 ms (HP lemah),
+ * resolusi diturunkan dan frame rate dibatasi 30 fps. Berhenti saat
+ * keluar layar, dan diam bila pengguna memilih prefers-reduced-motion.
+ *
+ * tone="light" dipakai bila globe berada di atas latar terang: orbit
+ * digambar dengan garis gelap, bukan putih.
  */
 import ZMark from '@/components/ui/ZMark.astro';
 import { ZSN_MARK } from '@/config/mark';
 
 interface Props {
   class?: string;
+  tone?: 'dark' | 'light';
 }
-const { class: extra = '' } = Astro.props;
+const { class: extra = '', tone = 'dark' } = Astro.props;
 ---
 
 <div
   class:list={['globe relative aspect-square w-full touch-pan-y select-none', extra]}
   data-globe={JSON.stringify(ZSN_MARK)}
+  data-tone={tone}
 >
-  <div class="globe-glow pointer-events-none absolute inset-[8%] rounded-full" aria-hidden="true"></div>
+  <div class:list={['globe-glow pointer-events-none absolute inset-[8%] rounded-full', tone]} aria-hidden="true"></div>
   <div class="globe-fallback absolute inset-[16%] transition-opacity duration-700">
     <ZMark size="100%" title="Logo ZSN" />
   </div>
@@ -37,6 +42,9 @@ const { class: extra = '' } = Astro.props;
   .globe-glow {
     background: radial-gradient(circle, rgb(255 206 0 / 0.22) 0%, rgb(255 206 0 / 0.06) 45%, transparent 70%);
     filter: blur(10px);
+  }
+  .globe-glow.light {
+    background: radial-gradient(circle, rgb(255 206 0 / 0.28) 0%, rgb(255 206 0 / 0.08) 45%, transparent 68%);
   }
   :global(.globe.ready) .globe-fallback {
     opacity: 0;
@@ -77,7 +85,7 @@ const { class: extra = '' } = Astro.props;
       r[i] = d[i * 4];
       gg[i] = d[i * 4 + 1];
       b[i] = d[i * 4 + 2];
-      // Celah Z (putih) diberi sifat "menyala": tidak terlalu gelap di sisi bayangan
+      // Celah Z (putih) "menyala": tidak terlalu gelap di sisi bayangan
       e[i] = d[i * 4 + 2] > 200 ? 1 : 0;
     }
     return { r, g: gg, b, e };
@@ -105,12 +113,14 @@ const { class: extra = '' } = Astro.props;
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     tex: ReturnType<typeof buildTexture>;
+    light: boolean;
     sphere = document.createElement('canvas');
     sctx = this.sphere.getContext('2d')!;
     img!: ImageData;
     buf!: Uint32Array;
     W = 0; R = 0; dpr = 1;
-    // data per piksel
+    /** batas atas DPR, diturunkan otomatis bila perangkat lambat */
+    dprCap = 1.6;
     idx!: Int32Array; mx!: Float32Array; my!: Float32Array; mz!: Float32Array;
     shade!: Float32Array; spec!: Float32Array; rim!: Float32Array; alpha!: Float32Array; lat!: Float32Array;
     count = 0;
@@ -126,9 +136,15 @@ const { class: extra = '' } = Astro.props;
     ro: ResizeObserver;
     dragging = false;
     lastX = 0;
+    // pemantau performa
+    cost = 0;
+    samples = 0;
+    lowPower = false;
+    skip = false;
 
     constructor(root: HTMLElement) {
       this.root = root;
+      this.light = root.dataset.tone === 'light';
       this.canvas = root.querySelector('canvas')!;
       this.ctx = this.canvas.getContext('2d')!;
       this.tex = buildTexture(JSON.parse(root.dataset.globe!));
@@ -146,12 +162,12 @@ const { class: extra = '' } = Astro.props;
       else this.start();
     }
 
-    setup() {
+    setup(force = false) {
       const css = this.root.clientWidth;
       if (!css) return;
-      this.dpr = Math.min(window.devicePixelRatio || 1, 1.6);
+      this.dpr = Math.min(window.devicePixelRatio || 1, this.dprCap);
       const W = Math.round(css * this.dpr);
-      if (W === this.W) return;
+      if (W === this.W && !force) return;
       this.W = W;
       this.canvas.width = this.canvas.height = W;
       const R = (this.R = Math.round(W * 0.34));
@@ -172,6 +188,7 @@ const { class: extra = '' } = Astro.props;
       const hl = Math.hypot(hx, hy, hz);
       hx /= hl; hy /= hl; hz /= hl;
       const tilt = 0.3, ct = Math.cos(tilt), st = Math.sin(tilt);
+      const ambient = this.light ? 0.42 : 0.3;
 
       let n = 0;
       for (let j = 0; j < D; j++) {
@@ -182,19 +199,18 @@ const { class: extra = '' } = Astro.props;
           if (r2 > 1) continue;
           const nz = Math.sqrt(1 - r2);
           idx[n] = j * D + i;
-          // kemiringan sumbu (seperti bumi, condong ke arah penonton)
+          // kemiringan sumbu, condong ke arah penonton
           mx[n] = nx;
           my[n] = ny * ct - nz * st;
           mz[n] = ny * st + nz * ct;
           const diff = Math.max(0, nx * lx + ny * ly + nz * lz);
-          shade[n] = 0.3 + 0.82 * diff;
+          shade[n] = ambient + 0.82 * diff;
           spec[n] = Math.pow(Math.max(0, nx * hx + ny * hy + nz * hz), 40) * 0.6;
           rim[n] = Math.pow(1 - nz, 2.6);
           alpha[n] = Math.min(1, (1 - Math.sqrt(r2)) * R * 1.2);
           // garis lintang (statis karena putaran di sumbu Y)
           const latV = my[n] * 4;
-          const fl = Math.abs(latV - Math.round(latV));
-          lat[n] = fl < 0.035 ? 1 : 0;
+          lat[n] = Math.abs(latV - Math.round(latV)) < 0.035 ? 1 : 0;
           n++;
         }
       }
@@ -226,16 +242,36 @@ const { class: extra = '' } = Astro.props;
       if (this.reduced || this.raf) return;
       this.last = performance.now();
       const loop = (t: number) => {
-        const dt = Math.min(0.05, (t - this.last) / 1000);
-        this.last = t;
-        if (!this.visible) {
+        if (!this.visible || document.hidden) {
           this.raf = 0;
+          if (document.hidden) document.addEventListener('visibilitychange', () => this.start(), { once: true });
           return;
         }
-        this.frame(dt);
         this.raf = requestAnimationFrame(loop);
+        // mode hemat: lewati setiap frame kedua (sekitar 30 fps)
+        if (this.lowPower && (this.skip = !this.skip)) return;
+        const dt = Math.min(0.05, (t - this.last) / 1000);
+        this.last = t;
+        const t0 = performance.now();
+        this.frame(dt);
+        this.measure(performance.now() - t0);
       };
       this.raf = requestAnimationFrame(loop);
+    }
+
+    /** Turunkan kualitas bila rata-rata frame terlalu mahal */
+    measure(ms: number) {
+      if (this.lowPower) return;
+      this.cost += ms;
+      if (++this.samples < 40) return;
+      const avg = this.cost / this.samples;
+      this.cost = 0;
+      this.samples = 0;
+      if (avg > 14) {
+        this.lowPower = true;
+        this.dprCap = 1;
+        this.setup(true);
+      }
     }
 
     renderSphere() {
@@ -251,7 +287,7 @@ const { class: extra = '' } = Astro.props;
         let r: number, g: number, b: number;
         let sh = shade[k];
         if (z > -0.03 && z < 0.03) {
-          // cincin volt di jahitan depan/belakang
+          // cincin kuning di jahitan depan/belakang
           r = 255; g = 214; b = 40;
           sh = 0.7 + sh * 0.5;
         } else {
@@ -259,10 +295,9 @@ const { class: extra = '' } = Astro.props;
           const ti = (((y + 1) * 0.5 * T1) | 0) * TS + (((u + 1) * 0.5 * T1) | 0);
           r = tex.r[ti]; g = tex.g[ti]; b = tex.b[ti];
           if (tex.e[ti]) sh = 0.62 + sh * 0.42;
-          // garis bujur & lintang: kisi globe tipis berwarna volt
+          // kisi bujur & lintang tipis berwarna kuning di bidang gelap
           const lon = fastAtan2(x, z) * lonStep;
-          const fl = Math.abs(lon - Math.round(lon));
-          const grid = lat[k] || fl < 0.05 ? 0.22 : 0;
+          const grid = lat[k] || Math.abs(lon - Math.round(lon)) < 0.05 ? 0.22 : 0;
           if (grid && r < 120) {
             r += (VOLT[0] - r) * grid;
             g += (VOLT[1] - g) * grid;
@@ -285,40 +320,39 @@ const { class: extra = '' } = Astro.props;
       const R = this.R * ring.r;
       const a = t + spin;
       let x = Math.cos(a) * R, y = 0, z = Math.sin(a) * R;
-      // putar di sumbu X lalu Z
       const cx = Math.cos(ring.tx), sx = Math.sin(ring.tx);
       const y1 = y * cx - z * sx, z1 = y * sx + z * cx;
       y = y1; z = z1;
       const cz = Math.cos(ring.tz), sz = Math.sin(ring.tz);
-      const x2 = x * cz - y * sz, y2 = x * sz + y * cz;
-      return [x2, y2, z] as const;
+      return [x * cz - y * sz, x * sz + y * cz, z] as const;
     }
 
     drawRings(front: boolean) {
-      const { ctx, W, dpr, time } = this;
+      const { ctx, W, dpr, time, light } = this;
       const cx = W / 2, cy = W / 2;
       const SEG = 120;
+      const line = light
+        ? front ? 'rgba(10,12,15,0.28)' : 'rgba(10,12,15,0.12)'
+        : front ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.08)';
       for (const ring of RINGS) {
         const spin = time * 0.05;
         ctx.beginPath();
         let pen = false;
         for (let i = 0; i <= SEG; i++) {
-          const t = (i / SEG) * Math.PI * 2;
-          const [x, y, z] = this.ringPoint(ring, t, spin);
-          const isFront = z >= 0;
-          if (isFront === front) {
+          const [x, y, z] = this.ringPoint(ring, (i / SEG) * Math.PI * 2, spin);
+          if (z >= 0 === front) {
             if (pen) ctx.lineTo(cx + x, cy + y);
             else ctx.moveTo(cx + x, cy + y);
             pen = true;
           } else pen = false;
         }
-        ctx.strokeStyle = front ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.08)';
+        ctx.strokeStyle = line;
         ctx.lineWidth = dpr;
         ctx.setLineDash(front ? [] : [3 * dpr, 5 * dpr]);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // paket cahaya
+        // paket cahaya berjalan di orbit
         for (const p0 of ring.packets) {
           const head = p0 + time * ring.speed;
           const [hx, hy, hz] = this.ringPoint(ring, head, spin);
@@ -326,14 +360,16 @@ const { class: extra = '' } = Astro.props;
           const dir = Math.sign(ring.speed);
           for (let k = 0; k < 14; k++) {
             const [x, y] = this.ringPoint(ring, head - dir * k * 0.035, spin);
-            ctx.fillStyle = `rgba(255,206,0,${(front ? 0.9 : 0.35) * (1 - k / 14)})`;
+            ctx.fillStyle = light
+              ? `rgba(217,169,0,${(front ? 0.95 : 0.4) * (1 - k / 14)})`
+              : `rgba(255,206,0,${(front ? 0.9 : 0.35) * (1 - k / 14)})`;
             ctx.beginPath();
             ctx.arc(cx + x, cy + y, (2.4 - k * 0.12) * dpr, 0, Math.PI * 2);
             ctx.fill();
           }
-          ctx.fillStyle = front ? '#FFF6C8' : 'rgba(255,230,120,.5)';
+          ctx.fillStyle = light ? '#0A0C0F' : front ? '#FFF6C8' : 'rgba(255,230,120,.5)';
           ctx.shadowColor = 'rgba(255,206,0,.9)';
-          ctx.shadowBlur = front ? 14 * dpr : 0;
+          ctx.shadowBlur = front && !this.lowPower ? 14 * dpr : 0;
           ctx.beginPath();
           ctx.arc(cx + hx, cy + hy, 3.2 * dpr, 0, Math.PI * 2);
           ctx.fill();
@@ -374,7 +410,7 @@ const { class: extra = '' } = Astro.props;
       try {
         live.add(new Globe(el));
       } catch {
-        // tetap tampil sebagai logo statis
+        // gagal = tetap tampil sebagai logo statis (fallback SVG)
       }
     });
   }

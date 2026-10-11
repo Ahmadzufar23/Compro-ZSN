@@ -1,7 +1,8 @@
 ---
 /**
  * ServicePage: satu template untuk semua halaman layanan & produk.
- * Setiap blok dirender hanya bila datanya ada di frontmatter.
+ * Hero gelap (foto atau skema), badan terang. Setiap blok dirender hanya
+ * bila datanya ada di frontmatter.
  */
 import type { CollectionEntry } from 'astro:content';
 import { render, getCollection } from 'astro:content';
@@ -14,7 +15,7 @@ import CtaFinal from '@/components/home/CtaFinal.astro';
 import SoftwarePanel from './SoftwarePanel.astro';
 import { services } from '@/config/services';
 import { waLink } from '@/config/site';
-import { projectSlug, kategoriLabel } from '@/config/project';
+import { projectSlug, kategoriLabel, lokasiLabel } from '@/config/project';
 
 interface Props {
   entry: CollectionEntry<'layanan'> | CollectionEntry<'produk'>;
@@ -32,30 +33,36 @@ const judulPanjang = d.judul.length > 28;
 
 /* Galeri memakai foto proyek asli dengan kategori yang sama. Foto galeri
    di frontmatter layanan masih placeholder, jadi tidak dipakai. */
-const kategoriSlug: Record<string, string> = { 'fiber-optic': 'fiber', cctv: 'cctv', network: 'network', maintenance: 'maintenance', software: 'software' };
+const kategoriSlug: Record<string, string> = {
+  'fiber-optic': 'fiber',
+  cctv: 'cctv',
+  network: 'network',
+  maintenance: 'maintenance',
+  software: 'software',
+};
 const fotoProyek = (await getCollection('project'))
   .filter((p) => p.data.kategori === kategoriSlug[slug])
   .sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf())
   .slice(0, 4);
 
-/* Penomoran indeks section berurutan sesuai blok yang benar-benar tampil */
-let n = 0;
-const idx = () => String(++n).padStart(2, '0');
-
 const softwareBuild = [
-  { icon: 'lucide:layout-dashboard', judul: 'Sistem operasional internal', detail: 'Panel admin, alur kerja, dan persetujuan yang mengikuti cara tim Anda benar-benar bekerja.' },
-  { icon: 'lucide:file-bar-chart', judul: 'Pencatatan & pelaporan', detail: 'Data tersentral dengan dashboard dan laporan otomatis, tanpa rekap manual di spreadsheet.' },
+  { icon: 'lucide:layout-dashboard', judul: 'Sistem operasional internal', detail: 'Panel admin, alur kerja, dan persetujuan yang mengikuti cara tim Anda bekerja.' },
+  { icon: 'lucide:file-bar-chart', judul: 'Pencatatan & pelaporan', detail: 'Data tersentral dengan dashboard dan laporan otomatis, menggantikan rekap manual di spreadsheet.' },
   { icon: 'lucide:calendar-clock', judul: 'Booking & penjadwalan', detail: 'Reservasi, jadwal, dan pengelolaan sumber daya dalam satu sistem.' },
   { icon: 'lucide:plug-zap', judul: 'Integrasi & otomasi', detail: 'API dan konektor yang menghubungkan sistem yang sudah ada, termasuk perangkat lapangan.' },
 ];
 const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'];
+
+/* Latar section berselang-seling otomatis sesuai blok yang tampil */
+let alt = 0;
+const bg = () => (alt++ % 2 === 0 ? 'bg-canvas' : 'bg-raised');
 ---
 
 <Base title={d.judul} description={d.ringkas}>
   <!-- HERO -->
-  <section class="relative isolate overflow-hidden bg-ink pt-32 lg:pt-40">
+  <section class="theme-dark relative isolate overflow-hidden bg-canvas pt-32 lg:pt-40">
     {
-      d.heroImage && (
+      d.heroImage ? (
         <div class="absolute inset-0 -z-10">
           <Image
             src={d.heroImage}
@@ -65,31 +72,30 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
             sizes="100vw"
             loading="eager"
             fetchpriority="high"
-            class="size-full object-cover opacity-45"
+            class="size-full object-cover opacity-50"
           />
           <div class="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/30" />
           <div class="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
         </div>
+      ) : (
+        <div class="bg-grid mask-fade pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
       )
     }
-    {!d.heroImage && <div class="bg-grid mask-fade pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />}
 
-    <div class="container-content grid gap-12 pb-16 lg:grid-cols-12 lg:pb-24">
+    <div class="container-content grid items-end gap-12 pb-16 lg:grid-cols-12 lg:pb-24">
       <div class:list={[isSoftware ? 'lg:col-span-7' : 'lg:col-span-9']}>
-        <nav aria-label="Breadcrumb" class="label-tech mb-8 flex flex-wrap items-center gap-2 text-fog">
+        <nav aria-label="Breadcrumb" class="label-tech mb-8 flex flex-wrap items-center gap-2 text-soft">
           <a href="/" class="hover:text-volt">Beranda</a>
-          <span class="text-line-strong">/</span>
+          <span aria-hidden="true">/</span>
           <a href="/services" class="hover:text-volt">Layanan</a>
-          <span class="text-line-strong">/</span>
-          <span class="text-snow">{d.judul}</span>
+          <span aria-hidden="true">/</span>
+          <span class="text-strong" aria-current="page">{d.judul}</span>
         </nav>
-        <p class="font-display text-7xl font-extrabold leading-none text-transparent sm:text-8xl" style="font-stretch:125%;-webkit-text-stroke:1.5px var(--color-volt)" aria-hidden="true">
-          {kode}
-        </p>
-        <h1 class:list={['mt-4', judulPanjang ? 'text-h1' : 'text-hero']}>{d.judul}</h1>
-        <p class="mt-8 max-w-2xl text-lg leading-relaxed text-mist">{d.subjudul}</p>
+        <p class="label-tech inline-flex items-center gap-2 bg-volt px-2.5 py-1.5 text-ink">ZSN/{kode} · {svc?.lapisan}</p>
+        <h1 class:list={['mt-6', judulPanjang ? 'text-h1' : 'text-hero']}>{d.judul}</h1>
+        <p class="mt-8 max-w-2xl text-lg leading-relaxed text-body">{d.subjudul}</p>
         <div class="mt-10 flex flex-wrap gap-3">
-          <Button href={waLink(pesan)} external size="lg" icon="lucide:zap">{d.ctaLabel}</Button>
+          <Button href={waLink(pesan)} external size="lg" icon="lucide:message-circle">{d.ctaLabel}</Button>
           <Button href="#lingkup" variant="ghost" size="lg" icon="lucide:arrow-down">Lingkup pekerjaan</Button>
         </div>
       </div>
@@ -102,12 +108,12 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
 
     {
       d.spesifikasi && (
-        <div class="border-t border-line bg-ink/70 backdrop-blur">
+        <div class="border-t border-rule bg-ink/70 backdrop-blur">
           <dl class="container-content grid grid-cols-2 lg:grid-cols-4">
             {d.spesifikasi.map((s, i) => (
-              <div class:list={['border-line py-6 pr-4', i % 2 === 1 && 'border-l pl-5', i >= 2 && 'border-t lg:border-t-0', i > 0 && 'lg:border-l lg:pl-6']}>
-                <dt class="label-tech text-fog">{s.label}</dt>
-                <dd class="mt-2 font-semibold text-snow">{s.nilai}</dd>
+              <div class:list={['border-rule py-6 pr-4', i % 2 === 1 && 'border-l pl-5', i >= 2 && 'border-t lg:border-t-0', i > 0 && 'lg:border-l lg:pl-6']}>
+                <dt class="label-tech text-soft">{s.label}</dt>
+                <dd class="mt-2 font-semibold text-strong">{s.nilai}</dd>
               </div>
             ))}
           </dl>
@@ -117,19 +123,19 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
   </section>
 
   <!-- RINGKASAN + COCOK UNTUK -->
-  <section class="bg-carbon py-20 lg:py-28">
+  <section class:list={[bg(), 'py-20 lg:py-28']}>
     <div class="container-content grid gap-14 lg:grid-cols-12">
       <div class="lg:col-span-7" data-reveal>
-        <Eyebrow index={idx()}>Ringkasnya</Eyebrow>
-        <div class="prose-zsn mt-6 text-xl leading-relaxed text-snow sm:text-2xl">
+        <Eyebrow>Ringkasan</Eyebrow>
+        <div class="prose-zsn mt-6 text-xl leading-relaxed text-strong sm:text-2xl">
           <Content />
         </div>
         {d.stats && (
-          <dl class="mt-12 grid grid-cols-2 gap-px bg-line sm:grid-cols-4">
+          <dl class="mt-12 grid grid-cols-2 border-l border-t border-rule sm:grid-cols-4">
             {d.stats.map((s) => (
-              <div class="bg-carbon p-5">
-                <dt class="font-display text-lg font-extrabold text-volt" style="font-stretch:110%">{s.angka}</dt>
-                <dd class="label-tech mt-2 text-[0.6rem] text-fog">{s.label}</dd>
+              <div class="border-b border-r border-rule p-5">
+                <dt class="font-display text-lg font-extrabold text-strong" style="font-stretch:110%">{s.angka}</dt>
+                <dd class="label-tech mt-2 text-[0.6rem] text-soft">{s.label}</dd>
               </div>
             ))}
           </dl>
@@ -137,11 +143,11 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
       </div>
       {d.cocokUntuk && (
         <aside class="lg:col-span-4 lg:col-start-9" data-reveal style="--d:120ms">
-          <p class="label-tech text-fog">Cocok untuk</p>
-          <ul class="mt-5 border-t border-line">
+          <p class="label-tech text-soft">Cocok untuk</p>
+          <ul class="mt-5 border-t border-strong">
             {d.cocokUntuk.map((c) => (
-              <li class="flex items-center gap-3 border-b border-line py-4 text-snow">
-                <Icon name="lucide:check" class="size-4 shrink-0 text-volt" />
+              <li class="flex items-center gap-3 border-b border-rule py-4 text-strong">
+                <span class="size-2 shrink-0 bg-volt ring-1 ring-strong" aria-hidden="true" />
                 {c}
               </li>
             ))}
@@ -153,23 +159,23 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
 
   {
     isSoftware && (
-      <section class="bg-ink py-20 lg:py-28">
+      <section class:list={[bg(), 'py-20 lg:py-28']}>
         <div class="container-content">
-          <Eyebrow index={idx()} data-reveal>Yang kami bangun</Eyebrow>
-          <h2 class="mt-6 max-w-3xl text-h1" data-reveal>Software yang mengikuti proses bisnis Anda, bukan sebaliknya.</h2>
-          <div class="mt-14 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
+          <Eyebrow data-reveal>Yang kami bangun</Eyebrow>
+          <h2 class="mt-6 max-w-3xl text-h1" data-reveal>Software yang disesuaikan dengan proses bisnis Anda.</h2>
+          <div class="mt-14 grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
             {softwareBuild.map((b, i) => (
-              <article class="bg-ink p-8 transition-colors hover:bg-carbon" data-reveal style={`--d:${i * 80}ms`}>
-                <Icon name={b.icon} class="size-8 text-volt" />
+              <article class="bg-canvas p-8" data-reveal style={`--d:${i * 80}ms`}>
+                <span class="icon-tile"><Icon name={b.icon} class="size-6" /></span>
                 <h3 class="mt-8 text-xl">{b.judul}</h3>
-                <p class="mt-3 text-sm leading-relaxed text-fog">{b.detail}</p>
+                <p class="mt-3 text-sm leading-relaxed text-soft">{b.detail}</p>
               </article>
             ))}
           </div>
           <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal>
-            <span class="label-tech mr-2 text-fog">Teknologi</span>
+            <span class="label-tech mr-2 text-soft">Teknologi</span>
             {stack.map((s) => (
-              <span class="label-tech border border-line px-3 py-2 text-mist">{s}</span>
+              <span class="label-tech border border-rule-strong px-3 py-2 text-strong">{s}</span>
             ))}
           </div>
         </div>
@@ -178,26 +184,26 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
   }
 
   <!-- LINGKUP (sekuens) -->
-  <section id="lingkup" class="relative bg-ink py-20 lg:py-28">
+  <section id="lingkup" class:list={[bg(), 'relative py-20 lg:py-28']}>
     <div class="container-content grid gap-14 lg:grid-cols-12">
       <div class="lg:col-span-4">
         <div class="lg:sticky lg:top-28">
-          <Eyebrow index={idx()} data-reveal>{isSoftware ? 'Tahap pengerjaan' : 'Lingkup pekerjaan'}</Eyebrow>
+          <Eyebrow data-reveal>{isSoftware ? 'Tahap pengerjaan' : 'Lingkup pekerjaan'}</Eyebrow>
           <h2 class="mt-6 text-h2" data-reveal>
-            {isSoftware ? 'Dari analisis sampai sistem dipakai tim Anda.' : 'Apa saja yang kami kerjakan, berurutan.'}
+            {isSoftware ? 'Dari analisis kebutuhan sampai sistem dipakai tim Anda.' : 'Pekerjaan yang termasuk, berurutan.'}
           </h2>
         </div>
       </div>
       <ol class="relative lg:col-span-8">
-        <span class="absolute bottom-6 left-[1.4rem] top-6 w-px bg-line" aria-hidden="true" />
+        <span class="absolute bottom-6 left-[1.35rem] top-6 w-px bg-rule-strong" aria-hidden="true" />
         {d.scope.map((s, i) => (
           <li class="group relative flex gap-6 pb-10 last:pb-0" data-reveal style={`--d:${i * 60}ms`}>
-            <span class="relative z-10 flex size-11 shrink-0 items-center justify-center border border-line-strong bg-ink font-mono text-sm text-snow transition-colors group-hover:border-volt group-hover:bg-volt group-hover:text-ink">
+            <span class="relative z-10 flex size-11 shrink-0 items-center justify-center border border-strong bg-canvas font-mono text-sm text-strong transition-colors group-hover:bg-volt">
               {String(i + 1).padStart(2, '0')}
             </span>
             <div class="pt-2">
               <h3 class="text-xl">{s.judul}</h3>
-              <p class="mt-2 max-w-xl text-fog">{s.detail}</p>
+              <p class="mt-2 max-w-xl text-soft">{s.detail}</p>
             </div>
           </li>
         ))}
@@ -207,14 +213,14 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
 
   {
     fotoProyek.length > 0 && (
-      <section class="bg-carbon py-20 lg:py-28">
+      <section class:list={[bg(), 'py-20 lg:py-28']}>
         <div class="container-content">
           <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <Eyebrow index={idx()} data-reveal>Dokumentasi lapangan</Eyebrow>
-              <h2 class="mt-6 text-h2" data-reveal>Seperti ini pekerjaannya di lapangan.</h2>
+              <Eyebrow data-reveal>Dokumentasi lapangan</Eyebrow>
+              <h2 class="mt-6 text-h2" data-reveal>Pekerjaan {kategoriLabel[kategoriSlug[slug]]} yang sudah kami kerjakan.</h2>
             </div>
-            <a href="/portfolio" class="label-tech inline-flex min-h-11 items-center gap-2 text-volt hover:underline" data-reveal>
+            <a href="/portfolio" class="inline-flex min-h-11 items-center gap-2 font-semibold text-strong underline decoration-volt decoration-2 underline-offset-4" data-reveal>
               Semua proyek <Icon name="lucide:arrow-right" class="size-4" />
             </a>
           </div>
@@ -222,7 +228,7 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
             {fotoProyek.map((p, i) => (
               <a
                 href={`/portfolio/${projectSlug(p.id)}`}
-                class:list={['crop-marks group relative block aspect-[3/4] overflow-hidden', fotoProyek.length === 1 && 'sm:col-span-2 sm:aspect-[16/9]']}
+                class:list={['group relative block aspect-[3/4] overflow-hidden bg-ink', fotoProyek.length === 1 && 'sm:col-span-2 sm:aspect-[16/9]']}
                 data-reveal
                 style={`--d:${i * 80}ms`}
               >
@@ -230,7 +236,7 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
                 <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink via-ink/70 to-transparent p-5 pt-20">
                   <span class="label-tech block text-volt">{p.data.kodeProject}</span>
                   <span class="mt-1 block font-semibold text-snow">{p.data.judul}</span>
-                  <span class="label-tech mt-1 block text-[0.6rem] text-fog">{kategoriLabel[p.data.kategori]} · {p.data.lokasi}</span>
+                  <span class="label-tech mt-1 block text-[0.6rem] text-snow/80">{lokasiLabel(p.data.lokasi)} · {p.data.tanggal.getFullYear()}</span>
                 </div>
               </a>
             ))}
@@ -242,18 +248,16 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
 
   {
     d.alurKerja && (
-      <section class="on-paper bg-paper py-20 text-graphite lg:py-28">
+      <section class:list={[bg(), 'py-20 lg:py-28']}>
         <div class="container-content">
-          <Eyebrow index={idx()} tone="paper" data-reveal>Alur kerja</Eyebrow>
-          <h2 class="mt-6 text-h2 !text-ink" data-reveal>Empat langkah sampai serah terima.</h2>
-          <ol class="mt-12 grid gap-px bg-ink/10 md:grid-cols-4">
+          <Eyebrow data-reveal>Alur kerja</Eyebrow>
+          <h2 class="mt-6 text-h2" data-reveal>Empat langkah sampai serah terima.</h2>
+          <ol class="mt-12 grid border-t-2 border-strong md:grid-cols-4">
             {d.alurKerja.map((a, i) => (
-              <li class="bg-paper p-7" data-reveal style={`--d:${i * 80}ms`}>
-                <span class="font-display text-5xl font-extrabold text-transparent" style="font-stretch:125%;-webkit-text-stroke:1.5px #0A0C0F">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <h3 class="mt-6 text-xl !text-ink">{a.judul}</h3>
-                <p class="mt-2 text-sm">{a.detail}</p>
+              <li class="border-b border-rule py-7 md:border-b-0 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0" data-reveal style={`--d:${i * 80}ms`}>
+                <span class="label-tech text-soft">Langkah {i + 1}</span>
+                <h3 class="mt-3 text-xl">{a.judul}</h3>
+                <p class="mt-2 text-sm text-soft">{a.detail}</p>
               </li>
             ))}
           </ol>
@@ -264,16 +268,16 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
 
   {
     d.masalah && (
-      <section class="bg-ink py-20 lg:py-28">
+      <section class:list={[bg(), 'py-20 lg:py-28']}>
         <div class="container-content">
-          <Eyebrow index={idx()} data-reveal>Gejala yang sering kami temui</Eyebrow>
-          <h2 class="mt-6 max-w-3xl text-h2" data-reveal>Kalau salah satu ini terdengar familiar, jaringan Anda butuh perawatan.</h2>
-          <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Eyebrow data-reveal>Gejala yang sering ditemui</Eyebrow>
+          <h2 class="mt-6 max-w-3xl text-h2" data-reveal>Tanda jaringan Anda butuh pemeliharaan.</h2>
+          <div class="mt-12 grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
             {d.masalah.map((m, i) => (
-              <article class="panel cut-corner p-7" data-reveal style={`--d:${i * 80}ms`}>
-                <Icon name="lucide:triangle-alert" class="size-6 text-volt" />
+              <article class="bg-canvas p-7" data-reveal style={`--d:${i * 80}ms`}>
+                <span class="icon-tile"><Icon name="lucide:triangle-alert" class="size-6" /></span>
                 <h3 class="mt-6 text-lg">{m.judul}</h3>
-                <p class="mt-2 text-sm text-fog">{m.detail}</p>
+                <p class="mt-2 text-sm text-soft">{m.detail}</p>
               </article>
             ))}
           </div>
@@ -284,21 +288,21 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
 
   {
     d.tierPerangkat && (
-      <section class="bg-carbon py-20 lg:py-28">
+      <section class:list={[bg(), 'py-20 lg:py-28']}>
         <div class="container-content">
-          <Eyebrow index={idx()} data-reveal>Tingkat perangkat</Eyebrow>
-          <h2 class="mt-6 text-h2" data-reveal>Pilih spesifikasi sesuai risiko area Anda.</h2>
+          <Eyebrow data-reveal>Tingkat perangkat</Eyebrow>
+          <h2 class="mt-6 text-h2" data-reveal>Spesifikasi menyesuaikan kebutuhan area.</h2>
           <div class="mt-12 grid gap-4 lg:grid-cols-3">
             {d.tierPerangkat.map((t, i) => (
-              <article class:list={['relative p-8', i === 1 ? 'bg-volt text-ink' : 'panel']} data-reveal style={`--d:${i * 80}ms`}>
-                <p class:list={['label-tech', i === 1 ? 'text-ink/70' : 'text-volt']}>{t.tier}</p>
+              <article class:list={['relative border p-8', i === 1 ? 'border-ink bg-volt text-ink' : 'border-strong bg-canvas']} data-reveal style={`--d:${i * 80}ms`}>
+                <p class:list={['label-tech', i === 1 ? 'text-ink' : 'text-soft']}>{t.tier}</p>
                 <h3 class:list={['mt-3 text-h3', i === 1 && '!text-ink']}>{t.nama}</h3>
-                <p class:list={['mt-2 text-sm', i === 1 ? 'text-ink/80' : 'text-fog']}>{t.ringkas}</p>
-                <dl class:list={['mt-8 border-t', i === 1 ? 'border-ink/20' : 'border-line']}>
+                <p class:list={['mt-2 text-sm', i === 1 ? 'text-ink' : 'text-soft']}>{t.ringkas}</p>
+                <dl class:list={['mt-8 border-t', i === 1 ? 'border-ink/30' : 'border-rule']}>
                   {t.spek.map((s) => (
-                    <div class:list={['flex justify-between gap-4 border-b py-3 text-sm', i === 1 ? 'border-ink/20' : 'border-line']}>
-                      <dt class={i === 1 ? 'text-ink/70' : 'text-fog'}>{s.label}</dt>
-                      <dd class:list={['text-right font-semibold', i === 1 ? 'text-ink' : 'text-snow']}>{s.nilai}</dd>
+                    <div class:list={['flex justify-between gap-4 border-b py-3 text-sm', i === 1 ? 'border-ink/30' : 'border-rule']}>
+                      <dt class={i === 1 ? 'text-ink' : 'text-soft'}>{s.label}</dt>
+                      <dd class:list={['text-right font-semibold', i === 1 ? 'text-ink' : 'text-strong']}>{s.nilai}</dd>
                     </div>
                   ))}
                 </dl>
@@ -312,33 +316,33 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
 
   {
     d.paket && (
-      <section class="bg-carbon py-20 lg:py-28">
+      <section class:list={[bg(), 'py-20 lg:py-28']}>
         <div class="container-content">
-          <Eyebrow index={idx()} data-reveal>{isSoftware ? 'Contoh sistem' : 'Pilihan paket'}</Eyebrow>
+          <Eyebrow data-reveal>{isSoftware ? 'Contoh sistem' : 'Pilihan paket'}</Eyebrow>
           <h2 class="mt-6 max-w-3xl text-h2" data-reveal>
-            {isSoftware ? 'Beberapa sistem yang bisa kami bangun.' : 'Paket menyesuaikan skala jaringan Anda.'}
+            {isSoftware ? 'Contoh sistem yang bisa dikembangkan.' : 'Paket menyesuaikan skala jaringan Anda.'}
           </h2>
           <div class="mt-12 grid gap-4 lg:grid-cols-3">
             {d.paket.map((p, i) => (
-              <article class="panel flex flex-col p-8" data-reveal style={`--d:${i * 80}ms`}>
+              <article class="flex flex-col border border-strong bg-canvas p-8" data-reveal style={`--d:${i * 80}ms`}>
                 <h3 class="text-h3">{p.nama}</h3>
-                <p class="mt-2 text-sm text-fog">{p.ringkas}</p>
-                <ul class="mt-8 flex-1 space-y-3 border-t border-line pt-6">
+                <p class="mt-2 text-sm text-soft">{p.ringkas}</p>
+                <ul class="mt-8 flex-1 space-y-3 border-t border-rule pt-6">
                   {p.isi.map((x) => (
-                    <li class="flex gap-3 text-sm text-mist">
-                      <Icon name="lucide:zap" class="mt-0.5 size-4 shrink-0 text-volt" />
+                    <li class="flex gap-3 text-sm">
+                      <Icon name="lucide:check" class="mt-0.5 size-4 shrink-0 text-strong" />
                       {typeof x === 'string' ? x : `${x.label}: ${x.nilai}`}
                     </li>
                   ))}
                 </ul>
-                <p class="label-tech mt-8 text-fog">
-                  {p.hargaMulai ? `Mulai Rp ${p.hargaMulai} juta${p.satuan ?? ''}` : 'Harga sesuai survei'}
+                <p class="label-tech mt-8 text-soft">
+                  {p.hargaMulai ? `Mulai Rp ${p.hargaMulai} juta${p.satuan ?? ''}` : 'Harga sesuai hasil survei'}
                 </p>
                 <a
                   href={waLink(`Halo ZSN, saya tertarik dengan ${p.nama} (${d.judul}).`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="mt-4 inline-flex min-h-11 items-center gap-2 font-semibold text-volt hover:underline"
+                  class="mt-4 inline-flex min-h-11 items-center gap-2 font-semibold text-strong underline decoration-volt decoration-2 underline-offset-4"
                 >
                   Minta penawaran <Icon name="lucide:arrow-up-right" class="size-4" />
                 </a>
@@ -352,17 +356,17 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
 
   {
     (d.faktorHarga || d.tidakTermasuk) && (
-      <section class="bg-ink py-20 lg:py-28">
+      <section class:list={[bg(), 'py-20 lg:py-28']}>
         <div class="container-content grid gap-14 lg:grid-cols-2">
           {d.faktorHarga && (
             <div>
-              <Eyebrow index={idx()} data-reveal>Yang menentukan biaya</Eyebrow>
-              <h2 class="mt-6 text-h2" data-reveal>Harga transparan, dihitung dari survei.</h2>
-              <dl class="mt-10 border-t border-line">
+              <Eyebrow data-reveal>Yang menentukan biaya</Eyebrow>
+              <h2 class="mt-6 text-h2" data-reveal>Biaya dihitung dari hasil survei.</h2>
+              <dl class="mt-10 border-t border-strong">
                 {d.faktorHarga.map((f) => (
-                  <div class="border-b border-line py-5" data-reveal>
-                    <dt class="font-semibold text-snow">{f.judul}</dt>
-                    <dd class="mt-1 text-sm text-fog">{f.penjelasan}</dd>
+                  <div class="border-b border-rule py-5" data-reveal>
+                    <dt class="font-semibold text-strong">{f.judul}</dt>
+                    <dd class="mt-1 text-sm text-soft">{f.penjelasan}</dd>
                   </div>
                 ))}
               </dl>
@@ -370,13 +374,13 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
           )}
           {d.tidakTermasuk && (
             <div>
-              <Eyebrow index={idx()} data-reveal>Batas lingkup</Eyebrow>
+              <Eyebrow data-reveal>Batas lingkup</Eyebrow>
               <h2 class="mt-6 text-h2" data-reveal>Tidak termasuk dalam kontrak.</h2>
-              <p class="mt-4 text-fog" data-reveal>Ditulis jelas di awal, supaya tidak ada asumsi yang berujung sengketa.</p>
-              <ul class="mt-8 border-t border-line">
+              <p class="mt-4 text-soft" data-reveal>Ditulis sejak awal supaya kedua pihak punya pemahaman yang sama.</p>
+              <ul class="mt-8 border-t border-strong">
                 {d.tidakTermasuk.map((t) => (
-                  <li class="flex gap-3 border-b border-line py-4 text-mist" data-reveal>
-                    <Icon name="lucide:x" class="mt-1 size-4 shrink-0 text-fog" />
+                  <li class="flex gap-3 border-b border-rule py-4" data-reveal>
+                    <Icon name="lucide:x" class="mt-1 size-4 shrink-0 text-soft" />
                     {t}
                   </li>
                 ))}
@@ -390,15 +394,15 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
 
   {
     d.merek && (
-      <section class="border-y border-line bg-void py-10">
+      <section class="border-y border-rule bg-canvas py-10">
         <div class="container-content flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p class="label-tech text-fog">Perangkat yang kami tangani</p>
-            <p class="mt-1 text-xs text-fog/70">Instalatur independen, bukan mitra resmi produsen.</p>
+            <p class="label-tech text-soft">Perangkat yang kami tangani</p>
+            <p class="mt-1 text-xs text-soft">Instalatur independen, tidak terafiliasi resmi dengan produsen.</p>
           </div>
           <ul class="flex flex-wrap gap-x-8 gap-y-2">
             {d.merek.map((m) => (
-              <li class="font-display text-2xl font-extrabold text-mist" style="font-stretch:115%">{m}</li>
+              <li class="font-display text-2xl font-extrabold text-strong" style="font-stretch:115%">{m}</li>
             ))}
           </ul>
         </div>
@@ -407,23 +411,23 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
   }
 
   <!-- FAQ -->
-  <section class="bg-carbon py-20 lg:py-28">
+  <section class:list={[bg(), 'py-20 lg:py-28']}>
     <div class="container-content grid gap-12 lg:grid-cols-12">
       <div class="lg:col-span-4">
-        <Eyebrow index={idx()} data-reveal>Pertanyaan umum</Eyebrow>
-        <h2 class="mt-6 text-h2" data-reveal>Yang biasanya ditanyakan sebelum survei.</h2>
+        <Eyebrow data-reveal>Pertanyaan umum</Eyebrow>
+        <h2 class="mt-6 text-h2" data-reveal>Yang sering ditanyakan sebelum survei.</h2>
       </div>
-      <div class="border-t border-line lg:col-span-8">
+      <div class="border-t border-strong lg:col-span-8">
         {
           d.faq.map((f) => (
-            <details class="group border-b border-line" data-reveal>
-              <summary class="flex min-h-16 items-center justify-between gap-6 py-5 text-lg font-semibold text-snow transition-colors hover:text-volt">
+            <details class="group border-b border-rule" data-reveal>
+              <summary class="flex min-h-16 items-center justify-between gap-6 py-5 text-lg font-semibold text-strong">
                 {f.tanya}
-                <span class="faq-icon flex size-9 shrink-0 items-center justify-center border border-line-strong text-volt transition-transform duration-300">
+                <span class="faq-icon flex size-9 shrink-0 items-center justify-center border border-strong transition-[transform,background-color] duration-300 group-hover:bg-volt">
                   <Icon name="lucide:plus" class="size-4" />
                 </span>
               </summary>
-              <p class="max-w-2xl pb-6 text-fog">{f.jawab}</p>
+              <p class="max-w-2xl pb-6 text-soft">{f.jawab}</p>
             </details>
           ))
         }
@@ -432,19 +436,19 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
   </section>
 
   <!-- LAYANAN LAIN -->
-  <section class="border-t border-line bg-ink py-16">
+  <section class="border-t border-rule bg-canvas py-16">
     <div class="container-content">
-      <p class="label-tech text-fog">Layanan lain</p>
-      <ul class="mt-6 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
+      <p class="label-tech text-soft">Layanan lain</p>
+      <ul class="mt-6 grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
         {
           lain.map((s) => (
             <li>
-              <a href={s.href} class="group flex h-full items-center justify-between gap-4 bg-ink p-6 transition-colors hover:bg-carbon">
+              <a href={s.href} class="group flex h-full items-center justify-between gap-4 bg-canvas p-6 transition-colors hover:bg-volt/15">
                 <span>
-                  <span class="label-tech block text-volt">ZSN/{s.kode}</span>
-                  <span class="mt-2 block font-semibold text-snow">{s.label}</span>
+                  <span class="label-tech block text-soft">ZSN/{s.kode}</span>
+                  <span class="mt-2 block font-semibold text-strong">{s.label}</span>
                 </span>
-                <Icon name="lucide:arrow-up-right" class="size-5 text-fog transition-colors group-hover:text-volt" />
+                <Icon name="lucide:arrow-up-right" class="size-5 text-strong" />
               </a>
             </li>
           ))
@@ -454,10 +458,10 @@ const stack = ['TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'Astro', 'React'
   </section>
 
   <CtaFinal
-    judul={isSoftware ? 'Punya proses yang masih manual?' : `Siap mulai proyek ${d.judul}?`}
+    judul={isSoftware ? 'Punya proses yang masih manual?' : `Butuh ${d.judul}?`}
     sub={isSoftware
-      ? 'Ceritakan alur kerja yang ingin Anda rapikan. Kami bantu petakan sebelum satu baris kode pun ditulis.'
-      : 'Kirim lokasi dan gambaran kebutuhan Anda. Kami atur jadwal survei dan kirim penawaran tertulis setelahnya.'}
+      ? 'Ceritakan alur kerja yang ingin dirapikan. Kami petakan kebutuhannya dulu sebelum mulai mengembangkan.'
+      : 'Kirim lokasi dan gambaran kebutuhan Anda. Kami atur jadwal survei, lalu kirim penawaran tertulis.'}
     pesan={pesan}
     label={d.ctaLabel}
   />

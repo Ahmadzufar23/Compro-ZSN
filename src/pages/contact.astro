@@ -6,7 +6,7 @@
 import { Icon } from 'astro-icon/components';
 import Base from '@/layouts/Base.astro';
 import PageHero from '@/components/ui/PageHero.astro';
-import { site, waLink } from '@/config/site';
+import { site, waLink, nomorTampil } from '@/config/site';
 
 const layananOpt = [
   'Fiber Optic & FTTH',
@@ -19,32 +19,31 @@ const layananOpt = [
 const bangunanOpt = ['Gedung perkantoran', 'Ruko / kantor kecil', 'Pabrik / gudang', 'Apartemen / perumahan', 'Toko / ritel', 'Lainnya'];
 const waktuOpt = ['Secepatnya', 'Bulan ini', '1 sampai 3 bulan', 'Masih membandingkan'];
 
-const nomorTampil = `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)}-${site.whatsapp.slice(5, 9)}-${site.whatsapp.slice(9)}`;
 const waLangsung = waLink('Halo ZSN, saya ingin berkonsultasi.');
 const a = site.alamat;
-const field = 'mt-2 min-h-12 w-full border border-line bg-ink px-4 py-3 text-snow placeholder:text-fog/60 outline-none transition-colors focus:border-volt';
+const field =
+  'mt-2 min-h-12 w-full border border-rule-strong bg-canvas px-4 py-3 text-strong placeholder:text-soft outline-none transition-colors focus:border-strong focus:ring-2 focus:ring-volt';
 ---
 
 <Base title="Kontak" description="Hubungi ZSN untuk survei lokasi dan konsultasi fiber optik, jaringan, CCTV, pemeliharaan, dan software. Respons melalui WhatsApp.">
   <PageHero
     eyebrow="Kontak"
-    index="ZSN"
-    judul='Ceritakan lokasinya. <span class="text-fog">Kami yang datang.</span>'
-    sub="Isi form singkat di bawah. Form ini menyusun pesan WhatsApp untuk Anda, jadi tidak ada data yang tersimpan di website kami."
+    judul="Ceritakan lokasinya, kami jadwalkan survei."
+    sub="Form ini menyusun pesan WhatsApp untuk Anda. Data yang Anda isi tidak disimpan di website."
     crumbs={[{ label: 'Beranda', href: '/' }, { label: 'Kontak' }]}
   />
 
-  <section class="bg-ink pb-24 lg:pb-32">
+  <section class="bg-raised py-16 lg:py-24">
     <div class="container-content grid gap-10 lg:grid-cols-12">
-      <form id="wa-form" class="panel p-6 sm:p-10 lg:col-span-8" novalidate>
+      <form id="wa-form" class="border border-strong bg-canvas p-6 sm:p-10 lg:col-span-8" novalidate>
         <fieldset>
-          <legend class="label-tech text-volt">01 · Layanan yang dibutuhkan</legend>
+          <legend class="label-tech flex items-center gap-2 text-strong"><span class="size-2 bg-volt ring-1 ring-strong"></span>1. Layanan yang dibutuhkan</legend>
           <div class="mt-4 flex flex-wrap gap-2">
             {
               layananOpt.map((l, i) => (
-                <label class="chip-opt cursor-pointer">
+                <label class="cursor-pointer">
                   <input type="checkbox" name="layanan" value={l} class="peer sr-only" checked={i === 0} />
-                  <span class="flex min-h-11 items-center gap-2 border border-line px-4 text-sm text-mist transition-colors peer-checked:border-volt peer-checked:bg-volt peer-checked:text-ink peer-focus-visible:outline-2 peer-focus-visible:outline-volt">
+                  <span class="flex min-h-11 items-center gap-2 border border-rule-strong px-4 text-sm text-body transition-colors peer-checked:border-strong peer-checked:bg-volt peer-checked:text-ink peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-strong">
                     {l}
                   </span>
                 </label>
@@ -54,75 +53,75 @@ const field = 'mt-2 min-h-12 w-full border border-line bg-ink px-4 py-3 text-sno
         </fieldset>
 
         <fieldset class="mt-10">
-          <legend class="label-tech text-volt">02 · Tentang Anda</legend>
+          <legend class="label-tech flex items-center gap-2 text-strong"><span class="size-2 bg-volt ring-1 ring-strong"></span>2. Tentang Anda</legend>
           <div class="mt-2 grid gap-5 sm:grid-cols-2">
-            <label class="block text-sm text-mist">Nama
+            <label class="block text-sm font-medium text-strong">Nama <span class="text-soft">(wajib)</span>
               <input name="nama" required autocomplete="name" class={field} placeholder="Nama Anda" />
             </label>
-            <label class="block text-sm text-mist">Perusahaan / instansi
+            <label class="block text-sm font-medium text-strong">Perusahaan / instansi
               <input name="perusahaan" autocomplete="organization" class={field} placeholder="Opsional" />
             </label>
           </div>
         </fieldset>
 
         <fieldset class="mt-10">
-          <legend class="label-tech text-volt">03 · Lokasi & waktu</legend>
+          <legend class="label-tech flex items-center gap-2 text-strong"><span class="size-2 bg-volt ring-1 ring-strong"></span>3. Lokasi & waktu</legend>
           <div class="mt-2 grid gap-5 sm:grid-cols-2">
-            <label class="block text-sm text-mist">Lokasi proyek
+            <label class="block text-sm font-medium text-strong">Lokasi proyek <span class="text-soft">(wajib)</span>
               <input name="lokasi" required class={field} placeholder="Contoh: Kebayoran Lama, Jakarta Selatan" />
             </label>
-            <label class="block text-sm text-mist">Jenis bangunan
+            <label class="block text-sm font-medium text-strong">Jenis bangunan
               <select name="bangunan" class={field}>
                 {bangunanOpt.map((b) => <option>{b}</option>)}
               </select>
             </label>
-            <label class="block text-sm text-mist sm:col-span-2">Kapan ingin dikerjakan?
+            <label class="block text-sm font-medium text-strong sm:col-span-2">Kapan ingin dikerjakan?
               <select name="waktu" class={field}>
                 {waktuOpt.map((w) => <option>{w}</option>)}
               </select>
             </label>
-            <label class="block text-sm text-mist sm:col-span-2">Gambaran kebutuhan
+            <label class="block text-sm font-medium text-strong sm:col-span-2">Gambaran kebutuhan
               <textarea name="catatan" rows="4" class={field} placeholder="Contoh: butuh 12 titik CCTV di gudang 2 lantai, kabel lama ingin dirapikan."></textarea>
             </label>
           </div>
         </fieldset>
 
-        <div class="mt-10 flex flex-col gap-4 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p id="wa-error" class="text-sm text-volt" role="alert" aria-live="polite"></p>
+        <div class="mt-10 flex flex-col gap-4 border-t border-rule pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p id="wa-error" class="text-sm font-semibold text-strong" role="alert" aria-live="polite"></p>
           <button type="submit" class="cut-z inline-flex min-h-14 items-center justify-center gap-3 bg-volt px-7 font-semibold text-ink transition-colors hover:bg-volt-hot">
             Kirim lewat WhatsApp
             <Icon name="lucide:send" class="size-5" />
           </button>
         </div>
         <noscript>
-          <p class="mt-4 text-sm text-fog">JavaScript nonaktif. Gunakan <a href={waLangsung} class="text-volt underline">tautan WhatsApp langsung</a>.</p>
+          <p class="mt-4 text-sm text-soft">JavaScript nonaktif. Gunakan <a href={waLangsung} class="font-semibold text-strong underline">tautan WhatsApp langsung</a>.</p>
         </noscript>
       </form>
 
       <aside class="space-y-4 lg:col-span-4">
-        <a href={waLangsung} target="_blank" rel="noopener noreferrer" class="group block bg-volt p-7 text-ink">
+        <a href={waLangsung} target="_blank" rel="noopener noreferrer" class="group block border border-ink bg-volt p-7 text-ink">
           <Icon name="lucide:message-circle" class="size-7" />
-          <p class="label-tech mt-6 text-ink/70">WhatsApp</p>
+          <p class="label-tech mt-6">WhatsApp</p>
           <p class="mt-1 font-display text-2xl font-extrabold" style="font-stretch:110%">{nomorTampil}</p>
           <p class="mt-4 inline-flex items-center gap-2 text-sm font-semibold">
             Chat langsung <Icon name="lucide:arrow-up-right" class="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </p>
         </a>
-        <a href={`mailto:${site.email}`} class="panel group block p-7 transition-colors hover:border-volt">
-          <Icon name="lucide:mail" class="size-6 text-volt" />
-          <p class="label-tech mt-6 text-fog">Email</p>
-          <p class="mt-1 break-all font-semibold text-snow">{site.email}</p>
+        <a href={`mailto:${site.email}`} class="block border border-strong bg-canvas p-7 transition-shadow hover:shadow-[6px_6px_0_0_var(--color-volt)]">
+          <Icon name="lucide:mail" class="size-6 text-strong" />
+          <p class="label-tech mt-6 text-soft">Email</p>
+          <p class="mt-1 break-all font-semibold text-strong">{site.email}</p>
         </a>
-        <a href={site.maps.url} target="_blank" rel="noopener noreferrer" class="panel group block p-7 transition-colors hover:border-volt">
-          <Icon name="lucide:map-pin" class="size-6 text-volt" />
-          <p class="label-tech mt-6 text-fog">Kantor</p>
-          <p class="mt-1 text-snow">{a.jalan}, {a.kelurahan}, {a.kecamatan}, {a.kota} {a.kodePos}</p>
-          <p class="label-tech mt-4 inline-flex items-center gap-1 text-volt">Buka peta <Icon name="lucide:arrow-up-right" class="size-3.5" /></p>
+        <a href={site.maps.url} target="_blank" rel="noopener noreferrer" class="block border border-strong bg-canvas p-7 transition-shadow hover:shadow-[6px_6px_0_0_var(--color-volt)]">
+          <Icon name="lucide:map-pin" class="size-6 text-strong" />
+          <p class="label-tech mt-6 text-soft">Kantor</p>
+          <p class="mt-1 text-strong">{a.jalan}, {a.kelurahan}, {a.kecamatan}, {a.kota} {a.kodePos}</p>
+          <p class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-strong underline decoration-volt decoration-2 underline-offset-4">Buka peta <Icon name="lucide:arrow-up-right" class="size-3.5" /></p>
         </a>
-        <div class="panel p-7">
-          <Icon name="lucide:clock" class="size-6 text-volt" />
-          <p class="label-tech mt-6 text-fog">Jam operasional</p>
-          <p class="mt-1 text-snow">Senin sampai Sabtu<br />08.00 sampai 17.00 WIB</p>
+        <div class="border border-strong bg-canvas p-7">
+          <Icon name="lucide:clock" class="size-6 text-strong" />
+          <p class="label-tech mt-6 text-soft">Jam operasional</p>
+          <p class="mt-1 text-strong">{site.jamOperasional}</p>
         </div>
       </aside>
     </div>

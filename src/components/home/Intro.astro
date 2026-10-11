@@ -5,44 +5,56 @@ import Eyebrow from '@/components/ui/Eyebrow.astro';
 const qa = [
   {
     icon: 'lucide:cable',
-    tanya: 'Apa yang kami kerjakan?',
+    tanya: 'Apa yang kami kerjakan',
     jawab:
-      'Instalasi fiber optik dan FTTH, jaringan kantor dan gedung, CCTV, kontrak pemeliharaan, serta pengembangan software yang terhubung ke semuanya.',
+      'Instalasi fiber optik dan FTTH, jaringan kantor dan gedung, CCTV, kontrak pemeliharaan, serta pengembangan software.',
   },
   {
     icon: 'lucide:building-2',
-    tanya: 'Untuk siapa?',
+    tanya: 'Untuk siapa',
     jawab:
-      'ISP lokal dan RT/RW Net, gedung perkantoran, apartemen, gudang dan pabrik, ritel, sampai perusahaan yang sedang membuka cabang baru.',
+      'ISP lokal dan RT/RW Net, gedung perkantoran, apartemen, gudang dan pabrik, ritel, dan perusahaan yang membuka kantor baru.',
   },
   {
     icon: 'lucide:clipboard-check',
-    tanya: 'Bagaimana kami bekerja?',
+    tanya: 'Cara kerjanya',
     jawab:
-      'Survei dulu, desain disetujui, dipasang tim kami sendiri, diuji dengan alat ukur, lalu diserahkan bersama laporan dan dokumentasinya.',
+      'Survei lokasi, desain dan penawaran, instalasi, pengujian, lalu serah terima bersama laporan dan dokumentasinya.',
   },
 ];
 ---
 
-<section class="relative bg-ink py-24 lg:py-36" aria-labelledby="intro-title">
-  <div class="container-content">
-    <Eyebrow index="01" data-reveal>ZSN dalam 30 detik</Eyebrow>
+<section class="relative bg-canvas py-24 lg:py-32" aria-labelledby="intro-title">
+  <div class="container-content grid gap-12 lg:grid-cols-12">
+    <div class="lg:col-span-5">
+      <Eyebrow data-reveal>Tentang ZSN</Eyebrow>
+      <h2 id="intro-title" class="mt-6 text-h1" data-reveal>
+        Kontraktor jaringan yang juga <span class="volt-under">membangun software.</span>
+      </h2>
+    </div>
+    <div class="space-y-5 text-lg leading-relaxed lg:col-span-6 lg:col-start-7 lg:pt-12" data-reveal>
+      <p>
+        ZSN mulai bekerja di instalasi dan perawatan fiber optik di Jakarta pada 2015. Dari situ
+        pekerjaan kami meluas ke jaringan kantor, CCTV, dan kontrak pemeliharaan.
+      </p>
+      <p>
+        Sekarang kami juga membangun aplikasi seperti dashboard pemantauan dan sistem pelaporan,
+        sehingga satu gedung bisa ditangani dari kabel sampai software oleh satu pihak.
+      </p>
+      <a href="/about" class="inline-flex min-h-11 items-center gap-2 font-semibold text-strong underline decoration-volt decoration-2 underline-offset-4 hover:decoration-strong">
+        Selengkapnya tentang ZSN <Icon name="lucide:arrow-right" class="size-4" />
+      </a>
+    </div>
+  </div>
 
-    <h2 id="intro-title" class="mt-8 max-w-5xl text-h2 leading-[1.08]" data-reveal>
-      Kebanyakan gangguan jaringan bukan karena alatnya kurang mahal, tetapi karena
-      <span class="text-volt-glow">pemasangannya asal</span> dan
-      <span class="text-volt-glow">tidak pernah didokumentasikan.</span>
-      <span class="text-fog">ZSN dibangun untuk membereskan itu.</span>
-    </h2>
-
-    <div class="mt-16 grid gap-px bg-line md:grid-cols-3 lg:mt-24">
+  <div class="container-content mt-16 lg:mt-24">
+    <div class="grid gap-px border border-rule bg-rule md:grid-cols-3">
       {
         qa.map((q, i) => (
-          <article class="group relative bg-ink p-8 pt-10 transition-colors duration-300 hover:bg-carbon lg:p-10" data-reveal style={`--d:${i * 120}ms`}>
-            <span class="absolute left-0 top-0 h-0.5 w-0 bg-volt transition-all duration-500 group-hover:w-full" aria-hidden="true" />
-            <Icon name={q.icon} class="size-8 text-volt" aria-hidden="true" />
+          <article class="bg-canvas p-8 lg:p-10" data-reveal style={`--d:${i * 100}ms`}>
+            <span class="icon-tile"><Icon name={q.icon} class="size-6" aria-hidden="true" /></span>
             <h3 class="mt-8 text-h3">{q.tanya}</h3>
-            <p class="mt-4 leading-relaxed text-fog">{q.jawab}</p>
+            <p class="mt-3 leading-relaxed text-soft">{q.jawab}</p>
           </article>
         ))
       }

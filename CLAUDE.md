@@ -20,22 +20,37 @@ Semua script klien harus aman untuk `ClientRouter`: inisialisasi di
 `astro:page-load`, bersihkan di `astro:before-swap`, dan beri guard supaya
 tidak terpasang dua kali.
 
-## Arah visual: "Power Grid" (per 2026-10)
+## Arah visual: "Power Grid" hibrida (per 2026-10)
 
-Gelap seperti ruang panel, kuning volt seperti arus yang berjalan di jalur.
+Badan halaman TERANG seperti kertas gambar teknik. Gelap HANYA di hero
+(semua halaman), menu mobile, dan footer. CTA penutup kuning penuh.
 Motif utama: petir Z dari logo bundar ZSN.
 
-- Palet: `void` `ink` `carbon` `steel` `line` (gelap berlapis), `snow` `mist` `fog`
-  (teks), `paper` `bone` `graphite` (section terang), `volt` `volt-hot` `volt-deep` (kuning logo).
-- Kuning bebas dipakai sebagai aksen, blok sorotan (`.volt-mark`), dan satu
-  section CTA penuh (`CtaFinal`). Teks kuning hanya di atas latar gelap.
-- Heading memakai Archivo lebar (`font-stretch` 110 sampai 125%), sentence case.
-- Utility khas: `.cut-z` (sudut terpotong diagonal), `.bg-grid`, `.crop-marks`,
-  `.flow-line` (arus di jalur SVG), `.label-tech`, `.panel`, `[data-reveal]`.
-- Signature: `GlobeMark.astro`, logo ZSN sebagai globe 3D yang berputar,
-  dirender per piksel di canvas 2D tanpa library. Geometri logo di
-  `src/config/mark.ts` (dipakai juga oleh `ZMark.astro` dan favicon).
+- **Token semantik** (pakai ini di komponen): `canvas` `raised` `sunken` (latar),
+  `strong` `body` `soft` (teks), `rule` `rule-strong` (garis). Nilainya
+  ditukar otomatis di dalam elemen ber-kelas `.theme-dark` (lihat global.css).
+- **Warna absolut** (tidak ikut tema): `ink` `snow` `void` `volt` `volt-hot` `volt-deep`.
+  Pakai untuk teks di atas tombol kuning dan overlay di atas foto.
+- Kuning di atas putih = 1.49:1. Di latar terang, kuning HANYA isian (tombol,
+  `.volt-mark`, `.volt-under`, `.icon-tile`, penanda kotak). Teks/ikon kuning
+  hanya di dalam `.theme-dark` atau di atas foto.
+- Navbar transparan di atas hero gelap, berubah putih saat digulir
+  (`html.nav-scrolled`). Karena itu setiap halaman WAJIB diawali hero gelap.
+- Heading Archivo lebar (`font-stretch` 110 sampai 125%), sentence case.
+- Signature: `GlobeMark.astro`, logo ZSN sebagai globe 3D (canvas 2D, tanpa
+  library), prop `tone="light"` untuk latar terang, kualitas turun otomatis di
+  perangkat lambat. Geometri logo di `src/config/mark.ts`.
+- OG image: `public/og-default.jpg` dirender dari `/og-card` (lihat komentar di file itu).
 - Semua animasi wajib menghormati `prefers-reduced-motion`.
+
+### Anti AI-slop (copy & visual)
+
+- Hindari pola "X, bukan Y", slogan tiga kata berirama, dan kalimat dramatis pendek.
+- Tulis fakta yang bisa dicek. Klaim baru harus bersumber dari konten pemilik.
+- Jangan menampilkan gambar buatan AI sebagai pekerjaan ZSN.
+  `src/assets/project/proj-6.jpg` (sama dengan `src/assets/layanan/network-hero.jpg`) adalah gambar AI
+  (TODO pemilik: ganti dengan foto asli). Section dokumen di beranda sengaja tidak memakainya.
+- Ilustrasi dokumen (OTDR, as-built, berita acara) diberi keterangan "ilustrasi format".
 
 ## Konvensi
 

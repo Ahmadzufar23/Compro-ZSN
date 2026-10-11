@@ -1,5 +1,11 @@
 ---
-import { getCollection, render } from 'astro:content';
+/**
+ * Detail proyek. Blok cerita (tantangan, pekerjaan, hasil) dan galeri
+ * hanya tampil bila diisi di frontmatter. Selama belum diisi, halaman
+ * menampilkan lingkup standar layanan terkait dengan label yang jelas,
+ * bukan cerita karangan.
+ */
+import { getCollection, getEntry, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import Base from '@/layouts/Base.astro';
@@ -7,19 +13,33 @@ import Eyebrow from '@/components/ui/Eyebrow.astro';
 import Button from '@/components/ui/Button.astro';
 import ProjectCard from '@/components/project/ProjectCard.astro';
 import CtaFinal from '@/components/home/CtaFinal.astro';
-import { kategoriLabel, kategoriLayanan, projectSlug } from '@/config/project';
+import { kategoriLabel, kategoriLayanan, projectSlug, lokasiLabel } from '@/config/project';
 
 export async function getStaticPaths() {
-  const project = await getCollection('project');
-  return project.map((entry) => ({ params: { slug: projectSlug(entry.id) }, props: { entry } }));
+  const project = (await getCollection('project')).sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf());
+  return project.map((entry, i) => ({
+    params: { slug: projectSlug(entry.id) },
+    props: {
+      entry,
+      prev: project[i - 1] ?? project[project.length - 1],
+      next: project[i + 1] ?? project[0],
+    },
+  }));
 }
 
-const { entry } = Astro.props;
+const { entry, prev, next } = Astro.props;
 const d = entry.data;
 const { Content } = await render(entry);
 const layanan = kategoriLayanan[d.kategori];
 const tanggal = d.tanggal.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
 const hasBody = !!entry.body?.trim();
+const hasCerita = !!(d.tantangan || d.pekerjaan || d.hasil);
+
+/* Lingkup standar dari halaman layanan terkait */
+const slugLayanan = layanan.href.split('/').pop()!;
+const sumber =
+  (await getEntry('layanan', `en/${slugLayanan}`)) ?? (await getEntry('produk', `en/${slugLayanan}`));
+const lingkupStandar = sumber?.data.scope ?? [];
 
 const lain = (await getCollection('project'))
   .filter((p) => p.id !== entry.id)
@@ -28,31 +48,32 @@ const lain = (await getCollection('project'))
 
 const meta = [
   { label: 'Kode proyek', nilai: d.kodeProject },
-  { label: 'Kategori', nilai: kategoriLabel[d.kategori] },
-  { label: 'Lokasi', nilai: d.lokasi.charAt(0) + d.lokasi.slice(1).toLowerCase() },
+  { label: 'Layanan', nilai: layanan.label },
+  { label: 'Lokasi', nilai: lokasiLabel(d.lokasi) },
   { label: 'Waktu', nilai: tanggal },
+  ...(d.durasi ? [{ label: 'Durasi', nilai: d.durasi }] : []),
   ...(d.klienTampil && d.klienNama ? [{ label: 'Klien', nilai: d.klienNama }] : []),
   ...d.stats.map((s) => ({ label: s.label, nilai: s.nilai })),
 ];
 ---
 
 <Base title={d.judul} description={d.ringkas}>
-  <section class="relative isolate overflow-hidden bg-ink pt-32 lg:pt-40">
+  <section class="theme-dark relative isolate overflow-hidden bg-canvas pt-32 lg:pt-40">
+    <div class="bg-grid mask-fade pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
     <div class="container-content">
-      <nav aria-label="Breadcrumb" class="label-tech mb-8 flex flex-wrap items-center gap-2 text-fog">
+      <nav aria-label="Breadcrumb" class="label-tech mb-8 flex flex-wrap items-center gap-2 text-soft">
         <a href="/" class="hover:text-volt">Beranda</a>
-        <span class="text-line-strong">/</span>
+        <span aria-hidden="true">/</span>
         <a href="/portfolio" class="hover:text-volt">Proyek</a>
-        <span class="text-line-strong">/</span>
-        <span class="text-snow">{d.kodeProject}</span>
+        <span aria-hidden="true">/</span>
+        <span class="text-strong" aria-current="page">{d.kodeProject}</span>
       </nav>
-      <Eyebrow index={kategoriLabel[d.kategori]}>{d.kodeProject}</Eyebrow>
+      <p class="label-tech inline-flex bg-volt px-2.5 py-1.5 text-ink">{d.kodeProject} · {kategoriLabel[d.kategori]}</p>
       <h1 class="mt-6 max-w-5xl text-h1">{d.judul}</h1>
-      <p class="mt-6 max-w-2xl text-lg text-mist">{d.ringkas}</p>
+      <p class="mt-6 max-w-2xl text-lg text-body">{d.ringkas}</p>
     </div>
-
-    <div class="container-content mt-12">
-      <figure class="crop-marks relative aspect-[16/9] lg:aspect-[21/9]">
+    <div class="container-content mt-12 pb-0">
+      <figure class="relative aspect-[4/3] translate-y-16 overflow-hidden bg-ink sm:aspect-[16/9] lg:aspect-[21/9]">
         <Image
           src={d.cover}
           alt={d.coverAlt}
@@ -63,38 +84,86 @@ const meta = [
           fetchpriority="high"
           class="size-full object-cover"
         />
-        <span class="label-tech absolute bottom-4 left-4 bg-ink/85 px-3 py-2 text-volt backdrop-blur">
-          {d.kodeProject} · {d.lokasi}
-        </span>
+        <figcaption class="label-tech absolute bottom-0 left-0 bg-ink px-3 py-2 text-[0.6rem] text-snow">
+          {d.coverAlt}
+        </figcaption>
       </figure>
     </div>
   </section>
 
-  <section class="bg-ink py-16 lg:py-24">
+  <section class="bg-canvas pb-20 pt-32 lg:pb-28">
     <div class="container-content grid gap-12 lg:grid-cols-12">
-      <dl class="border-t border-line lg:col-span-4">
+      <dl class="border-t-2 border-strong lg:col-span-4">
         {
           meta.map((m) => (
-            <div class="flex justify-between gap-6 border-b border-line py-4">
-              <dt class="label-tech text-fog">{m.label}</dt>
-              <dd class="text-right text-sm font-semibold text-snow">{m.nilai}</dd>
+            <div class="flex justify-between gap-6 border-b border-rule py-4">
+              <dt class="label-tech pt-0.5 text-soft">{m.label}</dt>
+              <dd class="text-right text-sm font-semibold text-strong">{m.nilai}</dd>
             </div>
           ))
         }
       </dl>
+
       <div class="lg:col-span-7 lg:col-start-6">
+        {hasBody && (
+          <div class="prose-zsn text-lg leading-relaxed">
+            <Content />
+          </div>
+        )}
+
         {
-          hasBody ? (
-            <div class="prose-zsn text-lg leading-relaxed text-mist">
-              <Content />
+          hasCerita ? (
+            <div class="space-y-10">
+              {d.tantangan && (
+                <div>
+                  <Eyebrow>Kondisi awal</Eyebrow>
+                  <p class="mt-4 text-lg leading-relaxed">{d.tantangan}</p>
+                </div>
+              )}
+              {d.pekerjaan && (
+                <div>
+                  <Eyebrow>Yang dikerjakan</Eyebrow>
+                  <ol class="mt-4 border-t border-rule">
+                    {d.pekerjaan.map((p, i) => (
+                      <li class="flex gap-4 border-b border-rule py-3">
+                        <span class="label-tech mt-1 text-soft">{String(i + 1).padStart(2, '0')}</span>
+                        {p}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+              {d.hasil && (
+                <div>
+                  <Eyebrow>Hasil</Eyebrow>
+                  <p class="mt-4 text-lg leading-relaxed">{d.hasil}</p>
+                </div>
+              )}
             </div>
           ) : (
-            <p class="text-lg leading-relaxed text-mist">
-              Proyek ini termasuk layanan <strong class="text-snow">{layanan.label}</strong>. Seluruh
-              pekerjaan dikerjakan tim lapangan ZSN dan diserahkan bersama dokumentasi hasil kerja.
-            </p>
+            !hasBody && (
+              <div>
+                <p class="text-lg leading-relaxed">
+                  Proyek ini bagian dari layanan <strong class="text-strong">{layanan.label}</strong>. Lingkup
+                  standar layanan tersebut:
+                </p>
+                <ol class="mt-6 border-t border-strong">
+                  {lingkupStandar.map((s, i) => (
+                    <li class="flex gap-4 border-b border-rule py-4">
+                      <span class="label-tech mt-1 w-6 shrink-0 text-soft">{String(i + 1).padStart(2, '0')}</span>
+                      <span>
+                        <span class="block font-semibold text-strong">{s.judul}</span>
+                        <span class="text-sm text-soft">{s.detail}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+                <p class="mt-4 text-xs text-soft">Daftar di atas adalah lingkup standar layanan, bukan rincian proyek ini.</p>
+              </div>
+            )
           )
         }
+
         <div class="mt-10 flex flex-wrap gap-3">
           <Button href={layanan.href} variant="ghost" icon="lucide:arrow-right">Layanan {layanan.label}</Button>
         </div>
@@ -104,24 +173,47 @@ const meta = [
 
   {
     d.galeri && (
-      <section class="bg-carbon py-16 lg:py-24">
-        <div class="container-content grid gap-4 md:grid-cols-2">
-          {d.galeri.map((g) => (
-            <figure class="crop-marks relative aspect-[4/3]">
-              <Image src={g.src} alt={g.alt} width={1000} widths={[500, 1000]} sizes="(min-width:768px) 50vw, 100vw" class="size-full object-cover" loading="lazy" />
-              <figcaption class="mt-3 text-sm text-fog">{g.alt}</figcaption>
-            </figure>
-          ))}
+      <section class="bg-raised py-16 lg:py-24">
+        <div class="container-content">
+          <Eyebrow>Galeri proyek</Eyebrow>
+          <div class="mt-8 grid gap-4 md:grid-cols-2">
+            {d.galeri.map((g) => (
+              <figure>
+                <Image src={g.src} alt={g.alt} width={1000} widths={[500, 1000]} sizes="(min-width:768px) 50vw, 100vw" class="aspect-[4/3] w-full object-cover" loading="lazy" />
+                <figcaption class="mt-3 text-sm text-soft">{g.alt}</figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </section>
     )
   }
 
-  <section class="border-t border-line bg-carbon py-16 lg:py-24">
+  <!-- navigasi proyek sebelum / sesudah -->
+  <nav aria-label="Proyek lain" class="border-y border-rule bg-canvas">
+    <div class="container-content grid sm:grid-cols-2">
+      <a href={`/portfolio/${projectSlug(prev.id)}`} class="group flex min-h-24 items-center gap-4 border-b border-rule py-6 sm:border-b-0 sm:border-r sm:pr-6">
+        <Icon name="lucide:arrow-left" class="size-5 shrink-0 text-strong transition-transform group-hover:-translate-x-1" />
+        <span>
+          <span class="label-tech block text-soft">Sebelumnya · {prev.data.kodeProject}</span>
+          <span class="mt-1 block font-semibold text-strong">{prev.data.judul}</span>
+        </span>
+      </a>
+      <a href={`/portfolio/${projectSlug(next.id)}`} class="group flex min-h-24 items-center justify-end gap-4 py-6 text-right sm:pl-6">
+        <span>
+          <span class="label-tech block text-soft">Berikutnya · {next.data.kodeProject}</span>
+          <span class="mt-1 block font-semibold text-strong">{next.data.judul}</span>
+        </span>
+        <Icon name="lucide:arrow-right" class="size-5 shrink-0 text-strong transition-transform group-hover:translate-x-1" />
+      </a>
+    </div>
+  </nav>
+
+  <section class="bg-raised py-16 lg:py-24">
     <div class="container-content">
       <div class="flex items-end justify-between gap-6">
-        <h2 class="text-h2">Proyek lainnya</h2>
-        <a href="/portfolio" class="label-tech inline-flex min-h-11 items-center gap-2 text-volt hover:underline">
+        <h2 class="text-h2">Proyek terkait</h2>
+        <a href="/portfolio" class="inline-flex min-h-11 items-center gap-2 font-semibold text-strong underline decoration-volt decoration-2 underline-offset-4">
           Semua proyek <Icon name="lucide:arrow-right" class="size-4" />
         </a>
       </div>
@@ -131,7 +223,7 @@ const meta = [
     </div>
   </section>
 
-  <CtaFinal judul="Butuh pekerjaan serupa?" pesan={`Halo ZSN, saya ingin berkonsultasi tentang proyek serupa "${d.judul}".`} />
+  <CtaFinal judul="Butuh pekerjaan serupa?" pesan={`Halo ZSN, saya ingin berkonsultasi tentang proyek serupa "${d.judul}" (${d.kodeProject}).`} />
 </Base>
 
 <style>

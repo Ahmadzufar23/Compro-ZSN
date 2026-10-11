@@ -29,7 +29,7 @@ export const site = {
     kodePos: '12240',
   },
 
-  jamOperasional: 'Monday to Saturday, 08:00 to 17:00 WIB',
+  jamOperasional: 'Senin sampai Sabtu, 08.00 sampai 17.00 WIB',
 
   /** JANGAN tampilkan di halaman publik mana pun (keputusan pemilik).
    *  Field ini hanya dipakai untuk dokumen transaksi: penawaran,
@@ -59,3 +59,6 @@ export const site = {
 export function waLink(pesan: string): string {
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(pesan)}`;
 }
+
+/** Nomor WhatsApp untuk ditampilkan: +62 822-1032-3080 */
+export const nomorTampil = `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)}-${site.whatsapp.slice(5, 9)}-${site.whatsapp.slice(9)}`;

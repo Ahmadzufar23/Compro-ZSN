@@ -1,6 +1,6 @@
 ---
 /**
- * Coverage: peta skematik Jabodetabek ala peta jalur, bukan peta
+ * Coverage: peta skematik Jabodetabek ala peta jalur kereta, bukan peta
  * geografis presisi. Pusat di kantor Jakarta Selatan.
  */
 import { Icon } from 'astro-icon/components';
@@ -19,80 +19,64 @@ const kota = [
 const a = site.alamat;
 ---
 
-<section class="relative overflow-hidden bg-ink py-24 lg:py-32" aria-labelledby="wilayah-title">
+<section class="relative overflow-hidden bg-canvas py-24 lg:py-32" aria-labelledby="wilayah-title">
   <div class="container-content grid items-center gap-14 lg:grid-cols-12">
     <div class="lg:col-span-5">
-      <Eyebrow index="07" data-reveal>Wilayah kerja</Eyebrow>
-      <h2 id="wilayah-title" class="mt-6 text-h1" data-reveal>
-        Berbasis di Jakarta Selatan. <span class="text-fog">Bergerak ke seluruh Jabodetabek.</span>
-      </h2>
-      <p class="mt-6 text-lg text-fog" data-reveal>
-        Tim lapangan kami berangkat dari Kebayoran Lama. Proyek di luar Jabodetabek tetap bisa
-        dikerjakan, ceritakan lokasinya dan kita bahas logistiknya bersama.
+      <Eyebrow data-reveal>Wilayah kerja</Eyebrow>
+      <h2 id="wilayah-title" class="mt-6 text-h1" data-reveal>Berkantor di Jakarta Selatan, melayani Jabodetabek.</h2>
+      <p class="mt-6 text-lg" data-reveal>
+        Tim lapangan berangkat dari kantor kami di Kebayoran Lama. Untuk proyek di luar
+        Jabodetabek, jadwal dan biaya mobilisasi dibicarakan saat konsultasi.
       </p>
 
-      <dl class="mt-10 space-y-5 border-t border-line pt-8" data-reveal>
+      <dl class="mt-10 space-y-5 border-t border-strong pt-8" data-reveal>
         <div class="flex gap-4">
-          <dt><Icon name="lucide:map-pin" class="size-5 text-volt" aria-label="Alamat" /></dt>
-          <dd class="text-sm text-mist">
+          <dt><Icon name="lucide:map-pin" class="size-5 text-strong" aria-label="Alamat" /></dt>
+          <dd class="text-sm">
             {a.jalan}, {a.kelurahan}, {a.kecamatan}, {a.kota} {a.kodePos}
-            <a href={site.maps.url} target="_blank" rel="noopener noreferrer" class="label-tech mt-2 flex min-h-8 items-center gap-1 text-volt hover:underline">
+            <a href={site.maps.url} target="_blank" rel="noopener noreferrer" class="mt-2 flex min-h-8 items-center gap-1 font-semibold text-strong underline decoration-volt decoration-2 underline-offset-4">
               Buka di Google Maps <Icon name="lucide:arrow-up-right" class="size-3.5" />
             </a>
           </dd>
         </div>
         <div class="flex gap-4">
-          <dt><Icon name="lucide:clock" class="size-5 text-volt" aria-label="Jam operasional" /></dt>
-          <dd class="text-sm text-mist">Senin sampai Sabtu, 08.00 sampai 17.00 WIB</dd>
+          <dt><Icon name="lucide:clock" class="size-5 text-strong" aria-label="Jam operasional" /></dt>
+          <dd class="text-sm">{site.jamOperasional}</dd>
         </div>
       </dl>
     </div>
 
     <div class="relative lg:col-span-7" data-reveal>
       <svg viewBox="0 0 600 580" class="w-full" role="img" aria-label="Peta skematik wilayah kerja ZSN: Jakarta, Tangerang, Bekasi, Depok, Bogor, dan Tangerang Selatan">
-        <g stroke="rgba(255,255,255,.05)">
+        <g stroke="rgba(10,12,15,.06)">
           {Array.from({ length: 13 }, (_, i) => <line x1={i * 50} x2={i * 50} y1="0" y2="580" />)}
           {Array.from({ length: 12 }, (_, i) => <line y1={i * 50} y2={i * 50} x1="0" x2="600" />)}
         </g>
-        <circle cx={HQ[0]} cy={HQ[1]} r="210" fill="none" stroke="rgba(255,206,0,.12)" stroke-dasharray="4 8" />
-        <circle cx={HQ[0]} cy={HQ[1]} r="120" fill="none" stroke="rgba(255,206,0,.08)" stroke-dasharray="4 8" />
+        <circle cx={HQ[0]} cy={HQ[1]} r="210" fill="none" stroke="rgba(10,12,15,.18)" stroke-dasharray="4 8" />
+        <circle cx={HQ[0]} cy={HQ[1]} r="120" fill="none" stroke="rgba(10,12,15,.12)" stroke-dasharray="4 8" />
 
-        {kota.map((k) => <path d={k.path} fill="none" stroke="rgba(255,255,255,.18)" stroke-width="6" stroke-linejoin="round" />)}
+        {kota.map((k) => <path d={k.path} fill="none" stroke="#0A0C0F" stroke-width="9" stroke-linejoin="round" />)}
+        {kota.map((k) => <path d={k.path} fill="none" stroke="#FFCE00" stroke-width="5" stroke-linejoin="round" />)}
         {
           kota.map((k, i) => (
-            <path
-              d={k.path}
-              fill="none"
-              stroke="#FFCE00"
-              stroke-width="3"
-              stroke-linejoin="round"
-              class="flow-line"
-              style={`--flow-speed:${5 + i}s;animation-delay:-${i * 1.3}s`}
-            />
+            <path d={k.path} fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" class="flow-line" style={`--flow-speed:${5 + i}s;animation-delay:-${i * 1.3}s`} />
           ))
         }
         {
           kota.map((k) => (
             <g>
-              <circle cx={k.x} cy={k.y} r="9" fill="#0A0C0F" stroke="#F4F4F2" stroke-width="3" />
-              <text
-                x={k.x}
-                y={k.y + (k.y > 300 ? 30 : -20)}
-                text-anchor="middle"
-                class="city"
-              >
-                {k.n}
-              </text>
+              <circle cx={k.x} cy={k.y} r="10" fill="#FFFFFF" stroke="#0A0C0F" stroke-width="3.5" />
+              <text x={k.x} y={k.y + (k.y > 300 ? 32 : -20)} text-anchor="middle" class="city">{k.n}</text>
             </g>
           ))
         }
         <g>
-          <circle cx={HQ[0]} cy={HQ[1]} r="14" fill="none" stroke="#FFCE00" stroke-width="2" class="pulse-ring" />
-          <rect x={HQ[0] - 16} y={HQ[1] - 16} width="32" height="32" fill="#FFCE00" transform={`rotate(45 ${HQ[0]} ${HQ[1]})`} />
-          <path d={`M${HQ[0] + 2} ${HQ[1] - 10} l-8 11 h6 l-2 9 l9 -12 h-6 z`} fill="#0A0C0F" />
-          <rect x={HQ[0] + 26} y={HQ[1] + 8} width="128" height="40" fill="#0A0C0F" stroke="#FFCE00" />
-          <text x={HQ[0] + 36} y={HQ[1] + 25} class="hq">KANTOR ZSN</text>
-          <text x={HQ[0] + 36} y={HQ[1] + 40} class="hq2">JAKARTA SELATAN</text>
+          <circle cx={HQ[0]} cy={HQ[1]} r="14" fill="none" stroke="#0A0C0F" stroke-width="2" class="pulse-ring" />
+          <rect x={HQ[0] - 17} y={HQ[1] - 17} width="34" height="34" fill="#0A0C0F" transform={`rotate(45 ${HQ[0]} ${HQ[1]})`} />
+          <path d={`M${HQ[0] + 2} ${HQ[1] - 10} l-8 11 h6 l-2 9 l9 -12 h-6 z`} fill="#FFCE00" />
+          <rect x={HQ[0] + 28} y={HQ[1] + 8} width="132" height="42" fill="#0A0C0F" />
+          <text x={HQ[0] + 38} y={HQ[1] + 26} class="hq">KANTOR ZSN</text>
+          <text x={HQ[0] + 38} y={HQ[1] + 41} class="hq2">JAKARTA SELATAN</text>
         </g>
       </svg>
     </div>
@@ -100,7 +84,7 @@ const a = site.alamat;
 </section>
 
 <style>
-  .city { font: 500 12px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; fill: var(--color-mist); }
-  .hq { font: 800 13px var(--font-display); fill: var(--color-volt); letter-spacing: 0.04em; }
-  .hq2 { font: 500 9px var(--font-mono); fill: var(--color-fog); letter-spacing: 0.14em; }
+  .city { font: 600 12px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; fill: #0a0c0f; paint-order: stroke; stroke: #fff; stroke-width: 4px; }
+  .hq { font: 800 13px var(--font-display); fill: #ffce00; letter-spacing: 0.04em; }
+  .hq2 { font: 500 9px var(--font-mono); fill: #c4c9d1; letter-spacing: 0.14em; }
 </style>

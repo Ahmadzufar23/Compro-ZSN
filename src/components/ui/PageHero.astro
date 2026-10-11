@@ -1,18 +1,17 @@
 ---
-/** Hero halaman dalam: gelap, grid blueprint, jalur arus tipis. */
+/** Hero halaman dalam: gelap, grid gambar teknik, jalur arus tipis. */
 import Eyebrow from './Eyebrow.astro';
 
 interface Props {
   eyebrow: string;
-  index?: string;
   judul: string;
   sub?: string;
   crumbs?: { label: string; href?: string }[];
 }
-const { eyebrow, index, judul, sub, crumbs } = Astro.props;
+const { eyebrow, judul, sub, crumbs } = Astro.props;
 ---
 
-<section class="relative isolate overflow-hidden bg-ink pb-16 pt-36 lg:pb-24 lg:pt-44">
+<section class="theme-dark relative isolate overflow-hidden bg-canvas pb-16 pt-36 lg:pb-24 lg:pt-44">
   <div class="bg-grid mask-fade pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
   <svg class="pointer-events-none absolute inset-0 -z-10 size-full" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <path d="M1460 140 H1100 L1020 220 H860" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1.2" />
@@ -20,35 +19,29 @@ const { eyebrow, index, judul, sub, crumbs } = Astro.props;
     <path d="M1460 460 H1220 L1140 380 H980" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1.2" />
     <path d="M1460 460 H1220 L1140 380 H980" fill="none" stroke="#FFCE00" stroke-width="2" class="flow-line" style="--flow-speed:9s;animation-delay:-4s" />
   </svg>
-  <div
-    class="pointer-events-none absolute -right-60 -top-40 -z-10 size-[50rem] rounded-full"
-    style="background:radial-gradient(circle, rgb(255 206 0 / .08), transparent 60%)"
-    aria-hidden="true"
-  >
-  </div>
 
   <div class="container-content">
     {
       crumbs && (
-        <nav aria-label="Breadcrumb" class="label-tech mb-8 flex flex-wrap items-center gap-2 text-fog">
+        <nav aria-label="Breadcrumb" class="label-tech mb-8 flex flex-wrap items-center gap-2 text-soft">
           {crumbs.map((c, i) => (
             <>
-              {i > 0 && <span class="text-line-strong">/</span>}
+              {i > 0 && <span aria-hidden="true">/</span>}
               {c.href ? (
                 <a href={c.href} class="hover:text-volt">{c.label}</a>
               ) : (
-                <span class="text-snow">{c.label}</span>
+                <span class="text-strong" aria-current="page">{c.label}</span>
               )}
             </>
           ))}
         </nav>
       )
     }
-    <Eyebrow index={index}>{eyebrow}</Eyebrow>
+    <Eyebrow>{eyebrow}</Eyebrow>
     <h1 class="mt-6 max-w-5xl text-hero">
       <Fragment set:html={judul} />
     </h1>
-    {sub && <p class="mt-8 max-w-2xl text-lg leading-relaxed text-mist">{sub}</p>}
+    {sub && <p class="mt-8 max-w-2xl text-lg leading-relaxed text-body">{sub}</p>}
     <slot />
   </div>
 </section>

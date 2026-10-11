@@ -196,6 +196,13 @@ const project = defineCollection({
 
         stats: z.array(z.object({ label: z.string(), nilai: z.string() })).max(4),
 
+        /* Cerita proyek, opsional. Diisi pemilik dari catatan proyek asli.
+           Halaman detail menampilkan blok ini hanya bila datanya ada. */
+        tantangan: z.string().optional(),
+        pekerjaan: z.array(z.string()).optional(),
+        hasil: z.string().optional(),
+        durasi: z.string().optional(),
+
         /* Galeri As-Built — sama bentuknya dengan galeri layanan,
            supaya komponen Gallery.astro bisa dipakai ulang tanpa ubah. */
         galeri: z
