@@ -1,183 +1,140 @@
 ---
-import { getCollection } from 'astro:content';
-import { Picture } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
 import Base from '@/layouts/Base.astro';
-import Section from '@/components/ui/Section.astro';
-import Button from '@/components/ui/Button.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import GlobeMark from '@/components/home/GlobeMark.astro';
+import PowerStrip from '@/components/home/PowerStrip.astro';
+import Process from '@/components/home/Process.astro';
+import CtaFinal from '@/components/home/CtaFinal.astro';
 import { site } from '@/config/site';
 
-import teamPhoto from '@/assets/project/proj-3.jpg';
+const jejak = [
+  {
+    tahun: '2015',
+    judul: 'Turun ke lapangan',
+    detail: 'Kegiatan usaha dimulai di bidang instalasi dan perawatan jaringan fiber optik di Jakarta. Menarik kabel, menyambung, menguji.',
+  },
+  {
+    tahun: '2023',
+    judul: 'Resmi berbadan hukum',
+    detail: `Berdiri sebagai ${site.namaLegal}, supaya bisa bekerja sama dengan perusahaan dan pengelola gedung secara formal dan berkontrak.`,
+  },
+  {
+    tahun: 'Kini',
+    judul: 'Satu atap, lima lini',
+    detail: 'Dari fiber optik meluas ke jaringan perusahaan, CCTV, kontrak pemeliharaan, dan pengembangan software yang berjalan di atas infrastrukturnya.',
+  },
+];
 
 const prinsip = [
-  {
-    judul: 'Professional Team',
-    detail: 'Executed by certified technicians with extensive experience, ensuring maximum safety and performance standards.',
-  },
-  {
-    judul: 'As-Built Documentation',
-    detail: 'Every project comes with a test report and complete documentation as proof of quality.',
-  },
-  {
-    judul: 'Warranty Backed',
-    detail: 'Repairs due to installation errors are handled by us at no additional cost.',
-  },
-  {
-    judul: 'Transparency',
-    detail: 'Cost estimates are explained based on real factors in the field, not floating numbers.',
-  },
+  { icon: 'lucide:map-pinned', judul: 'Survei sebelum harga', detail: 'Kami tidak memberi angka sebelum melihat lokasinya. Penawaran yang akurat butuh data lapangan.' },
+  { icon: 'lucide:hard-hat', judul: 'Dikerjakan tim sendiri', detail: 'Pekerjaan inti tidak dilempar ke subkontraktor yang tidak Anda kenal. Penanggung jawabnya jelas.' },
+  { icon: 'lucide:activity', judul: 'Diuji, bukan dikira', detail: 'Setiap jalur diukur dengan alat sebelum serah terima. Hasil ukurnya jadi bagian dari dokumen.' },
+  { icon: 'lucide:file-check-2', judul: 'Semua tercatat', detail: 'As-built, label port, dan berita acara. Teknisi siapa pun yang datang setelahnya tidak perlu menebak.' },
+  { icon: 'lucide:scale', judul: 'Jujur soal batas', detail: 'Apa yang tidak termasuk kontrak ditulis di awal. Kami juga terbuka bahwa kami bukan mitra resmi merek mana pun.' },
+  { icon: 'lucide:layers', judul: 'Berpikir sampai lapisan atas', detail: 'Kami memasang jaringan dengan membayangkan sistem yang nanti berjalan di atasnya.' },
 ];
 
-const jumlahLayanan = (await getCollection('layanan', (entry) => entry.id.startsWith('en/'))).length;
-
-const stats = [
-  { angka: 'Since 2023', label: 'Years in Operation' },
-  { angka: 'Nationwide', label: 'Service Coverage' },
-  { angka: 'Warrantied', label: 'Every Project' },
-  { angka: String(jumlahLayanan), label: 'Available Services' },
-];
+const a = site.alamat;
 ---
 
 <Base
-  title="About"
-  description="PT Zufar Solusi Nawasena (ZSN): network infrastructure, security, and digital system development for businesses across Indonesia."
+  title="Tentang Kami"
+  description="PT Zufar Solusi Nawasena (ZSN) mulai bekerja di lapangan fiber optik Jakarta sejak 2015 dan resmi berbadan hukum pada 2023. Kini menangani infrastruktur jaringan, keamanan, dan software dalam satu tim."
 >
-  <Section bg="canvas" size="lg" aria-label="Company Story">
-    <div class="mb-16 md:mb-20">
-      <p class="label-tech text-muted">About Us</p>
-      <h1 class="mt-3 text-h1">{site.namaLegal}</h1>
-    </div>
+  <PageHero
+    eyebrow="Tentang ZSN"
+    index="ZSN"
+    judul='Dimulai dari menarik kabel. <span class="text-fog">Tumbuh jadi satu atap untuk infrastruktur digital.</span>'
+    crumbs={[{ label: 'Beranda', href: '/' }, { label: 'Tentang' }]}
+  />
 
-    <div class="grid gap-12 lg:grid-cols-[55fr_45fr] lg:items-center">
-      <div class="max-w-[65ch]">
-        <p class="text-xl text-ink font-medium leading-relaxed">
-          {site.namaLegal} ({site.nama}) provides network infrastructure,
-          security, and digital system development for businesses in various
-          cities across Indonesia.
+  <section class="relative overflow-hidden bg-ink pb-24 lg:pb-32">
+    <div class="container-content grid items-center gap-16 lg:grid-cols-12">
+      <div class="lg:col-span-6">
+        <p class="text-xl leading-relaxed text-snow sm:text-2xl" data-reveal>
+          {site.namaLegal} adalah penyedia barang dan jasa teknologi yang berfokus pada
+          <span class="text-volt">infrastruktur jaringan</span>, <span class="text-volt">sistem keamanan</span>, dan
+          <span class="text-volt">solusi digital</span> untuk perusahaan.
         </p>
-        <p class="mt-6 text-muted leading-relaxed text-lg">
-          We handle everything from site surveys, fiber optic and CCTV installations,
-          enterprise network configurations, to developing systems that
-          run our clients' daily operations.
+        <p class="mt-6 text-lg text-fog" data-reveal>
+          Kami percaya sistem digital hanya sekuat fondasi fisiknya. Karena itu kami tetap turun
+          ke lapangan sendiri, sambil membangun software yang memanfaatkan infrastruktur tersebut.
         </p>
-      </div>
-      
-      <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
-        <Picture
-          src={teamPhoto}
-          formats={['avif', 'webp']}
-          fallbackFormat="webp"
-          alt="ZSN Team in the field"
-          width={800}
-          height={600}
-          class="w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-700"
-        />
-        <div class="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-2xl"></div>
-      </div>
-    </div>
 
-    <dl class="mt-16 grid grid-cols-2 gap-x-6 gap-y-10 border-t border-hairline pt-10 md:grid-cols-4" aria-label="Statistics">
-      {
-        stats.map(({ angka, label }) => (
-          <div class="min-w-0 border-l-2 border-yellow-400 pl-6">
-            <dt class="stat-angka font-display break-words text-3xl font-bold text-ink md:text-4xl" data-val={angka}>
-              {angka}
-            </dt>
-            <dd class="label-tech mt-2 text-muted uppercase tracking-widest text-xs">{label}</dd>
-          </div>
-        ))
-      }
-    </dl>
-  </Section>
-
-  {/* Cakupan Layanan - Dark Section */}
-  <section class="bg-zinc-950 border-y border-zinc-900 w-full overflow-hidden py-20 lg:py-32 relative">
-    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-700 via-zinc-950 to-zinc-950"></div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center text-center">
-      <div class="flex items-center justify-center gap-3 mb-6">
-        <div class="w-3 h-3 bg-yellow-400"></div>
-        <p class="text-zinc-500 font-mono text-sm tracking-widest uppercase">Coverage Area</p>
-        <div class="w-3 h-3 bg-yellow-400"></div>
+        <ol class="mt-14 border-l border-line">
+          {
+            jejak.map((j, i) => (
+              <li class="relative pb-10 pl-10 last:pb-0" data-reveal style={`--d:${i * 100}ms`}>
+                <span class="absolute -left-[7px] top-1.5 size-3.5 rotate-45 bg-volt ring-4 ring-ink" aria-hidden="true" />
+                <p class="font-display text-4xl font-extrabold text-snow" style="font-stretch:125%">{j.tahun}</p>
+                <h2 class="mt-2 text-xl">{j.judul}</h2>
+                <p class="mt-2 max-w-md text-fog">{j.detail}</p>
+              </li>
+            ))
+          }
+        </ol>
       </div>
-      <h2 class="text-white text-4xl lg:text-6xl font-display font-bold max-w-4xl mx-auto leading-tight">
-        Nationwide, unbounded by location.
-      </h2>
-      <p class="mt-8 max-w-2xl text-zinc-400 text-lg lg:text-xl mx-auto leading-relaxed">
-        Our headquarters is located in {site.alamat.kota}, but the ZSN team is ready to fly to various cities in Indonesia to execute projects based on your infrastructure needs.
-      </p>
+      <div class="lg:col-span-6" data-reveal>
+        <div class="mx-auto max-w-[520px]">
+          <GlobeMark />
+        </div>
+      </div>
     </div>
   </section>
 
-  {/* Prinsip Kerja - Premium Cards */}
-  <Section bg="surface" size="lg" aria-label="How we work">
-    <div class="text-center max-w-2xl mx-auto mb-16">
-      <p class="text-yellow-500 font-mono text-sm tracking-widest uppercase mb-4">Core Values</p>
-      <h2 class="text-ink text-4xl font-display font-bold">Why Clients Choose ZSN</h2>
-    </div>
+  <PowerStrip />
 
-    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-      {
-        prinsip.map((p, i) => (
-          <div class="bg-white border border-hairline p-8 shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl group flex flex-col items-start relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-zinc-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
-            
-            <div class="w-12 h-12 bg-zinc-900 rounded-xl flex items-center justify-center text-yellow-400 font-display font-bold text-xl mb-8 group-hover:bg-yellow-400 group-hover:text-zinc-900 transition-colors">
-              {String(i + 1).padStart(2, '0')}
-            </div>
-            
-            <h3 class="text-xl font-bold text-ink mb-3">{p.judul}</h3>
-            <p class="text-sm text-muted leading-relaxed">{p.detail}</p>
-          </div>
-        ))
-      }
+  <section class="bg-carbon py-24 lg:py-32">
+    <div class="container-content">
+      <Eyebrow index="01" data-reveal>Prinsip kerja</Eyebrow>
+      <h2 class="mt-6 max-w-3xl text-h1" data-reveal>Enam kebiasaan yang membuat klien kembali.</h2>
+      <div class="mt-14 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
+        {
+          prinsip.map((p, i) => (
+            <article class="group bg-carbon p-8 transition-colors hover:bg-steel lg:p-10" data-reveal style={`--d:${(i % 3) * 80}ms`}>
+              <Icon name={p.icon} class="size-8 text-volt" />
+              <h3 class="mt-8 text-h3">{p.judul}</h3>
+              <p class="mt-3 text-fog">{p.detail}</p>
+            </article>
+          ))
+        }
+      </div>
     </div>
-  </Section>
+  </section>
 
-  <Section bg="deep" size="lg" aria-label="Call to action">
-    <div class="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
-      <div class="max-w-2xl">
-        <h2 class="text-h2 text-white">Ready to work together?</h2>
-        <p class="mt-4 text-subtle">
-          Contact our team to consult your network infrastructure needs.
+  <Process index="02" />
+
+  <section class="bg-ink py-24 lg:py-32">
+    <div class="container-content grid gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <Eyebrow index="03" data-reveal>Identitas perusahaan</Eyebrow>
+        <h2 class="mt-6 text-h2" data-reveal>Badan hukum resmi, kantor yang bisa Anda datangi.</h2>
+        <p class="mt-6 text-fog" data-reveal>
+          Dokumen legalitas perusahaan tersedia untuk keperluan penawaran, kontrak, dan proses vendor
+          registration. Mintakan langsung kepada kami.
         </p>
       </div>
-      <Button href="/contact" size="lg" class="shrink-0">Contact Us</Button>
+      <dl class="border-t border-line lg:col-span-6 lg:col-start-7" data-reveal>
+        {
+          [
+            ['Nama perusahaan', site.namaLegal],
+            ['Nama dagang', 'ZSN Technology Solution'],
+            ['Mulai beroperasi', '2015'],
+            ['Berbadan hukum', '2023'],
+            ['Kantor', `${a.jalan}, ${a.kelurahan}, ${a.kecamatan}, ${a.kota} ${a.kodePos}`],
+            ['Wilayah kerja', 'Jabodetabek, luar kota sesuai kesepakatan'],
+          ].map(([k, v]) => (
+            <div class="grid gap-1 border-b border-line py-5 sm:grid-cols-3 sm:gap-6">
+              <dt class="label-tech pt-1 text-fog">{k}</dt>
+              <dd class="text-snow sm:col-span-2">{v}</dd>
+            </div>
+          ))
+        }
+      </dl>
     </div>
-  </Section>
+  </section>
+
+  <CtaFinal judul="Mari bicara soal proyek Anda." label="Hubungi via WhatsApp" pesan="Halo ZSN, saya ingin berkenalan dan mendiskusikan kebutuhan perusahaan kami." />
 </Base>
-
-<script>
-  import { inView, animate } from "motion";
-
-  const setupStats = () => {
-    const section = document.querySelector('[aria-label="Statistics"]');
-    const statElements = document.querySelectorAll('.stat-angka');
-
-    if (section && statElements.length > 0) {
-      inView(section, () => {
-        statElements.forEach(el => {
-          const val = el.getAttribute('data-val') || '';
-          const numMatch = val.match(/(\d+)/);
-
-          if (numMatch) {
-            const targetNum = parseInt(numMatch[1], 10);
-            const prefix = val.substring(0, numMatch.index);
-            const suffix = val.substring(numMatch.index + numMatch[1].length);
-
-            // Animate from 0, but for years (like 2023) start closer
-            let startNum = targetNum > 2000 ? 2000 : 0;
-
-            animate(startNum, targetNum, {
-               duration: 2,
-               ease: "easeOut",
-               onUpdate: (latest) => {
-                 el.textContent = `${prefix}${Math.round(latest)}${suffix}`;
-               }
-            });
-          }
-        });
-      }, { margin: "-50px" });
-    }
-  };
-
-  document.addEventListener('astro:page-load', setupStats);
-</script>

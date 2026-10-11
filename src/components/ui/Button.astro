@@ -1,74 +1,54 @@
 ---
-/**
- * Button
- *
- * Aturan warna yang ditegakkan di sini:
- *   Kuning #FFCE00 di atas putih = 1.49:1 -> GAGAL WCAG.
- *   Karena itu kuning hanya pernah muncul sebagai ISIAN, dengan
- *   teks ink di atasnya (13.27:1, AAA). Tidak ada varian
- *   "teks kuning" di komponen ini, dan jangan ditambahkan.
- *
- * Label tombol memakai kata kerja aktif dan konsisten dari
- * pemicu sampai hasil. Jangan pakai "Submit" atau "Pilih Paket"
- * (bahasa e-commerce; situs ini tidak punya checkout).
- */
-import type { HTMLAttributes } from 'astro/types';
+import { Icon } from 'astro-icon/components';
 
-interface Props extends HTMLAttributes<'a'> {
+interface Props {
   href: string;
-  variant?: 'primary' | 'outline-dark' | 'outline-light';
+  variant?: 'volt' | 'ghost' | 'ink' | 'paper-ghost';
   size?: 'md' | 'lg';
   external?: boolean;
+  icon?: string | false;
+  class?: string;
 }
 
 const {
   href,
-  variant = 'primary',
+  variant = 'volt',
   size = 'md',
-  class: extra = '',
   external = false,
-  ...rest
+  icon = 'lucide:arrow-up-right',
+  class: extra = '',
 } = Astro.props;
 
-const base =
-  'label-tech inline-flex items-center justify-center gap-2 transition-colors min-h-11';
-
 const variants = {
-  primary: 'bg-yellow text-ink hover:bg-yellow-hover',
-  'outline-dark': 'border border-ink text-ink hover:bg-ink hover:text-white',
-  'outline-light':
-    'border border-white/30 text-white hover:border-white hover:bg-white hover:text-ink',
+  volt: 'bg-volt text-ink hover:bg-volt-hot',
+  ink: 'bg-ink text-snow hover:bg-carbon',
+  ghost: 'text-snow ring-1 ring-inset ring-line-strong hover:ring-volt hover:text-volt',
+  'paper-ghost': 'text-ink ring-1 ring-inset ring-ink/25 hover:ring-ink',
 };
-
 const sizes = {
-  md: 'px-5 py-3',
-  lg: 'px-7 py-4',
+  md: 'min-h-12 px-5 text-sm gap-3',
+  lg: 'min-h-14 px-7 text-base gap-4',
 };
-
-const rel = external ? 'noopener noreferrer' : undefined;
-const target = external ? '_blank' : undefined;
 ---
 
 <a
   href={href}
-  {rel}
-  {target}
-  class:list={[base, variants[variant as keyof typeof variants], sizes[size as keyof typeof sizes], extra]}
-  {...rest}
+  class:list={[
+    'group/btn cut-z relative inline-flex items-center justify-center font-semibold tracking-tight transition-colors duration-200',
+    variants[variant],
+    sizes[size],
+    extra,
+  ]}
+  {...external ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
 >
-  <slot />
+  <span><slot /></span>
   {
-    external && (
-      <svg
-        class="size-3.5"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
+    icon && (
+      <Icon
+        name={icon}
+        class="size-[1.15em] shrink-0 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
         aria-hidden="true"
-      >
-        <path d="M7 17 17 7M9 7h8v8" />
-      </svg>
+      />
     )
   }
 </a>

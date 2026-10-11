@@ -1,0 +1,39 @@
+---
+/** Pita kuning miring berjalan: kata kerja lapangan ZSN. */
+interface Props {
+  items?: string[];
+  tilt?: boolean;
+}
+const {
+  items = [
+    'Fiber optic FTTH',
+    'Fusion splicing',
+    'Uji OTDR',
+    'Structured cabling',
+    'Rack & switch',
+    'WiFi enterprise',
+    'CCTV & NVR',
+    'Pemeliharaan berkala',
+    'Dashboard & aplikasi',
+  ],
+  tilt = true,
+} = Astro.props;
+const loop = [...items, ...items];
+---
+
+<div class:list={['relative z-10 overflow-hidden py-6', tilt && '-my-3']} aria-hidden="true">
+  <div class:list={['marquee bg-volt text-ink', tilt && '-mx-4 -rotate-[1.6deg]']}>
+    <div class="marquee-track py-4" style="--marquee-speed:42s">
+      {
+        loop.map((t) => (
+          <span class="flex shrink-0 items-center gap-6 pr-6 font-display text-xl font-extrabold uppercase sm:text-2xl" style="font-stretch:120%">
+            {t}
+            <svg width="16" height="22" viewBox="0 0 10 14" class="shrink-0">
+              <path d="M6.5 0 0 8h4l-1 6L10 5.5H5.8z" fill="#0A0C0F" />
+            </svg>
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</div>

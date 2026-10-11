@@ -1,0 +1,51 @@
+---
+import { Icon } from 'astro-icon/components';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+
+const qa = [
+  {
+    icon: 'lucide:cable',
+    tanya: 'Apa yang kami kerjakan?',
+    jawab:
+      'Instalasi fiber optik dan FTTH, jaringan kantor dan gedung, CCTV, kontrak pemeliharaan, serta pengembangan software yang terhubung ke semuanya.',
+  },
+  {
+    icon: 'lucide:building-2',
+    tanya: 'Untuk siapa?',
+    jawab:
+      'ISP lokal dan RT/RW Net, gedung perkantoran, apartemen, gudang dan pabrik, ritel, sampai perusahaan yang sedang membuka cabang baru.',
+  },
+  {
+    icon: 'lucide:clipboard-check',
+    tanya: 'Bagaimana kami bekerja?',
+    jawab:
+      'Survei dulu, desain disetujui, dipasang tim kami sendiri, diuji dengan alat ukur, lalu diserahkan bersama laporan dan dokumentasinya.',
+  },
+];
+---
+
+<section class="relative bg-ink py-24 lg:py-36" aria-labelledby="intro-title">
+  <div class="container-content">
+    <Eyebrow index="01" data-reveal>ZSN dalam 30 detik</Eyebrow>
+
+    <h2 id="intro-title" class="mt-8 max-w-5xl text-h2 leading-[1.08]" data-reveal>
+      Kebanyakan gangguan jaringan bukan karena alatnya kurang mahal, tetapi karena
+      <span class="text-volt-glow">pemasangannya asal</span> dan
+      <span class="text-volt-glow">tidak pernah didokumentasikan.</span>
+      <span class="text-fog">ZSN dibangun untuk membereskan itu.</span>
+    </h2>
+
+    <div class="mt-16 grid gap-px bg-line md:grid-cols-3 lg:mt-24">
+      {
+        qa.map((q, i) => (
+          <article class="group relative bg-ink p-8 pt-10 transition-colors duration-300 hover:bg-carbon lg:p-10" data-reveal style={`--d:${i * 120}ms`}>
+            <span class="absolute left-0 top-0 h-0.5 w-0 bg-volt transition-all duration-500 group-hover:w-full" aria-hidden="true" />
+            <Icon name={q.icon} class="size-8 text-volt" aria-hidden="true" />
+            <h3 class="mt-8 text-h3">{q.tanya}</h3>
+            <p class="mt-4 leading-relaxed text-fog">{q.jawab}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

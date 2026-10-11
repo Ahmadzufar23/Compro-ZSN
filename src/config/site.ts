@@ -44,7 +44,7 @@ export const site = {
    * Aktifkan setelah foto asli dan persetujuan tertulis tersedia. */
   halamanAktif: {
     tim: false,
-    project: false,
+    project: true,
   },
 
   maps: {

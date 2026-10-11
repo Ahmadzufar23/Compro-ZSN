@@ -1,45 +1,47 @@
 ---
-/**
- * ProjectCard — dipakai baik di grid gabungan maupun grid per kategori
- * di src/pages/project/index.astro, supaya markup kartu tidak duplikat.
- */
 import type { CollectionEntry } from 'astro:content';
-import { Picture } from 'astro:assets';
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { kategoriLabel, projectSlug } from '@/config/project';
 
 interface Props {
-  project: CollectionEntry<'project'>;
-  kategoriLabel: string;
+  entry: CollectionEntry<'project'>;
+  size?: 'lg' | 'md';
+  class?: string;
+  [key: string]: unknown;
 }
-const { project, kategoriLabel } = Astro.props;
-const { data } = project;
+const { entry, size = 'md', class: extra = '', ...rest } = Astro.props;
+const d = entry.data;
+const tahun = d.tanggal.getFullYear();
 ---
 
 <a
-  href={`/project/${project.id}`}
-  class:list={['group relative flex flex-col', data.unggulan && 'sm:col-span-2']}
+  href={`/portfolio/${projectSlug(entry.id)}`}
+  class:list={['proj group relative block overflow-hidden bg-steel', extra]}
+  {...rest}
 >
-  <div
-    class="relative overflow-hidden"
-    style={data.unggulan ? 'aspect-ratio: 21/9;' : 'aspect-ratio: 4/3;'}
-  >
-    <Picture
-      src={data.cover}
-      formats={['avif', 'webp']}
-      fallbackFormat="webp"
-      alt={data.coverAlt}
-      width={data.unggulan ? 1200 : 700}
-      height={data.unggulan ? 514 : 525}
-      loading="lazy"
-      pictureAttributes={{ class: 'block size-full' }}
-      class="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-    />
-    <span class="label-tech absolute left-3 top-3 bg-deep/80 px-2 py-1 text-white">
-      {kategoriLabel}
-    </span>
-  </div>
-  <div class="mt-4 border-t border-hairline pt-4">
-    <p class="label-tech text-muted">{data.kodeProject}</p>
-    <h3 class="mt-1 text-h3">{data.judul}</h3>
-    <p class="label-tech mt-2 text-subtle">{data.lokasi}</p>
+  <Image
+    src={d.cover}
+    alt={d.coverAlt}
+    width={size === 'lg' ? 1200 : 800}
+    widths={size === 'lg' ? [600, 900, 1200] : [400, 600, 800]}
+    sizes={size === 'lg' ? '(min-width:1024px) 60vw, 100vw' : '(min-width:1024px) 34vw, 100vw'}
+    class="absolute inset-0 size-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]"
+    loading="lazy"
+  />
+  <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/35 to-ink/10" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-volt mix-blend-multiply opacity-0 transition-opacity duration-500 group-hover:opacity-25" aria-hidden="true"></div>
+
+  <span class="label-tech absolute left-4 top-4 z-10 bg-ink/85 px-2.5 py-1.5 text-[0.6rem] text-volt backdrop-blur">
+    {d.kodeProject}
+  </span>
+  <span class="absolute right-4 top-4 z-10 flex size-11 items-center justify-center bg-volt text-ink opacity-0 transition-all duration-300 group-hover:opacity-100">
+    <Icon name="lucide:arrow-up-right" class="size-5" />
+  </span>
+
+  <div class="relative z-10 flex h-full flex-col justify-end p-5 sm:p-7">
+    <p class="label-tech text-[0.6rem] text-mist">{kategoriLabel[d.kategori]} · {d.lokasi} · {tahun}</p>
+    <h3 class:list={['mt-2 text-snow', size === 'lg' ? 'text-h3 sm:text-[2rem]' : 'text-xl']}>{d.judul}</h3>
+    {size === 'lg' && <p class="mt-2 max-w-md text-sm text-mist">{d.ringkas}</p>}
   </div>
 </a>

@@ -1,0 +1,23 @@
+---
+/** Merek perangkat yang DITANGANI. ZSN bukan mitra resmi merek mana pun. */
+const merek = ['Hikvision', 'Dahua', 'Uniview', 'Ezviz', 'MikroTik', 'Ubiquiti', 'Cisco', 'TP-Link'];
+const loop = [...merek, ...merek];
+---
+
+<section class="border-y border-line bg-void py-12" aria-labelledby="merek-title">
+  <div class="container-content flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+    <h2 id="merek-title" class="label-tech !font-mono text-fog">Perangkat yang kami tangani</h2>
+    <p class="text-xs text-fog/70">Kami instalatur independen, bukan mitra resmi produsen.</p>
+  </div>
+  <div class="marquee mt-8 overflow-hidden" style="mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)">
+    <ul class="marquee-track" style="--marquee-speed:50s">
+      {
+        loop.map((m, i) => (
+          <li class="shrink-0 px-8 font-display text-3xl font-extrabold text-line-strong transition-colors hover:text-snow sm:px-12 sm:text-4xl" style="font-stretch:118%" aria-hidden={i >= merek.length ? 'true' : undefined}>
+            {m}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

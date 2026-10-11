@@ -1,145 +1,117 @@
 ---
-/**
- * Navbar — SATU sumber kebenaran untuk seluruh situs.
- *
- * Setiap halaman memakai komponen ini. Tidak ada navbar lain di mana pun.
- * Ini yang membuat inkonsistensi nama merek dan menu menjadi mustahil
- * secara struktural.
- *
- * Menu mobile memakai <details>/<summary> — 0 KB JavaScript.
- *
- * Navigasi hibrida: di beranda, menu bergulir ke anchor seksi
- * (#layanan dst). Di halaman lain, menu kembali ke beranda lalu
- * bergulir (/#layanan dst) — halaman penuh tetap ada dan tetap
- * terindeks, menu hanya jadi jalan pintas dari beranda.
- *
- * State aktif TIDAK memakai scroll-spy JavaScript. Di beranda,
- * underline aktif sengaja tidak pernah muncul (tidak ada cara statis
- * mengetahui seksi mana yang sedang dilihat). Underline hanya muncul
- * di halaman terpisah, dicocokkan lewat prefix path.
- */
-import Logo from '@/components/ui/Logo.astro';
-import { useTranslations, defaultLang } from '@/i18n/utils';
+import { Icon } from 'astro-icon/components';
+import ZMark from '@/components/ui/ZMark.astro';
+import Button from '@/components/ui/Button.astro';
+import { navLinks } from '@/config/nav';
+import { waLink } from '@/config/site';
 
-const lang = defaultLang;
-const t = useTranslations(lang);
-
-const menu = [
-  { label: t('nav.about'), id: 'about', page: '/about' },
-  { label: t('nav.services'), id: 'services', page: '/services' },
-  { label: t('nav.portfolio'), id: 'portfolio', page: '/portfolio' },
-];
-
-const path = Astro.url.pathname;
-const isHome = path === '/' || path === `/${lang}` || path === `/${lang}/`;
-
-// Adjusted hrefFor to support language prefixing for anchor links
-const hrefFor = (id: string) => {
-  return isHome ? `#${id}` : `/#${id}`;
-};
-
-const isActive = (page: string) => {
-  return !isHome && path.startsWith(page);
-};
-
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+const survei = waLink('Halo ZSN, saya ingin meminta survei lokasi.');
 ---
 
-<header class="sticky top-0 z-50 border-b border-hairline bg-white/80 backdrop-blur-md">
-  <nav
-    class="container-content flex h-16 items-center justify-between gap-6"
-    aria-label="Main navigation"
-  >
-    <a href="/" aria-label="ZSN, Home" class="flex min-h-11 items-center">
-      <Logo variant="dark" />
+<header
+  class="nav-shell fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300"
+  data-nav
+>
+  <div class="container-content flex h-18 items-center justify-between gap-6">
+    <a href="/" class="group flex items-center gap-3" aria-label="ZSN, kembali ke beranda">
+      <span class="transition-transform duration-700 group-hover:rotate-[360deg]">
+        <ZMark size={36} ring />
+      </span>
+      <span class="flex flex-col leading-none">
+        <span class="font-display text-[1.35rem] font-extrabold tracking-tight text-snow" style="font-stretch:125%">ZSN</span>
+        <span class="label-tech mt-1 hidden text-[0.55rem] text-fog sm:block">Technology Solution</span>
+      </span>
     </a>
 
-    {/* Desktop */}
-    <ul class="hidden items-center gap-5 lg:flex">
-      {menu.map(({ label, id, page }) => {
-        return (
-          <li>
-            <a
-              href={hrefFor(id)}
-              aria-current={isActive(page) ? 'page' : undefined}
-              class:list={[
-                'relative flex min-h-11 items-center px-2.5 text-sm font-medium text-muted transition-colors hover:text-ink',
-                isActive(page) &&
-                  'text-ink after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-yellow',
-              ]}
-            >
-              {label}
-            </a>
-          </li>
-        );
-      })}
-    </ul>
-
-    <div class="hidden lg:flex items-center gap-4">
-      <a
-        href="/contact"
-        class="shrink-0 rounded-xl bg-yellow px-6 py-2.5 text-sm font-bold text-ink shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
-      >
-        {t('nav.consultation')}
-      </a>
-    </div>
-
-    {/* Mobile — tanpa JavaScript */}
-    <details class="group lg:hidden [&_summary::-webkit-details-marker]:hidden">
-      <summary
-        class="flex size-11 cursor-pointer list-none items-center justify-center text-ink"
-        aria-label="Open menu"
-      >
-        <svg
-          class="size-6 group-open:hidden"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          aria-hidden="true"
-        >
-          <path d="M3 6h18M3 12h18M3 18h18" />
-        </svg>
-        <svg
-          class="hidden size-6 group-open:block"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          aria-hidden="true"
-        >
-          <path d="M18 6 6 18M6 6l12 12" />
-        </svg>
-      </summary>
-
-      <div
-        class="absolute inset-x-0 top-16 border-b border-hairline bg-canvas px-5 pb-6 pt-2 shadow-lg"
-      >
-        <ul class="flex flex-col">
-          {menu.map(({ label, id, page }) => (
+    <nav aria-label="Navigasi utama" class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {
+          navLinks.map((l) => (
             <li>
               <a
-                href={hrefFor(id)}
-                aria-current={isActive(page) ? 'page' : undefined}
+                href={l.href}
                 class:list={[
-                  'block border-b border-hairline py-4 text-sm font-medium text-muted',
-                  isActive(page) && 'border-l-2 border-l-yellow pl-3 text-ink',
+                  'relative inline-flex min-h-11 items-center px-4 text-sm font-medium transition-colors',
+                  isActive(l.href) ? 'text-snow' : 'text-mist hover:text-snow',
                 ]}
+                aria-current={isActive(l.href) ? 'page' : undefined}
               >
-                {label}
+                {l.label}
+                {isActive(l.href) && (
+                  <span class="absolute inset-x-4 bottom-1.5 h-0.5 bg-volt" aria-hidden="true" />
+                )}
               </a>
             </li>
-          ))}
-        </ul>
-        <div class="mt-5 border-t border-hairline pt-5">
-        </div>
+          ))
+        }
+      </ul>
+    </nav>
 
-        <a
-          href="/contact"
-          class="mt-4 block rounded-xl bg-yellow py-3.5 text-center text-sm font-bold text-ink shadow-md"
+    <div class="flex items-center gap-3">
+      <span class="hidden min-[380px]:block"><Button href={survei} external icon="lucide:zap">Minta Survei</Button></span>
+
+      <details class="nav-mobile lg:hidden">
+        <summary
+          class="flex size-12 items-center justify-center text-snow ring-1 ring-inset ring-line-strong"
+          aria-label="Buka menu"
         >
-          {t('nav.consultation')}
-        </a>
-      </div>
-    </details>
-  </nav>
+          <Icon name="lucide:menu" class="icon-open size-5" />
+          <Icon name="lucide:x" class="icon-close size-5" />
+        </summary>
+        <div class="fixed inset-x-0 top-18 bottom-0 overflow-y-auto border-t border-line bg-ink/98 backdrop-blur-xl">
+          <nav aria-label="Navigasi mobile" class="container-content py-8">
+            <ul class="divide-y divide-line border-y border-line">
+              {
+                navLinks.map((l, i) => (
+                  <li>
+                    <a
+                      href={l.href}
+                      class="flex min-h-16 items-center justify-between gap-4 py-4 font-display text-2xl font-extrabold text-snow"
+                      style="font-stretch:115%"
+                    >
+                      <span class="flex items-baseline gap-4">
+                        <span class="label-tech text-volt">0{i + 1}</span>
+                        {l.label}
+                      </span>
+                      <Icon name="lucide:arrow-up-right" class="size-5 text-fog" />
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <Button href={survei} external size="lg" class="mt-8 w-full" icon="lucide:zap">
+              Minta Survei Gratis
+            </Button>
+          </nav>
+        </div>
+      </details>
+    </div>
+  </div>
 </header>
+
+<style>
+  .nav-shell {
+    border-bottom: 1px solid transparent;
+  }
+  :global(.nav-scrolled) .nav-shell,
+  .nav-shell:has(details[open]) {
+    background: rgb(10 12 15 / 0.82);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-bottom-color: var(--color-line);
+  }
+  .nav-mobile .icon-close { display: none; }
+  .nav-mobile[open] .icon-close { display: block; }
+  .nav-mobile[open] .icon-open { display: none; }
+</style>
+
+<script>
+  const onScroll = () =>
+    document.documentElement.classList.toggle('nav-scrolled', window.scrollY > 24);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('astro:page-load', () => {
+    onScroll();
+    document.querySelectorAll<HTMLDetailsElement>('.nav-mobile').forEach((d) => (d.open = false));
+  });
+</script>

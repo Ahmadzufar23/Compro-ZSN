@@ -1,28 +1,31 @@
 ---
 import Base from '@/layouts/Base.astro';
 import Hero from '@/components/home/Hero.astro';
-// DINONAKTIFKAN SEMENTARA — stat bar (1000+ / Since 2023 / 30+)
-// import StatBand from '@/components/home/StatBand.astro';
-import ServiceGrid from '@/components/home/ServiceGrid.astro';
-// DINONAKTIFKAN SEMENTARA — section Digital Products (bisa diaktifkan lagi)
-// import SoftwareBanner from '@/components/home/SoftwareBanner.astro';
-import ProjectHighlight from '@/components/home/ProjectHighlight.astro';
-import TentangPreview from '@/components/home/TentangPreview.astro';
-import CtaBanner from '@/components/home/CtaBanner.astro';
+import PowerStrip from '@/components/home/PowerStrip.astro';
+import Intro from '@/components/home/Intro.astro';
+import Services from '@/components/home/Services.astro';
+import StackLayers from '@/components/home/StackLayers.astro';
+import Process from '@/components/home/Process.astro';
+import Proof from '@/components/home/Proof.astro';
+import Projects from '@/components/home/Projects.astro';
+import Coverage from '@/components/home/Coverage.astro';
+import Brands from '@/components/home/Brands.astro';
+import CtaFinal from '@/components/home/CtaFinal.astro';
 ---
 
 <Base
-  title="Network Infrastructure & Digital Systems"
-  description="PT Zufar Solusi Nawasena (ZSN) handles network infrastructure and digital systems under one team: fiber optic, CCTV, enterprise networks, and software development."
+  title="Infrastruktur Jaringan & Sistem Digital"
+  description="ZSN (PT Zufar Solusi Nawasena) mengerjakan instalasi fiber optik FTTH, jaringan perusahaan, CCTV, pemeliharaan, dan software dalam satu tim. Berbasis di Jakarta Selatan, melayani Jabodetabek."
 >
   <Hero />
-  {/* DINONAKTIFKAN SEMENTARA — stat bar (1000+ / Since 2023 / 30+) */}
-  {/* <StatBand /> */}
-  <TentangPreview />
-  <ServiceGrid />
-  {/* DINONAKTIFKAN SEMENTARA — section Digital Products (bisa diaktifkan lagi) */}
-  {/* <SoftwareBanner /> */}
-  <ProjectHighlight />
-
-  <CtaBanner />
+  <PowerStrip />
+  <Intro />
+  <Services />
+  <StackLayers />
+  <Process />
+  <Proof />
+  <Projects />
+  <Coverage />
+  <Brands />
+  <CtaFinal />
 </Base>

@@ -1,0 +1,55 @@
+---
+/**
+ * ZMark: mark bundar ZSN digambar ulang sebagai vektor bersih
+ * (lingkaran hitam-kuning dengan potongan petir Z). Geometri yang sama
+ * dipakai GlobeMark.astro untuk tekstur globe 3D, lihat ZSN_MARK_PATHS.
+ */
+import { ZSN_MARK } from '@/config/mark';
+
+interface Props {
+  size?: number | string;
+  /** Warna potongan Z (celah putih pada logo asli) */
+  z?: string;
+  /** Warna bidang gelap */
+  body?: string;
+  /** Warna aksen kuning */
+  volt?: string;
+  ring?: boolean;
+  class?: string;
+  title?: string;
+}
+
+const {
+  size = 40,
+  z = '#F4F4F2',
+  body = '#0A0C0F',
+  volt = '#FFCE00',
+  ring = false,
+  class: extra = '',
+  title = 'ZSN',
+} = Astro.props;
+
+const id = `zm-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 680 680"
+  role="img"
+  aria-label={title}
+  class={extra}
+>
+  <defs>
+    <clipPath id={id}>
+      <circle cx="340" cy="340" r="340" />
+    </clipPath>
+  </defs>
+  <g clip-path={`url(#${id})`}>
+    <rect width="680" height="680" fill={z} />
+    <polygon points={ZSN_MARK.body} fill={body} />
+    <polygon points={ZSN_MARK.voltLeft} fill={volt} />
+    <polygon points={ZSN_MARK.voltRight} fill={volt} />
+  </g>
+  {ring && <circle cx="340" cy="340" r="332" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="10" />}
+</svg>

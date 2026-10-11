@@ -1,208 +1,167 @@
 ---
 /**
- * Kontak — situs static tanpa backend. Form hanya menyusun pesan
- * WhatsApp di sisi klien. Progressive enhancement: tanpa JS, tombol
- * kirim tetap berfungsi sebagai link WhatsApp dengan pesan generik.
+ * Kontak: situs static tanpa backend. Form menyusun pesan WhatsApp di
+ * sisi klien. Tanpa JS, tautan WhatsApp langsung tetap tersedia.
  */
+import { Icon } from 'astro-icon/components';
 import Base from '@/layouts/Base.astro';
-import Section from '@/components/ui/Section.astro';
-import Button from '@/components/ui/Button.astro';
+import PageHero from '@/components/ui/PageHero.astro';
 import { site, waLink } from '@/config/site';
 
-const pekerjaanOptions = [
+const layananOpt = [
   'Fiber Optic & FTTH',
-  'CCTV & Security',
-  'Network Infrastructure',
-  'Maintenance & IT Support',
-  'System Development',
-  'Not sure yet',
+  'Infrastruktur Jaringan',
+  'CCTV & Keamanan',
+  'Pemeliharaan & IT Support',
+  'Pengembangan Software',
+  'Belum yakin',
 ];
+const bangunanOpt = ['Gedung perkantoran', 'Ruko / kantor kecil', 'Pabrik / gudang', 'Apartemen / perumahan', 'Toko / ritel', 'Lainnya'];
+const waktuOpt = ['Secepatnya', 'Bulan ini', '1 sampai 3 bulan', 'Masih membandingkan'];
 
-const bangunanOptions = [
-  'Office Building',
-  'Shophouse',
-  'Factory or Warehouse',
-  'Residential',
-  'Office',
-  'Other',
-];
-
-const skalaOptions = [
-  '1 floor or 1 unit',
-  '2 to 5 floors',
-  '6 floors and above',
-  'Industrial Area / Estate',
-];
-
-const waktuOptions = [
-  'This week',
-  'This month',
-  '1 to 3 months',
-  'Still comparing options',
-];
-
-const waFallback = waLink('Hello ZSN, I would like to request a service needs survey.');
-const waLangsung = waLink('Hello ZSN, I have a question regarding your services.');
-const fieldClass =
-  'mt-2 min-h-11 w-full border border-hairline px-4 py-3 text-ink outline-none focus-visible:border-ink';
+const nomorTampil = `+${site.whatsapp.slice(0, 2)} ${site.whatsapp.slice(2, 5)}-${site.whatsapp.slice(5, 9)}-${site.whatsapp.slice(9)}`;
+const waLangsung = waLink('Halo ZSN, saya ingin berkonsultasi.');
+const a = site.alamat;
+const field = 'mt-2 min-h-12 w-full border border-line bg-ink px-4 py-3 text-snow placeholder:text-fog/60 outline-none transition-colors focus:border-volt';
 ---
 
-<Base
-  title="Contact"
-  description="Contact ZSN for consultation on fiber optic, CCTV, network, and system installation needs."
->
-  <Section bg="deep" size="md" aria-label="Contact Hero">
-    <p class="label-tech text-muted">Contact</p>
-    <h1 class="mt-3 text-h1 text-white">Get in touch</h1>
-    <p class="mt-4 max-w-2xl text-subtle">
-      Tell us about your location and requirements, and our team will respond via
-      WhatsApp to arrange a survey plan.
-    </p>
-  </Section>
+<Base title="Kontak" description="Hubungi ZSN untuk survei lokasi dan konsultasi fiber optik, jaringan, CCTV, pemeliharaan, dan software. Respons melalui WhatsApp.">
+  <PageHero
+    eyebrow="Kontak"
+    index="ZSN"
+    judul='Ceritakan lokasinya. <span class="text-fog">Kami yang datang.</span>'
+    sub="Isi form singkat di bawah. Form ini menyusun pesan WhatsApp untuk Anda, jadi tidak ada data yang tersimpan di website kami."
+    crumbs={[{ label: 'Beranda', href: '/' }, { label: 'Kontak' }]}
+  />
 
-  <Section bg="canvas" size="lg" id="survey" aria-label="Contact Form and Info">
-    <div class="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-      <form id="form-kontak" class="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label for="nama" class="label-tech block text-muted">Name</label>
-          <input
-            id="nama" name="nama" type="text" required
-            class={fieldClass}
-            placeholder="Your Name"
-          />
+  <section class="bg-ink pb-24 lg:pb-32">
+    <div class="container-content grid gap-10 lg:grid-cols-12">
+      <form id="wa-form" class="panel p-6 sm:p-10 lg:col-span-8" novalidate>
+        <fieldset>
+          <legend class="label-tech text-volt">01 · Layanan yang dibutuhkan</legend>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {
+              layananOpt.map((l, i) => (
+                <label class="chip-opt cursor-pointer">
+                  <input type="checkbox" name="layanan" value={l} class="peer sr-only" checked={i === 0} />
+                  <span class="flex min-h-11 items-center gap-2 border border-line px-4 text-sm text-mist transition-colors peer-checked:border-volt peer-checked:bg-volt peer-checked:text-ink peer-focus-visible:outline-2 peer-focus-visible:outline-volt">
+                    {l}
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="mt-10">
+          <legend class="label-tech text-volt">02 · Tentang Anda</legend>
+          <div class="mt-2 grid gap-5 sm:grid-cols-2">
+            <label class="block text-sm text-mist">Nama
+              <input name="nama" required autocomplete="name" class={field} placeholder="Nama Anda" />
+            </label>
+            <label class="block text-sm text-mist">Perusahaan / instansi
+              <input name="perusahaan" autocomplete="organization" class={field} placeholder="Opsional" />
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="mt-10">
+          <legend class="label-tech text-volt">03 · Lokasi & waktu</legend>
+          <div class="mt-2 grid gap-5 sm:grid-cols-2">
+            <label class="block text-sm text-mist">Lokasi proyek
+              <input name="lokasi" required class={field} placeholder="Contoh: Kebayoran Lama, Jakarta Selatan" />
+            </label>
+            <label class="block text-sm text-mist">Jenis bangunan
+              <select name="bangunan" class={field}>
+                {bangunanOpt.map((b) => <option>{b}</option>)}
+              </select>
+            </label>
+            <label class="block text-sm text-mist sm:col-span-2">Kapan ingin dikerjakan?
+              <select name="waktu" class={field}>
+                {waktuOpt.map((w) => <option>{w}</option>)}
+              </select>
+            </label>
+            <label class="block text-sm text-mist sm:col-span-2">Gambaran kebutuhan
+              <textarea name="catatan" rows="4" class={field} placeholder="Contoh: butuh 12 titik CCTV di gudang 2 lantai, kabel lama ingin dirapikan."></textarea>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="mt-10 flex flex-col gap-4 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p id="wa-error" class="text-sm text-volt" role="alert" aria-live="polite"></p>
+          <button type="submit" class="cut-z inline-flex min-h-14 items-center justify-center gap-3 bg-volt px-7 font-semibold text-ink transition-colors hover:bg-volt-hot">
+            Kirim lewat WhatsApp
+            <Icon name="lucide:send" class="size-5" />
+          </button>
         </div>
-
-        <div>
-          <label for="perusahaan" class="label-tech block text-muted">Company</label>
-          <input
-            id="perusahaan" name="perusahaan" type="text"
-            class={fieldClass}
-            placeholder="Company Name (optional)"
-          />
-        </div>
-
-        <div>
-          <label for="pekerjaan" class="label-tech block text-muted">Type of Work</label>
-          <select id="pekerjaan" name="pekerjaan" class={fieldClass}>
-            {pekerjaanOptions.map((o) => <option value={o}>{o}</option>)}
-          </select>
-        </div>
-
-        <div>
-          <label for="lokasi" class="label-tech block text-muted">Location</label>
-          <input
-            id="lokasi" name="lokasi" type="text" required
-            class={fieldClass}
-            placeholder="City or Address"
-          />
-        </div>
-
-        <div>
-          <label for="bangunan" class="label-tech block text-muted">Building Type</label>
-          <select id="bangunan" name="bangunan" class={fieldClass}>
-            {bangunanOptions.map((o) => <option value={o}>{o}</option>)}
-          </select>
-        </div>
-
-        <div>
-          <label for="skala" class="label-tech block text-muted">Estimated Scale</label>
-          <select id="skala" name="skala" class={fieldClass}>
-            {skalaOptions.map((o) => <option value={o}>{o}</option>)}
-          </select>
-        </div>
-
-        <div class="sm:col-span-2">
-          <label for="waktu" class="label-tech block text-muted">Project Timeline</label>
-          <select id="waktu" name="waktu" class={fieldClass}>
-            {waktuOptions.map((o) => <option value={o}>{o}</option>)}
-          </select>
-        </div>
-
-        <div class="sm:col-span-2">
-          <label for="catatan" class="label-tech block text-muted">Notes</label>
-          <textarea
-            id="catatan" name="catatan" rows="4"
-            class={fieldClass}
-            placeholder="Additional details (optional)"
-          ></textarea>
-        </div>
-
-        <Button
-          id="tombol-kirim"
-          href={waFallback}
-          data-wa={site.whatsapp}
-          size="lg"
-          external
-          class="mt-2 self-start sm:col-span-2"
-        >
-          Send via WhatsApp
-        </Button>
+        <noscript>
+          <p class="mt-4 text-sm text-fog">JavaScript nonaktif. Gunakan <a href={waLangsung} class="text-volt underline">tautan WhatsApp langsung</a>.</p>
+        </noscript>
       </form>
 
-      <div class="flex flex-col gap-8">
-        <div>
-          <p class="label-tech text-muted">Address</p>
-          <p class="mt-2 text-ink">
-            {site.alamat.jalan}<br />
-            {site.alamat.kelurahan}, {site.alamat.kecamatan}<br />
-            {site.alamat.kota}, {site.alamat.provinsi} {site.alamat.kodePos}
+      <aside class="space-y-4 lg:col-span-4">
+        <a href={waLangsung} target="_blank" rel="noopener noreferrer" class="group block bg-volt p-7 text-ink">
+          <Icon name="lucide:message-circle" class="size-7" />
+          <p class="label-tech mt-6 text-ink/70">WhatsApp</p>
+          <p class="mt-1 font-display text-2xl font-extrabold" style="font-stretch:110%">{nomorTampil}</p>
+          <p class="mt-4 inline-flex items-center gap-2 text-sm font-semibold">
+            Chat langsung <Icon name="lucide:arrow-up-right" class="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </p>
+        </a>
+        <a href={`mailto:${site.email}`} class="panel group block p-7 transition-colors hover:border-volt">
+          <Icon name="lucide:mail" class="size-6 text-volt" />
+          <p class="label-tech mt-6 text-fog">Email</p>
+          <p class="mt-1 break-all font-semibold text-snow">{site.email}</p>
+        </a>
+        <a href={site.maps.url} target="_blank" rel="noopener noreferrer" class="panel group block p-7 transition-colors hover:border-volt">
+          <Icon name="lucide:map-pin" class="size-6 text-volt" />
+          <p class="label-tech mt-6 text-fog">Kantor</p>
+          <p class="mt-1 text-snow">{a.jalan}, {a.kelurahan}, {a.kecamatan}, {a.kota} {a.kodePos}</p>
+          <p class="label-tech mt-4 inline-flex items-center gap-1 text-volt">Buka peta <Icon name="lucide:arrow-up-right" class="size-3.5" /></p>
+        </a>
+        <div class="panel p-7">
+          <Icon name="lucide:clock" class="size-6 text-volt" />
+          <p class="label-tech mt-6 text-fog">Jam operasional</p>
+          <p class="mt-1 text-snow">Senin sampai Sabtu<br />08.00 sampai 17.00 WIB</p>
         </div>
-
-        <div>
-          <p class="label-tech text-muted">Operating Hours</p>
-          <p class="mt-2 text-ink">{site.jamOperasional}</p>
-        </div>
-
-        <div>
-          <p class="label-tech text-muted">Email</p>
-          <p class="mt-2 text-ink">
-            <a href={`mailto:${site.email}`} class="hover:text-muted">{site.email}</a>
-          </p>
-        </div>
-
-        <Button href={waLangsung} variant="outline-dark" external class="self-start">
-          Chat via WhatsApp
-        </Button>
-
-        <div>
-          <p class="label-tech text-muted">Location Map</p>
-          <Button href={site.maps.url} variant="outline-dark" external class="mt-2 self-start">
-            Open in Google Maps
-          </Button>
-        </div>
-      </div>
+      </aside>
     </div>
-  </Section>
+  </section>
 </Base>
 
-<script>
-  const form = document.getElementById('form-kontak') as HTMLFormElement | null;
-  const tombol = document.getElementById('tombol-kirim') as HTMLAnchorElement | null;
-  if (form && tombol) {
-    const nomor = tombol.dataset.wa;
-    const baris: [string, string][] = [
-      ['Name', 'nama'],
-      ['Company', 'perusahaan'],
-      ['Type of work', 'pekerjaan'],
-      ['Location', 'lokasi'],
-      ['Building type', 'bangunan'],
-      ['Estimated scale', 'skala'],
-      ['Timeline', 'waktu'],
-      ['Notes', 'catatan'],
-    ];
-    const update = () => {
-      const data = new FormData(form);
-      const isi = baris
-        .map(([label, nama]) => {
-          const nilai = String(data.get(nama) || '').trim();
-          return nilai ? `${label}: ${nilai}` : '';
-        })
-        .filter(Boolean);
-      const teks = ['Hello ZSN, I would like to request a survey.', '', ...isi].join('\n');
-      tombol.href = `https://wa.me/${nomor}?text=${encodeURIComponent(teks)}`;
-    };
-    form.addEventListener('input', update);
-    form.addEventListener('change', update);
+<script is:inline define:vars={{ nomor: site.whatsapp }}>
+  function initWaForm() {
+    const form = document.getElementById('wa-form');
+    if (!form || form.dataset.init) return;
+    form.dataset.init = '1';
+    const err = document.getElementById('wa-error');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const nama = String(fd.get('nama') || '').trim();
+      const lokasi = String(fd.get('lokasi') || '').trim();
+      if (!nama || !lokasi) {
+        err.textContent = 'Nama dan lokasi proyek wajib diisi.';
+        (nama ? form.lokasi : form.nama).focus();
+        return;
+      }
+      err.textContent = '';
+      const layanan = fd.getAll('layanan').join(', ') || 'Belum ditentukan';
+      const perusahaan = String(fd.get('perusahaan') || '').trim();
+      const catatan = String(fd.get('catatan') || '').trim();
+      const baris = [
+        'Halo ZSN, saya ingin meminta survei.',
+        '',
+        `Nama: ${nama}${perusahaan ? ` (${perusahaan})` : ''}`,
+        `Layanan: ${layanan}`,
+        `Lokasi: ${lokasi}`,
+        `Bangunan: ${fd.get('bangunan')}`,
+        `Waktu: ${fd.get('waktu')}`,
+      ];
+      if (catatan) baris.push('', `Kebutuhan: ${catatan}`);
+      window.open(`https://wa.me/${nomor}?text=${encodeURIComponent(baris.join('\n'))}`, '_blank', 'noopener');
+    });
   }
+  initWaForm();
+  document.addEventListener('astro:page-load', initWaForm);
 </script>

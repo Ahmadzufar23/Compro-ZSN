@@ -1,200 +1,165 @@
 ---
-/**
- * Hero — headline terbelah dengan mark ZSN di tengah (arah "enterprise
- * terang" batch 3). Diagram topologi TIDAK lagi di sini — dipindah ke
- * CoverageSection.astro (lihat index.astro), karena tidak lagi muat di
- * samping headline yang sekarang rata tengah penuh lebar.
- */
-import Section from '@/components/ui/Section.astro';
-import HeroMark from './HeroMark.astro';
+import Button from '@/components/ui/Button.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import GlobeMark from './GlobeMark.astro';
+import { waLink } from '@/config/site';
+
+const survei = waLink('Halo ZSN, saya ingin meminta survei lokasi untuk proyek jaringan.');
+
+/* Jalur ala trace PCB / rute kabel: lurus lalu tikungan 45 derajat */
+const traces = [
+  { d: 'M-20 180 H360 L440 260 H760', speed: '7s', delay: '0s' },
+  { d: 'M-20 520 H200 L300 420 H620 L700 500 H900', speed: '9s', delay: '-3s' },
+  { d: 'M1460 120 H1180 L1100 200 H900', speed: '8s', delay: '-1s' },
+  { d: 'M1460 760 H1240 L1160 680 H980 L900 760 H700', speed: '10s', delay: '-5s' },
+  { d: 'M-20 820 H480 L560 740 H760', speed: '11s', delay: '-2s' },
+];
+const nodes = [
+  [360, 180], [440, 260], [300, 420], [620, 420], [1180, 120], [1100, 200], [1240, 760], [1160, 680], [560, 740],
+];
+
+const fakta = [
+  { angka: '2015', label: 'Mulai bekerja di lapangan fiber optik Jakarta' },
+  { angka: '5 lini', label: 'Layanan dari kabel fisik sampai kode aplikasi' },
+  { angka: 'Jabodetabek', label: 'Wilayah kerja utama, luar kota bisa didiskusikan' },
+  { angka: 'Berdokumen', label: 'Laporan uji dan berita acara di setiap serah terima' },
+];
 ---
 
-<Section bg="surface" size="lg" class="relative isolate flex min-h-[85vh] items-center overflow-hidden" aria-label="Hero">
-  {/* Grid halus */}
+<section class="relative isolate overflow-hidden bg-ink pt-28 lg:pt-32" aria-labelledby="hero-title">
+  <!-- Latar: grid blueprint + jalur arus -->
+  <div class="bg-grid mask-fade pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
   <div
-    class="pointer-events-none absolute inset-0 z-0 opacity-70"
-    style="background-image: linear-gradient(to right, var(--color-hairline) 1px, transparent 1px), linear-gradient(to bottom, var(--color-hairline) 1px, transparent 1px); background-size: 64px 64px;"
+    class="pointer-events-none absolute -right-40 top-10 -z-10 size-[60rem] rounded-full opacity-60"
+    style="background:radial-gradient(circle, rgb(255 206 0 / .10), transparent 60%)"
     aria-hidden="true"
-  />
-
-  {/* Garis horizontal putus-putus seperti referensi */}
-  <div class="pointer-events-none absolute left-0 right-0 top-1/2 z-0 -translate-y-[60px] border-t border-dashed border-zinc-300 md:-translate-y-[80px]" aria-hidden="true"></div>
-  <div class="pointer-events-none absolute left-0 right-0 top-1/2 z-0 translate-y-[60px] border-t border-dashed border-zinc-300 md:translate-y-[80px]" aria-hidden="true"></div>
-  
-  {/* Panah dekoratif di garis */}
-  <div class="pointer-events-none absolute left-0 top-1/2 z-0 flex w-full -translate-y-[60px] justify-between px-10 opacity-30 md:-translate-y-[80px]" aria-hidden="true">
-    <span class="text-[10px] tracking-[4px] text-zinc-500">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
-    <span class="text-[10px] tracking-[4px] text-zinc-500">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+  >
   </div>
-  <div class="pointer-events-none absolute left-0 top-1/2 z-0 flex w-full translate-y-[60px] justify-between px-10 opacity-30 md:translate-y-[80px]" aria-hidden="true">
-    <span class="text-[10px] tracking-[4px] text-zinc-500">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
-    <span class="text-[10px] tracking-[4px] text-zinc-500">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
-  </div>
-
-  {/* Blok aksen kuning (pola referensi) — kiri atas */}
-  <div class="animate-decor-left pointer-events-none absolute left-0 top-0 z-0 hidden md:grid grid-cols-3 gap-0 opacity-0 -translate-x-8" aria-hidden="true">
-    <div class="size-16 lg:size-20 bg-yellow"></div>
-    <div class="size-16 lg:size-20 bg-white"></div>
-    <div class="size-16 lg:size-20 bg-yellow"></div>
-    
-    <div class="size-16 lg:size-20 bg-white"></div>
-    <div class="size-16 lg:size-20 bg-yellow"></div>
-    <div class="size-16 lg:size-20"></div>
-    
-    <div class="size-16 lg:size-20 bg-yellow"></div>
-    <div class="size-16 lg:size-20"></div>
-    <div class="size-16 lg:size-20"></div>
-  </div>
-
-  {/* Blok aksen kuning (pola referensi) — kanan bawah */}
-  <div class="animate-decor-right pointer-events-none absolute bottom-0 right-0 z-0 hidden md:grid grid-cols-3 gap-0 opacity-0 translate-x-8" aria-hidden="true">
-    <div class="size-16 lg:size-20"></div>
-    <div class="size-16 lg:size-20"></div>
-    <div class="size-16 lg:size-20 bg-yellow"></div>
-    
-    <div class="size-16 lg:size-20"></div>
-    <div class="size-16 lg:size-20 bg-yellow"></div>
-    <div class="size-16 lg:size-20 bg-white"></div>
-    
-    <div class="size-16 lg:size-20 bg-yellow"></div>
-    <div class="size-16 lg:size-20 bg-white"></div>
-    <div class="size-16 lg:size-20 bg-yellow"></div>
-  </div>
-
-  {/* Blok aksen versi mobile (kiri atas & kanan bawah) */}
-  <div class="pointer-events-none absolute left-0 top-0 z-0 grid grid-cols-3 gap-0 md:hidden" aria-hidden="true">
-    <div class="size-8 bg-yellow"></div>
-    <div class="size-8 bg-white"></div>
-    <div class="size-8 bg-yellow"></div>
-    <div class="size-8 bg-white"></div>
-    <div class="size-8 bg-yellow"></div>
-    <div class="size-8"></div>
-    <div class="size-8 bg-yellow"></div>
-    <div class="size-8"></div>
-    <div class="size-8"></div>
-  </div>
-  <div class="pointer-events-none absolute bottom-0 right-0 z-0 grid grid-cols-3 gap-0 md:hidden" aria-hidden="true">
-    <div class="size-8"></div>
-    <div class="size-8"></div>
-    <div class="size-8 bg-yellow"></div>
-    <div class="size-8"></div>
-    <div class="size-8 bg-yellow"></div>
-    <div class="size-8 bg-white"></div>
-    <div class="size-8 bg-yellow"></div>
-    <div class="size-8 bg-white"></div>
-    <div class="size-8 bg-yellow"></div>
-  </div>
-
-  <div class="relative z-10 mx-auto flex w-full flex-col items-center text-center">
-    <h1 class="sr-only">Technology Solution</h1>
-
-    {/* Headline desktop */}
-    <div aria-hidden="true" class="hidden w-full flex-wrap items-center justify-center gap-x-4 md:flex lg:gap-x-6">
-      <span class="animate-hero-title opacity-0 translate-y-6 text-hero font-display font-medium tracking-tight text-ink">
-        TECHNOLOGY
-      </span>
-      <span class="animate-hero-title opacity-0 translate-y-6 text-hero flex items-center">
-        <HeroMark class="size-[0.8em] md:size-[0.95em]" />
-      </span>
-      <span class="animate-hero-title opacity-0 translate-y-6 text-hero font-display font-bold tracking-tight text-ink">
-        SOLUTION
-      </span>
-    </div>
-
-    {/* Headline mobile */}
-    <div aria-hidden="true" class="flex flex-col items-center gap-2 md:hidden">
-      <span class="animate-hero-title opacity-0 translate-y-6 text-hero font-display font-medium tracking-tight text-ink">
-        TECHNOLOGY
-      </span>
-      <span class="animate-hero-title opacity-0 translate-y-6 text-hero flex items-center">
-        <HeroMark class="size-[0.8em]" />
-      </span>
-      <span class="animate-hero-title opacity-0 translate-y-6 text-hero font-display font-bold tracking-tight text-ink">
-        SOLUTION
-      </span>
-    </div>
-
-    <p class="animate-hero-desc opacity-0 translate-y-6 mt-8 max-w-xl text-ink font-medium tracking-wide">
-      Zufar Solusi Nawasena (ZSN) is your expert team for network infrastructure and business digital systems, handling everything from physical infrastructure planning to integrated system maintenance.
-    </p>
-
-    {/* Tombol gaya referensi */}
-    <div class="animate-hero-cta opacity-0 translate-y-6 mt-9 flex w-full max-w-sm flex-col gap-4 sm:w-auto sm:max-w-none sm:flex-row sm:justify-center">
-      <a href="/services" class="group relative flex h-14 items-center justify-center border border-zinc-200 bg-white px-8 font-semibold text-ink shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] sm:w-auto">
-        View Services
-      </a>
-      <a href="/contact" class="group relative flex h-14 w-full sm:w-auto items-center bg-zinc-800 px-2 font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-zinc-900 overflow-hidden">
-        {/* Yellow expanding box */}
-        <span class="absolute left-2 z-10 flex h-10 w-10 items-center overflow-hidden bg-yellow text-zinc-900 transition-all duration-500 ease-[cubic-bezier(0.5,0,0,1)] group-hover:w-[calc(100%-1rem)]">
-          <div class="flex w-max items-center pl-[0.55rem]">
-            {/* SVG 1 */}
-            <svg viewBox="0 0 24 24" fill="currentColor" class="size-6 shrink-0" aria-hidden="true">
-              <circle cx="7" cy="6" r="1.5" /><circle cx="7" cy="10" r="1.5" /><circle cx="7" cy="14" r="1.5" /><circle cx="7" cy="18" r="1.5" />
-              <circle cx="11" cy="8" r="1.5" /><circle cx="11" cy="12" r="1.5" /><circle cx="11" cy="16" r="1.5" />
-              <circle cx="15" cy="10" r="1.5" /><circle cx="15" cy="14" r="1.5" />
-              <circle cx="19" cy="12" r="1.5" />
-            </svg>
-            {/* SVG 2 */}
-            <svg viewBox="0 0 24 24" fill="currentColor" class="ml-3 size-6 shrink-0 opacity-70" aria-hidden="true">
-              <circle cx="7" cy="6" r="1.5" /><circle cx="7" cy="10" r="1.5" /><circle cx="7" cy="14" r="1.5" /><circle cx="7" cy="18" r="1.5" />
-              <circle cx="11" cy="8" r="1.5" /><circle cx="11" cy="12" r="1.5" /><circle cx="11" cy="16" r="1.5" />
-              <circle cx="15" cy="10" r="1.5" /><circle cx="15" cy="14" r="1.5" />
-              <circle cx="19" cy="12" r="1.5" />
-            </svg>
-            {/* SVG 3 */}
-            <svg viewBox="0 0 24 24" fill="currentColor" class="ml-3 size-6 shrink-0 opacity-40" aria-hidden="true">
-              <circle cx="7" cy="6" r="1.5" /><circle cx="7" cy="10" r="1.5" /><circle cx="7" cy="14" r="1.5" /><circle cx="7" cy="18" r="1.5" />
-              <circle cx="11" cy="8" r="1.5" /><circle cx="11" cy="12" r="1.5" /><circle cx="11" cy="16" r="1.5" />
-              <circle cx="15" cy="10" r="1.5" /><circle cx="15" cy="14" r="1.5" />
-              <circle cx="19" cy="12" r="1.5" />
-            </svg>
-            {/* SVG 4 */}
-            <svg viewBox="0 0 24 24" fill="currentColor" class="ml-3 size-6 shrink-0 opacity-20" aria-hidden="true">
-              <circle cx="7" cy="6" r="1.5" /><circle cx="7" cy="10" r="1.5" /><circle cx="7" cy="14" r="1.5" /><circle cx="7" cy="18" r="1.5" />
-              <circle cx="11" cy="8" r="1.5" /><circle cx="11" cy="12" r="1.5" /><circle cx="11" cy="16" r="1.5" />
-              <circle cx="15" cy="10" r="1.5" /><circle cx="15" cy="14" r="1.5" />
-              <circle cx="19" cy="12" r="1.5" />
-            </svg>
-            {/* SVG 5 */}
-            <svg viewBox="0 0 24 24" fill="currentColor" class="ml-3 size-6 shrink-0 opacity-10" aria-hidden="true">
-              <circle cx="7" cy="6" r="1.5" /><circle cx="7" cy="10" r="1.5" /><circle cx="7" cy="14" r="1.5" /><circle cx="7" cy="18" r="1.5" />
-              <circle cx="11" cy="8" r="1.5" /><circle cx="11" cy="12" r="1.5" /><circle cx="11" cy="16" r="1.5" />
-              <circle cx="15" cy="10" r="1.5" /><circle cx="15" cy="14" r="1.5" />
-              <circle cx="19" cy="12" r="1.5" />
-            </svg>
-          </div>
-        </span>
-        {/* Text */}
-        <span class="relative z-0 pl-14 pr-6 transition-colors duration-300 group-hover:text-transparent">Free Consultation</span>
-      </a>
-    </div>
-  </div>
-</Section>
-
-<script>
-  import { animate, stagger } from "motion";
-
-  const setupAnimations = () => {
-    // Select elements (only animate the ones visible based on media queries to avoid duplicate runs if both are selected, 
-    // but motion handles duplicates gracefully anyway, we just select all).
-    const titleWords = document.querySelectorAll('.animate-hero-title');
-    const desc = document.querySelectorAll('.animate-hero-desc');
-    const cta = document.querySelectorAll('.animate-hero-cta');
-    const decorLeft = document.querySelectorAll('.animate-decor-left');
-    const decorRight = document.querySelectorAll('.animate-decor-right');
-
-    if (titleWords.length > 0) {
-      // Create an animation sequence
-      animate([
-        [decorLeft, { opacity: 1, transform: "none" }, { duration: 0.8, at: 0.1 }],
-        [decorRight, { opacity: 1, transform: "none" }, { duration: 0.8, at: 0.1 }],
-        [titleWords, { opacity: 1, transform: "none" }, { duration: 0.6, delay: stagger(0.15), at: 0.2 }],
-        [desc, { opacity: 1, transform: "none" }, { duration: 0.5, at: "-0.3" }],
-        [cta, { opacity: 1, transform: "none" }, { duration: 0.5, at: "-0.3" }]
-      ]);
+  <svg
+    class="pointer-events-none absolute inset-0 -z-10 size-full"
+    viewBox="0 0 1440 900"
+    preserveAspectRatio="xMidYMid slice"
+    aria-hidden="true"
+  >
+    {traces.map((t) => <path d={t.d} fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1.2" />)}
+    {
+      traces.map((t) => (
+        <path
+          d={t.d}
+          fill="none"
+          stroke="#FFCE00"
+          stroke-width="2"
+          stroke-linecap="square"
+          class="flow-line"
+          style={`--flow-speed:${t.speed};animation-delay:${t.delay};filter:drop-shadow(0 0 6px rgba(255,206,0,.8))`}
+        />
+      ))
     }
-  };
+    {nodes.map(([x, y]) => <rect x={x - 3} y={y - 3} width="6" height="6" fill="#0A0C0F" stroke="rgba(255,206,0,.5)" />)}
+  </svg>
 
-  // Run when Astro page loads (works with ViewTransitions)
-  document.addEventListener('astro:page-load', setupAnimations);
-</script>
+  <div class="container-content">
+    <div class="grid items-center gap-y-10 lg:grid-cols-12 lg:gap-x-8">
+      <div class="lg:col-span-7">
+        <Eyebrow index="ZSN">PT Zufar Solusi Nawasena · Sejak 2015</Eyebrow>
+
+        <h1 id="hero-title" class="mt-7 text-hero">
+          <span class="block">Infrastruktur</span>
+          <span class="block">yang tetap</span>
+          <span class="mt-1 flex items-center gap-3 sm:gap-5">
+            <span class="volt-mark">menyala.</span>
+            <svg viewBox="0 0 40 56" class="h-[0.8em] w-auto shrink-0" aria-hidden="true">
+              <path d="M26 0 0 32h16l-4 24L40 22H23z" fill="#FFCE00" style="filter:drop-shadow(0 0 14px rgba(255,206,0,.6))"></path>
+            </svg>
+          </span>
+        </h1>
+
+        <p class="mt-8 max-w-xl text-lg leading-relaxed text-mist">
+          ZSN adalah kontraktor jaringan dan pengembang sistem dari Jakarta. Kami menarik
+          <strong class="font-semibold text-snow">fiber optik</strong>, memasang
+          <strong class="font-semibold text-snow">CCTV dan jaringan kantor</strong>, menguji setiap
+          jalurnya, lalu membangun <strong class="font-semibold text-snow">software</strong> yang
+          berjalan di atasnya. Satu tim, satu penanggung jawab.
+        </p>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+          <Button href={survei} external size="lg" icon="lucide:zap">Minta Survei Gratis</Button>
+          <Button href="/services" variant="ghost" size="lg" icon="lucide:arrow-right">Lihat Layanan</Button>
+        </div>
+      </div>
+
+      <div class="relative lg:col-span-5">
+        <!-- Petir besar yang sesekali menyambar di belakang globe -->
+        <svg
+          viewBox="0 0 200 280"
+          class="strike pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[115%] -translate-x-1/2 -translate-y-1/2"
+          aria-hidden="true"
+        >
+          <path d="M130 0 0 160h80l-20 120L200 110h-85z" fill="none" stroke="#FFCE00" stroke-width="1.5" opacity=".9"></path>
+        </svg>
+
+        <div class="relative mx-auto max-w-[560px]">
+          <GlobeMark />
+          <span class="chip label-tech absolute left-0 top-[14%]">
+            <span class="dot"></span> Fusion splice
+          </span>
+          <span class="chip label-tech absolute right-0 top-[38%]">
+            <span class="dot"></span> OTDR tested
+          </span>
+          <span class="chip label-tech absolute bottom-[12%] left-[6%]">
+            <span class="dot"></span> As-built drawing
+          </span>
+          <p class="label-tech absolute -bottom-2 right-2 text-[0.6rem] text-fog/70">Seret untuk memutar</p>
+        </div>
+      </div>
+    </div>
+
+    <dl class="mt-16 grid grid-cols-2 border-t border-line lg:mt-20 lg:grid-cols-4">
+      {
+        fakta.map((f, i) => (
+          <div
+            class:list={[
+              'border-line py-7 pr-4',
+              i % 2 === 1 && 'border-l pl-5 lg:pl-7',
+              i >= 2 && 'border-t lg:border-t-0',
+              i === 2 && 'lg:border-l lg:pl-7',
+            ]}
+          >
+            <dt class="font-display text-xl font-extrabold break-words text-snow sm:text-3xl" style="font-stretch:110%">
+              {f.angka}
+            </dt>
+            <dd class="mt-2 max-w-[22ch] text-sm leading-snug text-fog">{f.label}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.8rem;
+    color: var(--color-snow);
+    background: rgb(16 19 24 / 0.78);
+    border: 1px solid var(--color-line-strong);
+    backdrop-filter: blur(8px);
+    font-size: 0.62rem;
+    pointer-events: none;
+  }
+  .chip .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-volt);
+    box-shadow: 0 0 10px var(--color-volt);
+  }
+  .strike {
+    animation: strike 7s linear infinite;
+    filter: drop-shadow(0 0 12px rgba(255, 206, 0, 0.8));
+  }
+  @media (max-width: 480px) {
+    .chip { display: none; }
+  }
+</style>

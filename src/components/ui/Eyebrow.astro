@@ -1,0 +1,23 @@
+---
+/** Eyebrow section: kode indeks + label mono, dengan petir kecil. */
+interface Props {
+  index?: string;
+  tone?: 'dark' | 'paper' | 'volt';
+  class?: string;
+  [key: string]: unknown;
+}
+const { index, tone = 'dark', class: extra = '', ...rest } = Astro.props;
+const colors = {
+  dark: { text: 'text-fog', idx: 'text-volt', bolt: '#FFCE00' },
+  paper: { text: 'text-graphite', idx: 'text-ink', bolt: '#0A0C0F' },
+  volt: { text: 'text-ink/70', idx: 'text-ink', bolt: '#0A0C0F' },
+}[tone];
+---
+
+<p class:list={['label-tech flex items-center gap-3', colors.text, extra]} {...rest}>
+  <svg width="10" height="14" viewBox="0 0 10 14" aria-hidden="true" class="shrink-0">
+    <path d="M6.5 0 0 8h4l-1 6L10 5.5H5.8z" fill={colors.bolt}></path>
+  </svg>
+  {index && <span class={colors.idx}>[{index}]</span>}
+  <span><slot /></span>
+</p>

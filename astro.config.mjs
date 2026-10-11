@@ -9,21 +9,13 @@ export default defineConfig({
   // dan set site.isProduction: true di src/config/site.ts saat rilis.
   // TODO: cek ulang URL Vercel sebenarnya (belum dikonfirmasi).
   site: 'https://compro-zsn.vercel.app',
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'id'],
-    routing: {
-      prefixDefaultLocale: false,
-    },
-  },
   integrations: [
     mdx(),
     sitemap({
-      // /tim dan /project belum siap tayang (menunggu foto asli dan
-      // persetujuan tertulis) — lihat site.halamanAktif di config/site.ts.
+      // /team belum siap tayang (menunggu foto & persetujuan tertulis).
       filter: (page) => {
         const url = new URL(page);
-        return !/^\/(tim|project)(\/|$)/.test(url.pathname);
+        return !/^\/team(\/|$)/.test(url.pathname);
       },
     }),
     icon(),

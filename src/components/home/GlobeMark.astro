@@ -1,0 +1,387 @@
+---
+/**
+ * GlobeMark: mark bundar ZSN sebagai globe 3D yang berputar seperti bumi.
+ *
+ * Tanpa library 3D. Bola dirender per piksel di canvas 2D: tiap piksel
+ * di dalam piringan dipetakan ke titik di permukaan bola (proyeksi
+ * ortografis), diputar pada sumbu Y, lalu mengambil warna dari tekstur
+ * logo. Sisi belakang memakai logo yang dicerminkan, jadi logo terbaca
+ * benar dari depan maupun belakang. Garis jahitan antara keduanya
+ * dijadikan cincin volt (meridian kuning).
+ *
+ * Di sekelilingnya ada orbit data dengan paket cahaya yang berjalan.
+ * Bisa diputar dengan diseret. Berhenti saat keluar layar, dan diam
+ * bila pengguna memilih prefers-reduced-motion.
+ */
+import ZMark from '@/components/ui/ZMark.astro';
+import { ZSN_MARK } from '@/config/mark';
+
+interface Props {
+  class?: string;
+}
+const { class: extra = '' } = Astro.props;
+---
+
+<div
+  class:list={['globe relative aspect-square w-full touch-pan-y select-none', extra]}
+  data-globe={JSON.stringify(ZSN_MARK)}
+>
+  <div class="globe-glow pointer-events-none absolute inset-[8%] rounded-full" aria-hidden="true"></div>
+  <div class="globe-fallback absolute inset-[16%] transition-opacity duration-700">
+    <ZMark size="100%" title="Logo ZSN" />
+  </div>
+  <canvas class="absolute inset-0 size-full cursor-grab active:cursor-grabbing" aria-hidden="true"></canvas>
+</div>
+
+<style>
+  .globe-glow {
+    background: radial-gradient(circle, rgb(255 206 0 / 0.22) 0%, rgb(255 206 0 / 0.06) 45%, transparent 70%);
+    filter: blur(10px);
+  }
+  :global(.globe.ready) .globe-fallback {
+    opacity: 0;
+  }
+</style>
+
+<script>
+  type Mark = { body: string; voltLeft: string; voltRight: string };
+
+  const TS = 512; // ukuran tekstur
+  const VOLT = [255, 206, 0];
+
+  function pts(s: string) {
+    return s.split(' ').map((p) => p.split(',').map(Number));
+  }
+
+  function buildTexture(mark: Mark) {
+    const c = document.createElement('canvas');
+    c.width = c.height = TS;
+    const g = c.getContext('2d')!;
+    const k = TS / 680;
+    g.fillStyle = '#F7F4EA';
+    g.fillRect(0, 0, TS, TS);
+    const poly = (list: number[][], col: string) => {
+      g.beginPath();
+      list.forEach(([x, y], i) => (i ? g.lineTo(x * k, y * k) : g.moveTo(x * k, y * k)));
+      g.closePath();
+      g.fillStyle = col;
+      g.fill();
+    };
+    poly(pts(mark.body), '#161A20');
+    poly(pts(mark.voltLeft), '#FFCE00');
+    poly(pts(mark.voltRight), '#FFCE00');
+    const d = g.getImageData(0, 0, TS, TS).data;
+    const n = TS * TS;
+    const r = new Uint8Array(n), gg = new Uint8Array(n), b = new Uint8Array(n), e = new Uint8Array(n);
+    for (let i = 0; i < n; i++) {
+      r[i] = d[i * 4];
+      gg[i] = d[i * 4 + 1];
+      b[i] = d[i * 4 + 2];
+      // Celah Z (putih) diberi sifat "menyala": tidak terlalu gelap di sisi bayangan
+      e[i] = d[i * 4 + 2] > 200 ? 1 : 0;
+    }
+    return { r, g: gg, b, e };
+  }
+
+  function fastAtan2(y: number, x: number) {
+    const ax = Math.abs(x), ay = Math.abs(y);
+    const a = Math.min(ax, ay) / (Math.max(ax, ay) + 1e-9);
+    const s = a * a;
+    let r = ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a;
+    if (ay > ax) r = 1.57079637 - r;
+    if (x < 0) r = 3.14159274 - r;
+    return y < 0 ? -r : r;
+  }
+
+  type Ring = { r: number; tx: number; tz: number; speed: number; packets: number[] };
+  const RINGS: Ring[] = [
+    { r: 1.3, tx: 1.18, tz: 0.38, speed: 0.55, packets: [0, 2.6] },
+    { r: 1.46, tx: 1.32, tz: -0.52, speed: -0.38, packets: [1.2] },
+    { r: 1.16, tx: 0.42, tz: 1.12, speed: 0.8, packets: [0.4, 3.6] },
+  ];
+
+  class Globe {
+    root: HTMLElement;
+    canvas: HTMLCanvasElement;
+    ctx: CanvasRenderingContext2D;
+    tex: ReturnType<typeof buildTexture>;
+    sphere = document.createElement('canvas');
+    sctx = this.sphere.getContext('2d')!;
+    img!: ImageData;
+    buf!: Uint32Array;
+    W = 0; R = 0; dpr = 1;
+    // data per piksel
+    idx!: Int32Array; mx!: Float32Array; my!: Float32Array; mz!: Float32Array;
+    shade!: Float32Array; spec!: Float32Array; rim!: Float32Array; alpha!: Float32Array; lat!: Float32Array;
+    count = 0;
+    theta = -0.5;
+    vel = 0;
+    base = 0.32;
+    raf = 0;
+    last = 0;
+    time = 0;
+    visible = true;
+    reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    io: IntersectionObserver;
+    ro: ResizeObserver;
+    dragging = false;
+    lastX = 0;
+
+    constructor(root: HTMLElement) {
+      this.root = root;
+      this.canvas = root.querySelector('canvas')!;
+      this.ctx = this.canvas.getContext('2d')!;
+      this.tex = buildTexture(JSON.parse(root.dataset.globe!));
+      this.io = new IntersectionObserver(([e]) => {
+        this.visible = e.isIntersecting;
+        if (this.visible) this.start();
+      });
+      this.ro = new ResizeObserver(() => this.setup());
+      this.setup();
+      this.io.observe(root);
+      this.ro.observe(root);
+      this.bindDrag();
+      root.classList.add('ready');
+      if (this.reduced) this.frame(0);
+      else this.start();
+    }
+
+    setup() {
+      const css = this.root.clientWidth;
+      if (!css) return;
+      this.dpr = Math.min(window.devicePixelRatio || 1, 1.6);
+      const W = Math.round(css * this.dpr);
+      if (W === this.W) return;
+      this.W = W;
+      this.canvas.width = this.canvas.height = W;
+      const R = (this.R = Math.round(W * 0.34));
+      const D = 2 * R;
+      this.sphere.width = this.sphere.height = D;
+      this.img = this.sctx.createImageData(D, D);
+      this.buf = new Uint32Array(this.img.data.buffer);
+
+      const max = Math.ceil(Math.PI * R * R) + 4 * D;
+      const idx = new Int32Array(max), mx = new Float32Array(max), my = new Float32Array(max), mz = new Float32Array(max);
+      const shade = new Float32Array(max), spec = new Float32Array(max), rim = new Float32Array(max), alpha = new Float32Array(max), lat = new Float32Array(max);
+
+      // Cahaya dari kiri atas depan
+      let lx = -0.55, ly = -0.62, lz = 0.58;
+      const ll = Math.hypot(lx, ly, lz);
+      lx /= ll; ly /= ll; lz /= ll;
+      let hx = lx, hy = ly, hz = lz + 1;
+      const hl = Math.hypot(hx, hy, hz);
+      hx /= hl; hy /= hl; hz /= hl;
+      const tilt = 0.3, ct = Math.cos(tilt), st = Math.sin(tilt);
+
+      let n = 0;
+      for (let j = 0; j < D; j++) {
+        const ny = (j + 0.5 - R) / R;
+        for (let i = 0; i < D; i++) {
+          const nx = (i + 0.5 - R) / R;
+          const r2 = nx * nx + ny * ny;
+          if (r2 > 1) continue;
+          const nz = Math.sqrt(1 - r2);
+          idx[n] = j * D + i;
+          // kemiringan sumbu (seperti bumi, condong ke arah penonton)
+          mx[n] = nx;
+          my[n] = ny * ct - nz * st;
+          mz[n] = ny * st + nz * ct;
+          const diff = Math.max(0, nx * lx + ny * ly + nz * lz);
+          shade[n] = 0.3 + 0.82 * diff;
+          spec[n] = Math.pow(Math.max(0, nx * hx + ny * hy + nz * hz), 40) * 0.6;
+          rim[n] = Math.pow(1 - nz, 2.6);
+          alpha[n] = Math.min(1, (1 - Math.sqrt(r2)) * R * 1.2);
+          // garis lintang (statis karena putaran di sumbu Y)
+          const latV = my[n] * 4;
+          const fl = Math.abs(latV - Math.round(latV));
+          lat[n] = fl < 0.035 ? 1 : 0;
+          n++;
+        }
+      }
+      Object.assign(this, { idx, mx, my, mz, shade, spec, rim, alpha, lat, count: n });
+      if (this.reduced) this.frame(0);
+    }
+
+    bindDrag() {
+      const c = this.canvas;
+      c.addEventListener('pointerdown', (e) => {
+        this.dragging = true;
+        this.lastX = e.clientX;
+        c.setPointerCapture(e.pointerId);
+      });
+      c.addEventListener('pointermove', (e) => {
+        if (!this.dragging) return;
+        const dx = e.clientX - this.lastX;
+        this.lastX = e.clientX;
+        this.theta += dx * 0.012;
+        this.vel = dx * 0.6;
+        if (this.reduced) this.frame(0);
+      });
+      const end = () => (this.dragging = false);
+      c.addEventListener('pointerup', end);
+      c.addEventListener('pointercancel', end);
+    }
+
+    start() {
+      if (this.reduced || this.raf) return;
+      this.last = performance.now();
+      const loop = (t: number) => {
+        const dt = Math.min(0.05, (t - this.last) / 1000);
+        this.last = t;
+        if (!this.visible) {
+          this.raf = 0;
+          return;
+        }
+        this.frame(dt);
+        this.raf = requestAnimationFrame(loop);
+      };
+      this.raf = requestAnimationFrame(loop);
+    }
+
+    renderSphere() {
+      const { tex, buf, count, idx, mx, my, mz, shade, spec, rim, alpha, lat } = this;
+      const c = Math.cos(this.theta), s = Math.sin(this.theta);
+      const T1 = TS - 1;
+      const lonStep = 6 / Math.PI; // meridian tiap 30 derajat
+      buf.fill(0);
+      for (let k = 0; k < count; k++) {
+        const x0 = mx[k], z0 = mz[k], y = my[k];
+        const x = x0 * c + z0 * s;
+        const z = -x0 * s + z0 * c;
+        let r: number, g: number, b: number;
+        let sh = shade[k];
+        if (z > -0.03 && z < 0.03) {
+          // cincin volt di jahitan depan/belakang
+          r = 255; g = 214; b = 40;
+          sh = 0.7 + sh * 0.5;
+        } else {
+          const u = z >= 0 ? x : -x;
+          const ti = (((y + 1) * 0.5 * T1) | 0) * TS + (((u + 1) * 0.5 * T1) | 0);
+          r = tex.r[ti]; g = tex.g[ti]; b = tex.b[ti];
+          if (tex.e[ti]) sh = 0.62 + sh * 0.42;
+          // garis bujur & lintang: kisi globe tipis berwarna volt
+          const lon = fastAtan2(x, z) * lonStep;
+          const fl = Math.abs(lon - Math.round(lon));
+          const grid = lat[k] || fl < 0.05 ? 0.22 : 0;
+          if (grid && r < 120) {
+            r += (VOLT[0] - r) * grid;
+            g += (VOLT[1] - g) * grid;
+            b += (VOLT[2] - b) * grid;
+          }
+        }
+        const sp = spec[k] * 255;
+        const rm = rim[k];
+        let R = r * sh + sp + rm * 120;
+        let G = g * sh + sp + rm * 96;
+        let B = b * sh + sp + rm * 10;
+        R = R > 255 ? 255 : R; G = G > 255 ? 255 : G; B = B > 255 ? 255 : B;
+        const A = (alpha[k] * 255) | 0;
+        buf[idx[k]] = (A << 24) | ((B | 0) << 16) | ((G | 0) << 8) | (R | 0);
+      }
+      this.sctx.putImageData(this.img, 0, 0);
+    }
+
+    ringPoint(ring: Ring, t: number, spin: number) {
+      const R = this.R * ring.r;
+      const a = t + spin;
+      let x = Math.cos(a) * R, y = 0, z = Math.sin(a) * R;
+      // putar di sumbu X lalu Z
+      const cx = Math.cos(ring.tx), sx = Math.sin(ring.tx);
+      const y1 = y * cx - z * sx, z1 = y * sx + z * cx;
+      y = y1; z = z1;
+      const cz = Math.cos(ring.tz), sz = Math.sin(ring.tz);
+      const x2 = x * cz - y * sz, y2 = x * sz + y * cz;
+      return [x2, y2, z] as const;
+    }
+
+    drawRings(front: boolean) {
+      const { ctx, W, dpr, time } = this;
+      const cx = W / 2, cy = W / 2;
+      const SEG = 120;
+      for (const ring of RINGS) {
+        const spin = time * 0.05;
+        ctx.beginPath();
+        let pen = false;
+        for (let i = 0; i <= SEG; i++) {
+          const t = (i / SEG) * Math.PI * 2;
+          const [x, y, z] = this.ringPoint(ring, t, spin);
+          const isFront = z >= 0;
+          if (isFront === front) {
+            if (pen) ctx.lineTo(cx + x, cy + y);
+            else ctx.moveTo(cx + x, cy + y);
+            pen = true;
+          } else pen = false;
+        }
+        ctx.strokeStyle = front ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.08)';
+        ctx.lineWidth = dpr;
+        ctx.setLineDash(front ? [] : [3 * dpr, 5 * dpr]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // paket cahaya
+        for (const p0 of ring.packets) {
+          const head = p0 + time * ring.speed;
+          const [hx, hy, hz] = this.ringPoint(ring, head, spin);
+          if (hz >= 0 !== front) continue;
+          const dir = Math.sign(ring.speed);
+          for (let k = 0; k < 14; k++) {
+            const [x, y] = this.ringPoint(ring, head - dir * k * 0.035, spin);
+            ctx.fillStyle = `rgba(255,206,0,${(front ? 0.9 : 0.35) * (1 - k / 14)})`;
+            ctx.beginPath();
+            ctx.arc(cx + x, cy + y, (2.4 - k * 0.12) * dpr, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.fillStyle = front ? '#FFF6C8' : 'rgba(255,230,120,.5)';
+          ctx.shadowColor = 'rgba(255,206,0,.9)';
+          ctx.shadowBlur = front ? 14 * dpr : 0;
+          ctx.beginPath();
+          ctx.arc(cx + hx, cy + hy, 3.2 * dpr, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      }
+    }
+
+    frame(dt: number) {
+      if (!this.count) return;
+      this.time += dt;
+      if (!this.dragging) {
+        this.vel *= 0.92;
+        this.theta += (this.base + this.vel) * dt;
+      }
+      this.renderSphere();
+      const { ctx, W, R } = this;
+      ctx.clearRect(0, 0, W, W);
+      this.drawRings(false);
+      ctx.drawImage(this.sphere, W / 2 - R, W / 2 - R);
+      this.drawRings(true);
+    }
+
+    destroy() {
+      cancelAnimationFrame(this.raf);
+      this.raf = 0;
+      this.io.disconnect();
+      this.ro.disconnect();
+    }
+  }
+
+  const live = new Set<Globe>();
+
+  function init() {
+    document.querySelectorAll<HTMLElement>('[data-globe]').forEach((el) => {
+      if (el.dataset.globeInit) return;
+      el.dataset.globeInit = '1';
+      try {
+        live.add(new Globe(el));
+      } catch {
+        // tetap tampil sebagai logo statis
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', () => {
+    live.forEach((g) => g.destroy());
+    live.clear();
+  });
+</script>

@@ -4,40 +4,34 @@ import Navbar from '@/components/layout/Navbar.astro';
 import Footer from '@/components/layout/Footer.astro';
 import { site } from '@/config/site';
 import { ClientRouter } from 'astro:transitions';
-import { getLangFromUrl } from '@/i18n/utils';
 
 interface Props {
   title: string;
   description: string;
-  /** Path gambar OG. Fase 4 akan menggantinya dengan OG dinamis. */
   ogImage?: string;
   noindex?: boolean;
 }
 
-const { title, description, ogImage = '/og-default.jpg', noindex = false } =
-  Astro.props;
+const { title, description, ogImage = '/og-default.jpg', noindex = false } = Astro.props;
 
-/* Selama domain asli belum aktif (site.isProduction === false), SEMUA
-   halaman wajib noindex — menimpa prop noindex per-halaman. Ini
-   mencegah Google mengindeks URL Vercel sementara. */
+/* Selama domain asli belum aktif, semua halaman noindex. */
 const shouldNoindex = !site.isProduction || noindex;
 
 const judulPenuh = `${title} · ZSN`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogUrl = new URL(ogImage, Astro.site);
 
-const lang = getLangFromUrl(Astro.url);
-
 const localBusiness = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
-  name: 'PT Zufar Solusi Nawasena',
+  name: site.namaLegal,
   alternateName: 'ZSN Technology Solution',
   description:
-    'Network infrastructure and digital systems: fiber optic FTTH installation, CCTV, enterprise networks, and software development.',
+    'Kontraktor infrastruktur jaringan dan pengembang sistem digital: fiber optik FTTH, CCTV, jaringan perusahaan, pemeliharaan, dan perangkat lunak.',
   url: Astro.site?.toString(),
   areaServed: 'Indonesia',
   telephone: `+${site.whatsapp}`,
+  email: site.email,
   address: {
     '@type': 'PostalAddress',
     streetAddress: site.alamat.jalan,
@@ -50,11 +44,12 @@ const localBusiness = {
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang="id">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{judulPenuh}</title>
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <ClientRouter />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -66,24 +61,21 @@ const localBusiness = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogUrl} />
-    <meta property="og:locale" content={lang === 'id' ? 'id_ID' : 'en_US'} />
+    <meta property="og:locale" content="id_ID" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <meta name="theme-color" content="#FFFFFF" />
+    <meta name="theme-color" content="#0A0C0F" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(localBusiness)}
-    />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(localBusiness)} />
   </head>
 
   <body class="flex min-h-dvh flex-col">
     <a
       href="#konten"
-      class="label-tech sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-yellow focus:px-4 focus:py-3 focus:text-ink"
+      class="label-tech sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-volt focus:px-4 focus:py-3 focus:text-ink"
     >
-      Skip to content
+      Lompat ke konten
     </a>
 
     <Navbar />
@@ -93,5 +85,26 @@ const localBusiness = {
     </main>
 
     <Footer />
+
+    <script>
+      let io: IntersectionObserver | undefined;
+      function reveal() {
+        document.documentElement.classList.add('js');
+        io?.disconnect();
+        io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io!.unobserve(e.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px' }
+        );
+        document.querySelectorAll('[data-reveal]:not(.is-in)').forEach((el) => io!.observe(el));
+      }
+      document.addEventListener('astro:page-load', reveal);
+    </script>
   </body>
 </html>

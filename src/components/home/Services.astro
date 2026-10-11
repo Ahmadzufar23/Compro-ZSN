@@ -1,0 +1,93 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import Button from '@/components/ui/Button.astro';
+import { services } from '@/config/services';
+
+const layanan = await getCollection('layanan');
+const produk = await getCollection('produk');
+const semua = [...layanan, ...produk];
+
+const rows = services.map((s) => {
+  const entry = semua.find((e) => e.id.endsWith(s.slug));
+  return { ...s, data: entry?.data };
+});
+---
+
+<section class="relative overflow-hidden bg-carbon py-24 lg:py-32" aria-labelledby="layanan-title">
+  <div class="container-content">
+    <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <Eyebrow index="02" data-reveal>Layanan</Eyebrow>
+        <h2 id="layanan-title" class="mt-6 max-w-3xl text-h1" data-reveal>
+          Lima lini kerja. <span class="text-fog">Satu tim yang bertanggung jawab penuh.</span>
+        </h2>
+      </div>
+      <div data-reveal>
+        <Button href="/services" variant="ghost" icon="lucide:arrow-right">Semua layanan</Button>
+      </div>
+    </div>
+
+    <ul class="mt-14 border-t border-line lg:mt-20">
+      {
+        rows.map((r, i) => (
+          <li data-reveal style={`--d:${i * 60}ms`}>
+            <a
+              href={r.href}
+              class="svc-row group relative grid grid-cols-[auto_1fr_auto] items-center gap-x-5 gap-y-3 border-b border-line py-8 sm:gap-x-8 lg:grid-cols-[7rem_1.1fr_1fr_auto] lg:py-10"
+            >
+              <span class="svc-bar absolute inset-y-0 left-0 w-0 bg-volt/[.06] transition-all duration-500 group-hover:w-full" aria-hidden="true" />
+
+              <span
+                class="relative font-display text-4xl font-extrabold text-transparent transition-colors duration-300 group-hover:text-volt lg:text-6xl"
+                style="font-stretch:125%;-webkit-text-stroke:1px var(--color-fog)"
+              >
+                {r.kode}
+              </span>
+
+              <span class="relative">
+                <span class="label-tech block text-volt">{r.lapisan}</span>
+                <span class="mt-2 block font-display text-xl font-extrabold text-snow sm:text-2xl lg:text-3xl" style="font-stretch:110%">
+                  {r.label}
+                </span>
+                <span class="mt-2 block text-sm text-fog lg:hidden">{r.tagline}</span>
+              </span>
+
+              <span class="relative hidden lg:block">
+                <span class="block text-sm leading-relaxed text-fog">{r.data?.ringkas}</span>
+                {r.data?.spesifikasi && (
+                  <span class="mt-4 flex flex-wrap gap-2">
+                    {r.data.spesifikasi.slice(0, 3).map((sp) => (
+                      <span class="label-tech border border-line px-2.5 py-1.5 text-[0.6rem] text-mist">{sp.nilai}</span>
+                    ))}
+                  </span>
+                )}
+              </span>
+
+              <span class="relative flex size-12 items-center justify-center border border-line-strong text-snow transition-all duration-300 group-hover:rotate-45 group-hover:border-volt group-hover:bg-volt group-hover:text-ink lg:size-14">
+                <Icon name="lucide:arrow-up" class="size-5" />
+              </span>
+
+              {r.data?.heroImage && (
+                <span class="svc-peek pointer-events-none absolute right-28 top-1/2 z-10 hidden w-64 -translate-y-1/2 rotate-3 opacity-0 transition-all duration-500 group-hover:-rotate-2 group-hover:opacity-100 xl:block">
+                  <Image
+                    src={r.data.heroImage}
+                    alt=""
+                    width={512}
+                    widths={[256, 512]}
+                    sizes="256px"
+                    class="aspect-[4/3] w-full object-cover grayscale-[30%]"
+                    loading="lazy"
+                  />
+                  <span class="label-tech absolute bottom-2 left-2 bg-ink/85 px-2 py-1 text-[0.55rem] text-volt">ZSN/{r.kode}</span>
+                </span>
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

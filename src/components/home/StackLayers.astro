@@ -1,0 +1,218 @@
+---
+/**
+ * StackLayers: empat lapisan infrastruktur digambar isometrik, ditembus
+ * satu petir dari kabel paling bawah sampai aplikasi paling atas.
+ * Arahkan kursor ke daftar di samping untuk menyorot lapisannya.
+ */
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+
+const layers = [
+  {
+    n: 4,
+    kode: 'SW',
+    judul: 'Aplikasi',
+    detail: 'Dashboard pemantauan, sistem inventaris, dan portal pelaporan yang membaca data dari lapisan di bawahnya.',
+    href: '/products/software',
+  },
+  {
+    n: 3,
+    kode: 'CV',
+    judul: 'Keamanan',
+    detail: 'Kamera, NVR, dan akses jarak jauh. Tata letak dirancang supaya tidak ada titik buta.',
+    href: '/services/cctv',
+  },
+  {
+    n: 2,
+    kode: 'NW',
+    judul: 'Jaringan',
+    detail: 'Rack, switch, router, VLAN, dan access point. Topologi dirancang dulu, baru dipasang.',
+    href: '/services/network',
+  },
+  {
+    n: 1,
+    kode: 'FO',
+    judul: 'Fisik',
+    detail: 'Kabel fiber optik dan tembaga, sambungan fusion splice, terminasi, dan uji redaman OTDR.',
+    href: '/services/fiber-optic',
+  },
+];
+
+/* posisi atas tiap pelat, dari lapisan 4 (atas) ke 1 (bawah) */
+const TY: Record<number, number> = { 4: 20, 3: 160, 2: 300, 1: 440 };
+const iso = (ty: number) => `matrix(1 .5 -1 .5 300 ${ty})`;
+const T = 14; // tebal pelat
+const bolt = `300,${TY[1] + 110} 278,480 322,410 280,340 320,270 284,200 300,${TY[4] + 110}`;
+---
+
+<section class="stack relative overflow-hidden bg-ink py-24 lg:py-32" aria-labelledby="stack-title">
+  <div class="bg-grid mask-fade pointer-events-none absolute inset-0" aria-hidden="true"></div>
+
+  <div class="container-content relative grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+    <div>
+      <Eyebrow index="03" data-reveal>Cara kami melihat infrastruktur</Eyebrow>
+      <h2 id="stack-title" class="mt-6 text-h1" data-reveal>
+        Dari kabel <span class="text-fog">sampai</span> <span class="volt-mark">dashboard.</span>
+      </h2>
+      <p class="mt-6 max-w-lg text-lg text-fog" data-reveal>
+        Sistem digital hanya sekuat kabel di bawahnya. Karena itu kami mengerjakan keempat
+        lapisan sendiri, sehingga tidak ada saling lempar tanggung jawab antar vendor.
+      </p>
+
+      <ol class="mt-10 border-t border-line">
+        {
+          layers.map((l) => (
+            <li data-reveal>
+              <a href={l.href} data-l={l.n} class="layer-item group flex gap-5 border-b border-line py-5 transition-colors">
+                <span class="label-tech mt-1 w-10 shrink-0 text-fog transition-colors group-hover:text-volt">L{l.n}</span>
+                <span>
+                  <span class="flex items-baseline gap-3">
+                    <span class="font-display text-xl font-extrabold text-snow" style="font-stretch:110%">{l.judul}</span>
+                    <span class="label-tech text-[0.6rem] text-fog">ZSN/{l.kode}</span>
+                  </span>
+                  <span class="mt-1.5 block text-sm leading-relaxed text-fog">{l.detail}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="mt-6 text-sm text-fog" data-reveal>
+        <span class="text-volt">+ Pemeliharaan</span> menjaga keempat lapisan tetap sehat setelah serah terima.
+      </p>
+    </div>
+
+    <div class="relative mx-auto w-full max-w-[560px]" data-reveal>
+      <svg viewBox="0 0 600 690" class="w-full" role="img" aria-label="Diagram empat lapisan infrastruktur: fisik, jaringan, keamanan, aplikasi">
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+
+        <!-- tiang penyangga antar pelat -->
+        {[80, 300, 520].map((x) => (
+          <line x1={x} y1={TY[4] + 110} x2={x} y2={TY[1] + 110} stroke="rgba(255,255,255,.09)" stroke-dasharray="3 6" />
+        ))}
+
+        {
+          [1, 2, 3, 4].map((n) => {
+            const ty = TY[n];
+            return (
+              <g class={`plate plate-${n}`}>
+                <!-- sisi tebal -->
+                <polygon points={`80,${ty + 110} 300,${ty + 220} 300,${ty + 220 + T} 80,${ty + 110 + T}`} class="side-l" />
+                <polygon points={`300,${ty + 220} 520,${ty + 110} 520,${ty + 110 + T} 300,${ty + 220 + T}`} class="side-r" />
+                <g transform={iso(ty)}>
+                  <rect width="220" height="220" class="face" />
+                  <rect x="8" y="8" width="204" height="204" fill="none" stroke="rgba(255,255,255,.06)" />
+
+                  {n === 1 && (
+                    <g fill="none" stroke-width="2">
+                      <path d="M0 60 H70 L90 80 H220" stroke="#FFCE00" class="flow-line" style="--flow-speed:5s" />
+                      <path d="M0 60 H70 L90 80 H220" stroke="rgba(255,206,0,.25)" />
+                      <path d="M0 130 H120 L140 150 H220" stroke="rgba(255,255,255,.3)" />
+                      <path d="M60 220 V170 L80 150 V0" stroke="rgba(255,255,255,.18)" />
+                      <path d="M170 220 V120 L150 100 V0" stroke="rgba(255,206,0,.35)" />
+                      <circle cx="90" cy="80" r="5" fill="#0A0C0F" stroke="#FFCE00" />
+                      <circle cx="140" cy="150" r="5" fill="#0A0C0F" stroke="#C4C9D1" />
+                      <circle cx="150" cy="100" r="5" fill="#0A0C0F" stroke="#FFCE00" />
+                    </g>
+                  )}
+                  {n === 2 && (
+                    <g>
+                      {[0, 1, 2].map((r) => (
+                        <g transform={`translate(${24 + r * 64} 30)`}>
+                          <rect width="44" height="150" fill="#1C2129" stroke="rgba(255,255,255,.2)" />
+                          {[0, 1, 2, 3, 4, 5, 6].map((p) => (
+                            <rect x="8" y={10 + p * 19} width="28" height="9" fill={p === 2 && r === 1 ? '#FFCE00' : 'rgba(255,255,255,.12)'} />
+                          ))}
+                        </g>
+                      ))}
+                      <path d="M46 195 H174" stroke="rgba(255,255,255,.3)" stroke-width="2" />
+                    </g>
+                  )}
+                  {n === 3 && (
+                    <g>
+                      {[[40, 40], [180, 50], [60, 170], [170, 175]].map(([x, y], k) => (
+                        <g>
+                          <path
+                            d={`M${x} ${y} L${x + (x < 110 ? 70 : -70)} ${y + (y < 110 ? 30 : -30)} L${x + (x < 110 ? 40 : -40)} ${y + (y < 110 ? 70 : -70)} Z`}
+                            fill={k === 1 ? 'rgba(255,206,0,.22)' : 'rgba(255,255,255,.07)'}
+                          />
+                          <rect x={x - 7} y={y - 7} width="14" height="14" fill="#0A0C0F" stroke={k === 1 ? '#FFCE00' : 'rgba(255,255,255,.5)'} />
+                        </g>
+                      ))}
+                    </g>
+                  )}
+                  {n === 4 && (
+                    <g>
+                      <rect x="20" y="20" width="80" height="54" fill="#FFCE00" />
+                      <rect x="110" y="20" width="90" height="54" fill="#1C2129" stroke="rgba(255,255,255,.2)" />
+                      <rect x="20" y="84" width="180" height="62" fill="#1C2129" stroke="rgba(255,255,255,.2)" />
+                      <polyline points="30,132 60,110 90,120 120,96 150,104 190,92" fill="none" stroke="#FFCE00" stroke-width="2.5" />
+                      <rect x="20" y="156" width="85" height="44" fill="#1C2129" stroke="rgba(255,255,255,.2)" />
+                      <rect x="115" y="156" width="85" height="44" fill="#1C2129" stroke="rgba(255,255,255,.2)" />
+                    </g>
+                  )}
+                </g>
+
+                <!-- label pelat -->
+                <text x="540" y={ty + 118} class="plate-label">L{n}</text>
+
+              </g>
+            );
+          })
+        }
+
+        <!-- tulang petir: menembus keempat lapisan -->
+        <g filter="url(#glow)" fill="none" stroke-linejoin="miter">
+          <polyline points={bolt} stroke="#FFCE00" stroke-width="2.5" />
+          <polyline points={bolt} stroke="#FFF3B0" stroke-width="3" class="flow-line" style="--flow-speed:3.5s" />
+        </g>
+        {[1, 2, 3].map((n) => <rect x="296" y={TY[n] + 106} width="8" height="8" fill="#FFCE00" />)}
+        <circle cx="300" cy={TY[4] + 110} r="6" fill="#FFCE00" filter="url(#glow)" />
+        <circle cx="300" cy={TY[4] + 110} r="6" fill="none" stroke="#FFCE00" class="pulse-ring" />
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .face {
+    fill: #12161b;
+    stroke: rgba(255, 255, 255, 0.16);
+    stroke-width: 1;
+    transition: fill 0.4s, stroke 0.4s;
+  }
+  .side-l { fill: #0c0f13; stroke: rgba(255, 255, 255, 0.1); }
+  .side-r { fill: #090b0e; stroke: rgba(255, 255, 255, 0.1); }
+  .plate { transition: transform 0.5s var(--ease-snap), opacity 0.4s; }
+  .plate-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    fill: var(--color-fog);
+  }
+  /* sorot pelat sesuai item daftar yang di-hover */
+  .stack:has(.layer-item:hover) .plate { opacity: 0.35; }
+  .stack:has([data-l='1']:hover) .plate-1,
+  .stack:has([data-l='2']:hover) .plate-2,
+  .stack:has([data-l='3']:hover) .plate-3,
+  .stack:has([data-l='4']:hover) .plate-4 {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  .stack:has([data-l='1']:hover) .plate-1 .face,
+  .stack:has([data-l='2']:hover) .plate-2 .face,
+  .stack:has([data-l='3']:hover) .plate-3 .face,
+  .stack:has([data-l='4']:hover) .plate-4 .face {
+    stroke: var(--color-volt);
+    fill: #171c22;
+  }
+  .stack:has([data-l='1']:hover) .plate-1 .plate-label,
+  .stack:has([data-l='2']:hover) .plate-2 .plate-label,
+  .stack:has([data-l='3']:hover) .plate-3 .plate-label,
+  .stack:has([data-l='4']:hover) .plate-4 .plate-label { fill: var(--color-volt); }
+  .layer-item:hover { background: rgb(255 206 0 / 0.04); }
+</style>

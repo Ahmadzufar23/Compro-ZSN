@@ -1,0 +1,42 @@
+---
+import Button from '@/components/ui/Button.astro';
+import { site, waLink } from '@/config/site';
+
+interface Props {
+  judul?: string;
+  sub?: string;
+  pesan?: string;
+  label?: string;
+}
+const {
+  judul = 'Punya lokasi yang perlu disambungkan?',
+  sub = 'Ceritakan lokasi dan kebutuhan Anda lewat WhatsApp. Kami balas dengan jadwal survei, bukan brosur.',
+  pesan = 'Halo ZSN, saya ingin meminta survei lokasi.',
+  label = 'Jadwalkan Survei',
+} = Astro.props;
+---
+
+<section class="on-paper relative isolate overflow-hidden bg-volt text-ink" aria-labelledby="cta-title">
+  <!-- petir raksasa sebagai tekstur -->
+  <svg viewBox="0 0 200 280" class="pointer-events-none absolute -right-10 -top-16 -z-10 h-[140%] opacity-[0.09] lg:right-10" aria-hidden="true">
+    <path d="M130 0 0 160h80l-20 120L200 110h-85z" fill="#0A0C0F" />
+  </svg>
+  <div class="hazard h-3 w-full opacity-90" aria-hidden="true"></div>
+
+  <div class="container-content py-20 lg:py-28">
+    <p class="label-tech flex items-center gap-3 text-ink/70" data-reveal>
+      <span class="blink inline-block size-2 bg-ink" aria-hidden="true"></span>
+      Langkah berikutnya
+    </p>
+    <h2 id="cta-title" class="mt-6 max-w-5xl text-mega !text-ink" style="font-stretch:118%;line-height:.92" data-reveal>
+      {judul}
+    </h2>
+    <div class="mt-12 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between" data-reveal>
+      <p class="max-w-lg text-lg font-medium text-ink/80">{sub}</p>
+      <div class="flex flex-wrap gap-3">
+        <Button href={waLink(pesan)} external variant="ink" size="lg" icon="lucide:message-circle">{label}</Button>
+        <Button href={`mailto:${site.email}`} variant="paper-ghost" size="lg" icon="lucide:mail">Kirim email</Button>
+      </div>
+    </div>
+  </div>
+</section>
